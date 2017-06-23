@@ -36,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        CacheUtil.init(MainActivity.this);
+//        CacheUtil.init(MainActivity.this);
+        CacheUtil.init(MainActivity.this,"WLIJkjdsfIlI789sd87dnu==","haohaoha");
 
         mTextView = (TextView) findViewById(R.id.text2);
 

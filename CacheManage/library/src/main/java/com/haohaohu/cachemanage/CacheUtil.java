@@ -25,7 +25,7 @@ public class CacheUtil {
     @SuppressLint("StaticFieldLeak")
     private static CacheUtil mInstance;
 
-    private static String secretKey = "XIwg1FTkse5O+lPv55J1nw==";
+    private static String secretKey = "WLIJkjdsfIlI789sd87dnu==";
     private static String iv = "haohaoha";
 
     private SoftReference<LruCache<String, String>> mLuCache =
@@ -50,7 +50,9 @@ public class CacheUtil {
     /**
      * 初始化工具类
      *
-     * @param context 上下文
+     * @param context   上下文
+     * @param secretKey 密钥
+     * @param iv        向量，8位字符
      */
     public static void init(Context context, String secretKey, String iv) {
         CacheUtil.context = context.getApplicationContext();
