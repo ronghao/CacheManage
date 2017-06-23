@@ -1,6 +1,9 @@
+[![](https://jitpack.io/v/ronghao/CacheManage.svg)](https://jitpack.io/#ronghao/CacheManage)
 # [CacheManage](https://github.com/ronghao/CacheManage)
 > android缓存管理器，分为内存缓存和文件缓存两种<br>
 > 先取内存数据，没有再从文件缓存中取
+
+
 
 # 特点
 + 封装[ASimpleCache](https://github.com/yangfuhai/ASimpleCache)，继承其所有功能
