@@ -1,5 +1,6 @@
 
-# [CacheManage](https://github.com/ronghao/CacheManage)  [![](https://jitpack.io/v/ronghao/CacheManage.svg)](https://jitpack.io/#ronghao/CacheManage) [![](https://travis-ci.org/ronghao/CacheManage.svg?branch=master)](https://travis-ci.org/ronghao/CacheManage)
+# [CacheManage](https://github.com/ronghao/CacheManage)  [![](https://jitpack.io/v/ronghao/CacheManage.svg)](https://jitpack.io/#ronghao/CacheManage) [![](https://travis-ci.org/ronghao/CacheManage.svg?branch=master)](https://travis-ci.org/ronghao/CacheManage) 
+
 > android缓存管理器，分为内存缓存和文件缓存两种<br>
 > 先取内存数据，没有再从文件缓存中取
 
@@ -41,7 +42,7 @@
 在项目build.gradle中添加
 
 	dependencies {
-	        compile 'com.github.ronghao:CacheManage:v1.0.0'
+	        compile 'com.github.ronghao:CacheManage:v1.0.1'
 	}
 
 # 特别注意
@@ -49,6 +50,7 @@
 
 # 未完成任务
 + 添加文件名称base64
++ 添加过期时间的判定、内存缓存如何设置缓存时间
 
 # 关于
 + 个人博客：[www.haohaohu.com](http://www.haohaohu.com/)
