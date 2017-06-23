@@ -47,8 +47,12 @@ public class MainActivity extends AppCompatActivity {
 
                 Test key5Test = CacheUtil.get("key5", Test.class);
                 Test key6Test = CacheUtil.get("key6", Test.class, true);
+                Test key14Test = CacheUtil.get("key14", Test.class);
+                Test key16Test = CacheUtil.get("key16", Test.class, true);
                 String strKey5 = key5Test == null ? "" : key5Test.toString();
                 String strKey6 = key6Test == null ? "" : key6Test.toString();
+                String strKey14 = key14Test == null ? "" : key14Test.toString();
+                String strKey16 = key16Test == null ? "" : key16Test.toString();
 
                 String value = new StringBuilder().append("不加密字符串测试:" + check("测试数据1", CacheUtil.get("key1")) + "\n")
                         .append("加密字符串测试:" + check("测试数据2", CacheUtil.get("key2", true)) + "\n")
@@ -62,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
                         .append("加密jsonArray对象测试:" + check(jsonArray.toString(), CacheUtil.get("key10", true)) + "\n")
                         .append("数字测试:" + check(1 + "", CacheUtil.get("key11")) + "\n")
                         .append("加密数字测试:" + check(1 + "", CacheUtil.get("key12", true)) + "\n")
+                        .append("保存数据5秒测试:" + check("测试数据1", CacheUtil.get("key13")) + "\n")
+                        .append("保存对象数据5秒测试:" + check(new Test(1, "2").toString(), strKey14) + "\n")
+                        .append("加密保存数据5秒测试:" + check("测试数据1", CacheUtil.get("key15", true)) + "\n")
+                        .append("加密保存对象数据5秒测试:" + check(new Test(1, "2").toString(), strKey16) + "\n")
                         .toString();
                 mTextView.setText(value);
             }
@@ -82,7 +90,10 @@ public class MainActivity extends AppCompatActivity {
                 CacheUtil.put("key10", jsonArray, true);//加密jsonArray对象测试
                 CacheUtil.put("key11", 1);//jsonArray对象测试
                 CacheUtil.put("key12", 1, true);//加密jsonArray对象测试
-                CacheUtil.put("key13", "测试数据1", 10 * 10000);
+                CacheUtil.put("key13", "测试数据1", 10);//保存数据5秒
+                CacheUtil.put("key14", new Test(1, "2"), 10);//保存对象数据5秒
+                CacheUtil.put("key15", "测试数据1", 10, true);//加密保存数据5秒
+                CacheUtil.put("key16", new Test(1, "2"), 10, true);//加密保存对象数据5秒
                 Toast.makeText(MainActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
             }
         });

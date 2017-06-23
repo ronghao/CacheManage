@@ -13,6 +13,7 @@
 	+ 支持String、byte、JSONObject、JSONArray
 + 双缓存：内存缓存和文件缓存
 	+ 先取内存数据，没有再从文件缓存中取
++ 添加内存缓存过期时间的判定
 
 # 使用方法
 	
@@ -50,7 +51,6 @@
 
 # 未完成任务
 + 添加文件名称base64
-+ 添加过期时间的判定、内存缓存如何设置缓存时间
 
 # 关于
 + 个人博客：[www.haohaohu.com](http://www.haohaohu.com/)

@@ -942,6 +942,54 @@ public class ACache {
         }
     }
 
+    /**
+     * 读取 String数据 ,返回数据没有去除时间
+     *
+     * @param key    保存的key
+     * @param isDes3 是否加密
+     * @return String 数据
+     */
+    public String getAsStringHasDate(String key, boolean isDes3) {
+        File file = mCache.get(key);
+        if (!file.exists())
+            return null;
+        boolean removeFile = false;
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new FileReader(file));
+            String readString = "";
+            String currentLine;
+            while ((currentLine = in.readLine()) != null) {
+                readString += currentLine;
+            }
+            if (isDes3) {
+                readString = Des3Util.decode(readString);
+            }
+            if (!Utils.isDue(readString)) {
+                return readString;
+            } else {
+                removeFile = true;
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (removeFile)
+                remove(key);
+        }
+    }
+
 
     public void put(String key, JSONObject value, boolean isDes3) {
         put(key, value.toString(), isDes3);

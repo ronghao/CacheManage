@@ -199,7 +199,7 @@ public class CacheUtil {
         }
         value = ACache.get(getContext()).getAsString(key, isDes3);
         if (!TextUtils.isEmpty(value)) {
-            getLruCache().put(key, value);
+            getLruCache().put(key, ACache.get(getContext()).getAsStringHasDate(key, isDes3));
             return value;
         }
         return "";
@@ -307,11 +307,23 @@ public class CacheUtil {
         Gson gson = new Gson();
         String value = getLruCache().get(key);
         if (!TextUtils.isEmpty(value)) {
-            return gson.fromJson(value, classOfT);
+            if (!Utils.isDue(value)) {
+                return gson.fromJson(Utils.clearDateInfo(value), classOfT);
+            } else {
+                getLruCache().remove(key);
+                try {
+                    return classOfT.newInstance();
+                } catch (InstantiationException e) {
+                    return null;
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
         }
         value = ACache.get(getContext()).getAsString(key, isDes3);
         if (!TextUtils.isEmpty(value)) {
-            getLruCache().put(key, value);
+            getLruCache().put(key, ACache.get(getContext()).getAsStringHasDate(key, isDes3));
             return gson.fromJson(value, classOfT);
         }
         try {
