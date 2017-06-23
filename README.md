@@ -1,4 +1,4 @@
-# CacheManage
+# [CacheManage](https://github.com/ronghao/CacheManage)
 > android缓存管理器，分为内存缓存和文件缓存两种<br>
 > 先取内存数据，没有再从文件缓存中取
 
@@ -50,5 +50,5 @@
 + 添加文件名称base64
 
 # 关于
-+ 个人博客：[www.haohaohu.com](www.haohaohu.com)
++ 个人博客：[www.haohaohu.com](http://www.haohaohu.com/)
 + 如果你也喜欢这个库，Star一下吧，欢迎Fork
