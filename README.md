@@ -1,9 +1,7 @@
-[![](https://jitpack.io/v/ronghao/CacheManage.svg)](https://jitpack.io/#ronghao/CacheManage)
-# [CacheManage](https://github.com/ronghao/CacheManage)
+
+# [CacheManage](https://github.com/ronghao/CacheManage)  [![](https://jitpack.io/v/ronghao/CacheManage.svg)](https://jitpack.io/#ronghao/CacheManage) [![](https://travis-ci.org/ronghao/CacheManage.svg?branch=master)](https://travis-ci.org/ronghao/CacheManage)
 > android缓存管理器，分为内存缓存和文件缓存两种<br>
 > 先取内存数据，没有再从文件缓存中取
-
-
 
 # 特点
 + 封装[ASimpleCache](https://github.com/yangfuhai/ASimpleCache)，继承其所有功能
@@ -43,7 +41,7 @@
 在项目build.gradle中添加
 
 	dependencies {
-	        compile 'com.github.ronghao:CacheManage:-SNAPSHOT'
+	        compile 'com.github.ronghao:CacheManage:v1.0.0'
 	}
 
 # 特别注意

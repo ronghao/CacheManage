@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
 //        CacheUtil.init(MainActivity.this);
-        CacheUtil.init(MainActivity.this,"WLIJkjdsfIlI789sd87dnu==","haohaoha");
+        CacheUtil.init(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==", "haohaoha");
 
         mTextView = (TextView) findViewById(R.id.text2);
 
@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
                         .append("加密jsonObject对象测试:" + check(jsonObject.toString(), CacheUtil.get("key8", true)) + "\n")
                         .append("jsonArray对象测试:" + check(jsonArray.toString(), CacheUtil.get("key9")) + "\n")
                         .append("加密jsonArray对象测试:" + check(jsonArray.toString(), CacheUtil.get("key10", true)) + "\n")
+                        .append("数字测试:" + check(1 + "", CacheUtil.get("key11")) + "\n")
+                        .append("加密数字测试:" + check(1 + "", CacheUtil.get("key12", true)) + "\n")
                         .toString();
                 mTextView.setText(value);
             }
@@ -78,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
                 CacheUtil.put("key8", jsonObject, true);//加密jsonObject对象测试
                 CacheUtil.put("key9", jsonArray);//jsonArray对象测试
                 CacheUtil.put("key10", jsonArray, true);//加密jsonArray对象测试
+                CacheUtil.put("key11", 1);//jsonArray对象测试
+                CacheUtil.put("key12", 1, true);//加密jsonArray对象测试
+                CacheUtil.put("key13", "测试数据1", 10 * 10000);
                 Toast.makeText(MainActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
             }
         });
