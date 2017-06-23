@@ -24,6 +24,7 @@ public class CacheUtil {
     private static Context context;
     @SuppressLint("StaticFieldLeak")
     private static CacheUtil mInstance;
+    private static boolean mIsDes3 = false;//默认不加密
 
     private static String secretKey = "WLIJkjdsfIlI789sd87dnu==";
     private static String iv = "haohaoha";
@@ -56,6 +57,20 @@ public class CacheUtil {
      */
     public static void init(Context context, String secretKey, String iv) {
         CacheUtil.context = context.getApplicationContext();
+        Des3Util.init(secretKey, iv);
+    }
+
+    /**
+     * 初始化工具类
+     *
+     * @param context   上下文
+     * @param secretKey 密钥
+     * @param iv        向量，8位字符
+     * @param isDes3    默认是否加密
+     */
+    public static void init(Context context, String secretKey, String iv, boolean isDes3) {
+        CacheUtil.context = context.getApplicationContext();
+        CacheUtil.mIsDes3 = isDes3;
         Des3Util.init(secretKey, iv);
     }
 
@@ -100,7 +115,7 @@ public class CacheUtil {
      * @param value 保存的value
      */
     public static void put(String key, String value) {
-        put(key, value, false);
+        put(key, value, mIsDes3);
     }
 
     /**
@@ -126,7 +141,7 @@ public class CacheUtil {
      * @return 保存的value
      */
     public static String get(String key) {
-        return get(key, false);
+        return get(key, mIsDes3);
     }
 
     /**
@@ -160,7 +175,7 @@ public class CacheUtil {
      * @param <T>   对应的实体对象
      */
     public static <T> void put(String key, T value) {
-        put(key, value, false);
+        put(key, value, mIsDes3);
     }
 
     /**
@@ -198,7 +213,7 @@ public class CacheUtil {
      * @return 实体对象
      */
     public static <T> T get(String key, Class<T> classOfT) {
-        return get(key, classOfT, false);
+        return get(key, classOfT, mIsDes3);
     }
 
     /**
