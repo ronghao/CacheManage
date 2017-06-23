@@ -914,12 +914,11 @@ public class ACache {
             while ((currentLine = in.readLine()) != null) {
                 readString += currentLine;
             }
+            if (isDes3) {
+                readString = Des3Util.decode(readString);
+            }
             if (!Utils.isDue(readString)) {
-                if (isDes3) {
-                    return Des3Util.decode(Utils.clearDateInfo(readString));
-                } else {
-                    return Utils.clearDateInfo(readString);
-                }
+                return Utils.clearDateInfo(readString);
             } else {
                 removeFile = true;
                 return null;
