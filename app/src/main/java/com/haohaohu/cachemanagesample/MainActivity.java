@@ -111,6 +111,12 @@ public class MainActivity extends AppCompatActivity {
                 CacheUtil.clear("key8");
                 CacheUtil.clear("key9");
                 CacheUtil.clear("key10");
+                CacheUtil.clear("key11");
+                CacheUtil.clear("key12");
+                CacheUtil.clear("key13");
+                CacheUtil.clear("key14");
+                CacheUtil.clear("key15");
+                CacheUtil.clear("key16");
                 Toast.makeText(MainActivity.this, "清理成功", Toast.LENGTH_SHORT).show();
             }
         });
