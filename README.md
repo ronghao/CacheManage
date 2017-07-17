@@ -30,6 +30,12 @@
     CacheUtil.put("key8", jsonObject, true);//加密jsonObject对象测试
     CacheUtil.put("key9", jsonArray);//jsonArray对象测试
     CacheUtil.put("key10", jsonArray, true);//加密jsonArray对象测试
+    CacheUtil.put("key11", 1);//jsonArray对象测试
+    CacheUtil.put("key12", 1, true);//加密jsonArray对象测试
+    CacheUtil.put("key13", "测试数据1", 10);//保存数据5秒
+    CacheUtil.put("key14", new Test(1, "2"), 10);//保存对象数据5秒
+    CacheUtil.put("key15", "测试数据1", 10, true);//加密保存数据5秒
+    CacheUtil.put("key16", new Test(1, "2"), 10, true);//加密保存对象数据5秒
 
 # 项目添加方法
 在根 build.gradle中添加
