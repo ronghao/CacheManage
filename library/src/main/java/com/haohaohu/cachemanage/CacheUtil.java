@@ -35,6 +35,7 @@ public class CacheUtil {
 
     private static String secretKey = "WLIJkjdsfIlI789sd87dnu==";
     private static String iv = "haohaoha";
+    private static boolean memoryCache = true;
 
     private SoftReference<LruCache<String, String>> mLuCache =
             new SoftReference<>(new LruCache<String, String>(50));
@@ -64,6 +65,22 @@ public class CacheUtil {
      */
     public static void init(Context context, String secretKey, String iv) {
         CacheUtil.context = context.getApplicationContext();
+        Des3Util.init(secretKey, iv);
+    }
+
+    /**
+     * 初始化工具类
+     *
+     * @param context     上下文
+     * @param secretKey   密钥
+     * @param iv          向量，8位字符
+     * @param isDes3      是否des3加密
+     * @param memoryCache 是否内存缓存
+     */
+    public static void init(Context context, String secretKey, String iv, boolean isDes3, boolean memoryCache) {
+        CacheUtil.context = context.getApplicationContext();
+        CacheUtil.memoryCache = memoryCache;
+        CacheUtil.mIsDes3 = isDes3;
         Des3Util.init(secretKey, iv);
     }
 
@@ -135,7 +152,9 @@ public class CacheUtil {
     public static void put(String key, String value, boolean isDes3) {
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value))
             return;
-        getLruCache().put(key, value);
+        if (CacheUtil.memoryCache) {
+            getLruCache().put(key, value);
+        }
         ACache.get(getContext()).put(key, value, isDes3);
     }
 
@@ -161,7 +180,8 @@ public class CacheUtil {
     public static void put(String key, String value, int time, boolean isDes3) {
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value))
             return;
-        getLruCache().put(key, Utils.newStringWithDateInfo(time, value));
+        if (CacheUtil.memoryCache)
+            getLruCache().put(key, Utils.newStringWithDateInfo(time, value));
         ACache.get(getContext()).put(key, value, time, isDes3);
     }
 
@@ -188,18 +208,24 @@ public class CacheUtil {
     public static String get(String key, boolean isDes3) {
         if (TextUtils.isEmpty(key))
             return "";
-        String value = getLruCache().get(key);
-        if (!TextUtils.isEmpty(value)) {
-            if (!Utils.isDue(value)) {
-                return Utils.clearDateInfo(value);
-            } else {
-                getLruCache().remove(key);
-                return "";
+        String value = "";
+        if (CacheUtil.memoryCache) {
+            value = getLruCache().get(key);
+            if (!TextUtils.isEmpty(value)) {
+                if (!Utils.isDue(value)) {
+                    return Utils.clearDateInfo(value);
+                } else {
+                    getLruCache().remove(key);
+                    return "";
+                }
             }
         }
+
         value = ACache.get(getContext()).getAsString(key, isDes3);
         if (!TextUtils.isEmpty(value)) {
-            getLruCache().put(key, ACache.get(getContext()).getAsStringHasDate(key, isDes3));
+            if (CacheUtil.memoryCache) {
+                getLruCache().put(key, ACache.get(getContext()).getAsStringHasDate(key, isDes3));
+            }
             return value;
         }
         return "";
@@ -236,7 +262,9 @@ public class CacheUtil {
         } else {
             date = gson.toJson(value);
         }
-        getLruCache().put(key, date);
+        if (CacheUtil.memoryCache) {
+            getLruCache().put(key, date);
+        }
         ACache.get(getContext()).put(key, date, isDes3);
     }
 
@@ -273,7 +301,9 @@ public class CacheUtil {
         } else {
             date = gson.toJson(value);
         }
-        getLruCache().put(key, Utils.newStringWithDateInfo(time, date));
+        if (CacheUtil.memoryCache) {
+            getLruCache().put(key, Utils.newStringWithDateInfo(time, date));
+        }
         ACache.get(getContext()).put(key, date, time, isDes3);
     }
 
@@ -305,25 +335,30 @@ public class CacheUtil {
         if (TextUtils.isEmpty(key) || classOfT == null)
             return null;
         Gson gson = new Gson();
-        String value = getLruCache().get(key);
-        if (!TextUtils.isEmpty(value)) {
-            if (!Utils.isDue(value)) {
-                return gson.fromJson(Utils.clearDateInfo(value), classOfT);
-            } else {
-                getLruCache().remove(key);
-                try {
-                    return classOfT.newInstance();
-                } catch (InstantiationException e) {
-                    return null;
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    return null;
+        String value = "";
+        if (CacheUtil.memoryCache) {
+            value = getLruCache().get(key);
+            if (!TextUtils.isEmpty(value)) {
+                if (!Utils.isDue(value)) {
+                    return gson.fromJson(Utils.clearDateInfo(value), classOfT);
+                } else {
+                    getLruCache().remove(key);
+                    try {
+                        return classOfT.newInstance();
+                    } catch (InstantiationException e) {
+                        return null;
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
                 }
             }
         }
         value = ACache.get(getContext()).getAsString(key, isDes3);
+
         if (!TextUtils.isEmpty(value)) {
-            getLruCache().put(key, ACache.get(getContext()).getAsStringHasDate(key, isDes3));
+            if (CacheUtil.memoryCache)
+                getLruCache().put(key, ACache.get(getContext()).getAsStringHasDate(key, isDes3));
             return gson.fromJson(value, classOfT);
         }
         try {
