@@ -377,6 +377,16 @@ public class CacheUtil {
         ACache.get(getContext()).remove(key);
     }
 
+    /**
+     * 以.开头的文件默认不显示
+     *
+     * @param key
+     * @return
+     */
+    public static String translateKey(String key) {
+        return "." + Base64Util.encode(key.getBytes());
+    }
+
 
     /**
      * 时间计算工具类
