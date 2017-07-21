@@ -54,22 +54,23 @@ public class MainActivity extends AppCompatActivity {
                 String strKey14 = key14Test == null ? "" : key14Test.toString();
                 String strKey16 = key16Test == null ? "" : key16Test.toString();
 
-                String value = new StringBuilder().append("不加密字符串测试:" + check("测试数据1", CacheUtil.get("key1")) + "\n")
-                        .append("加密字符串测试:" + check("测试数据2", CacheUtil.get("key2", true)) + "\n")
-                        .append("特殊字符串测试:" + check("~!@#$%^&*()_+{}[];':,.<>`", CacheUtil.get("key3")) + "\n")
-                        .append("加密特殊字符串测试:" + check("~!@#$%^&*()_+{}[];':,.<>`", CacheUtil.get("key4", true)) + "\n")
-                        .append("实体对象测试:" + check(new Test(1, "2").toString(), strKey5) + "\n")
-                        .append("加密实体对象测试:" + check(new Test(1, "2").toString(), strKey6) + "\n")
-                        .append("jsonObject对象测试:" + check(jsonObject.toString(), CacheUtil.get("key7")) + "\n")
-                        .append("加密jsonObject对象测试:" + check(jsonObject.toString(), CacheUtil.get("key8", true)) + "\n")
-                        .append("jsonArray对象测试:" + check(jsonArray.toString(), CacheUtil.get("key9")) + "\n")
-                        .append("加密jsonArray对象测试:" + check(jsonArray.toString(), CacheUtil.get("key10", true)) + "\n")
-                        .append("数字测试:" + check(1 + "", CacheUtil.get("key11")) + "\n")
-                        .append("加密数字测试:" + check(1 + "", CacheUtil.get("key12", true)) + "\n")
-                        .append("保存数据5秒测试:" + check("测试数据1", CacheUtil.get("key13")) + "\n")
-                        .append("保存对象数据5秒测试:" + check(new Test(1, "2").toString(), strKey14) + "\n")
-                        .append("加密保存数据5秒测试:" + check("测试数据1", CacheUtil.get("key15", true)) + "\n")
-                        .append("加密保存对象数据5秒测试:" + check(new Test(1, "2").toString(), strKey16) + "\n")
+                String value = new StringBuilder()
+                        .append("不加密字符串测试:").append(check("测试数据1", CacheUtil.get("key1"))).append("\n")
+                        .append("加密字符串测试:").append(check("测试数据2", CacheUtil.get("key2", true))).append("\n")
+                        .append("特殊字符串测试:").append(check("~!@#$%^&*()_+{}[];':,.<>`", CacheUtil.get("key3"))).append("\n")
+                        .append("加密特殊字符串测试:").append(check("~!@#$%^&*()_+{}[];':,.<>`", CacheUtil.get("key4", true))).append("\n")
+                        .append("实体对象测试:").append(check(new Test(1, "2").toString(), strKey5)).append("\n")
+                        .append("加密实体对象测试:").append(check(new Test(1, "2").toString(), strKey6)).append("\n")
+                        .append("jsonObject对象测试:").append(check(jsonObject.toString(), CacheUtil.get("key7"))).append("\n")
+                        .append("加密jsonObject对象测试:").append(check(jsonObject.toString(), CacheUtil.get("key8", true))).append("\n")
+                        .append("jsonArray对象测试:").append(check(jsonArray.toString(), CacheUtil.get("key9"))).append("\n")
+                        .append("加密jsonArray对象测试:").append(check(jsonArray.toString(), CacheUtil.get("key10", true))).append("\n")
+                        .append("数字测试:").append(check(1 + "", CacheUtil.get("key11"))).append("\n")
+                        .append("加密数字测试:").append(check(1 + "", CacheUtil.get("key12", true))).append("\n")
+                        .append("保存数据5秒测试:").append(check("测试数据1", CacheUtil.get("key13"))).append("\n")
+                        .append("保存对象数据5秒测试:").append(check(new Test(1, "2").toString(), strKey14)).append("\n")
+                        .append("加密保存数据5秒测试:").append(check("测试数据1", CacheUtil.get("key15", true))).append("\n")
+                        .append("加密保存对象数据5秒测试:").append(check(new Test(1, "2").toString(), strKey16)).append("\n")
                         .toString();
                 mTextView.setText(value);
             }
@@ -90,10 +91,10 @@ public class MainActivity extends AppCompatActivity {
                 CacheUtil.put("key10", jsonArray, true);//加密jsonArray对象测试
                 CacheUtil.put("key11", 1);//jsonArray对象测试
                 CacheUtil.put("key12", 1, true);//加密jsonArray对象测试
-                CacheUtil.put("key13", "测试数据1", 10);//保存数据5秒
-                CacheUtil.put("key14", new Test(1, "2"), 10);//保存对象数据5秒
-                CacheUtil.put("key15", "测试数据1", 10, true);//加密保存数据5秒
-                CacheUtil.put("key16", new Test(1, "2"), 10, true);//加密保存对象数据5秒
+                CacheUtil.put("key13", "测试数据1", 5);//保存数据5秒
+                CacheUtil.put("key14", new Test(1, "2"), 5);//保存对象数据5秒
+                CacheUtil.put("key15", "测试数据1", 5, true);//加密保存数据5秒
+                CacheUtil.put("key16", new Test(1, "2"), 5, true);//加密保存对象数据5秒
                 Toast.makeText(MainActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
             }
         });
