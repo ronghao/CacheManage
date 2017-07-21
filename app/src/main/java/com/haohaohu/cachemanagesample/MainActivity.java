@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                         .append("保存对象数据5秒测试:").append(check(new Test(1, "2").toString(), strKey14)).append("\n")
                         .append("加密保存数据5秒测试:").append(check("测试数据1", CacheUtil.get("key15", true))).append("\n")
                         .append("加密保存对象数据5秒测试:").append(check(new Test(1, "2").toString(), strKey16)).append("\n")
+                        .append("key加密保存数据测试:").append(check("123456", CacheUtil.get(CacheUtil.translateKey("key17"), true))).append("\n")
                         .toString();
                 mTextView.setText(value);
             }
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 CacheUtil.put("key14", new Test(1, "2"), 5);//保存对象数据5秒
                 CacheUtil.put("key15", "测试数据1", 5, true);//加密保存数据5秒
                 CacheUtil.put("key16", new Test(1, "2"), 5, true);//加密保存对象数据5秒
+                CacheUtil.put(CacheUtil.translateKey("key17"), "123456", true);//key加密
                 Toast.makeText(MainActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
             }
         });
@@ -118,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 CacheUtil.clear("key14");
                 CacheUtil.clear("key15");
                 CacheUtil.clear("key16");
+                CacheUtil.clear(CacheUtil.translateKey("key17"));
                 Toast.makeText(MainActivity.this, "清理成功", Toast.LENGTH_SHORT).show();
             }
         });
@@ -128,4 +131,5 @@ public class MainActivity extends AppCompatActivity {
     public String check(String str, String str1) {
         return str.equals(str1) ? "ok" : "fail";
     }
+
 }
