@@ -29,16 +29,21 @@ import java.lang.ref.SoftReference;
 public class CacheUtil {
     @SuppressLint("StaticFieldLeak")
     private static Context context;
-    @SuppressLint("StaticFieldLeak")
-    private static CacheUtil mInstance;
-    private static boolean mIsDes3 = false;//默认不加密
 
-    private static String secretKey = "WLIJkjdsfIlI789sd87dnu==";
-    private static String iv = "haohaoha";
-    private static boolean memoryCache = true;
+    private static boolean mIsDes3 = false;//默认不加密
+    private static boolean memoryCache = true;//默认保存到内存
 
     private SoftReference<LruCache<String, String>> mLuCache =
             new SoftReference<>(new LruCache<String, String>(50));
+
+
+    private static class CacheUtilHolder {
+        private static CacheUtil mInstance = new CacheUtil();
+    }
+
+    private static CacheUtil getInstance() {
+        return CacheUtilHolder.mInstance;
+    }
 
     private CacheUtil() {
         if (context == null) {
@@ -53,7 +58,7 @@ public class CacheUtil {
      */
     public static void init(Context context) {
         CacheUtil.context = context.getApplicationContext();
-        Des3Util.init(secretKey, iv);
+        Des3Util.init("WLIJkjdsfIlI789sd87dnu==", "haohaoha");
     }
 
     /**
@@ -106,17 +111,6 @@ public class CacheUtil {
     public static Context getContext() {
         if (context != null) return context;
         throw new NullPointerException("u should init first");
-    }
-
-    private static CacheUtil getInstance() {
-        if (mInstance == null) {
-            synchronized (CacheUtil.class) {
-                if (mInstance == null) {
-                    mInstance = new CacheUtil();
-                }
-            }
-        }
-        return mInstance;
     }
 
     /**
@@ -208,7 +202,7 @@ public class CacheUtil {
     public static String get(String key, boolean isDes3) {
         if (TextUtils.isEmpty(key))
             return "";
-        String value = "";
+        String value;
         if (CacheUtil.memoryCache) {
             value = getLruCache().get(key);
             if (!TextUtils.isEmpty(value)) {
@@ -274,7 +268,7 @@ public class CacheUtil {
      * @param <T>   对应的实体对象
      * @param key   保存的key
      * @param value 保存的value
-     * @param time  过期时间
+     * @param time  过期时间 秒
      */
     public static <T> void put(String key, T value, int time) {
         put(key, value, time, mIsDes3);
@@ -286,7 +280,7 @@ public class CacheUtil {
      * @param <T>    对应的实体对象
      * @param key    保存的key
      * @param value  保存的value
-     * @param time   过期时间
+     * @param time   过期时间 秒
      * @param isDes3 是否加密
      */
     public static <T> void put(String key, T value, int time, boolean isDes3) {
@@ -335,7 +329,7 @@ public class CacheUtil {
         if (TextUtils.isEmpty(key) || classOfT == null)
             return null;
         Gson gson = new Gson();
-        String value = "";
+        String value;
         if (CacheUtil.memoryCache) {
             value = getLruCache().get(key);
             if (!TextUtils.isEmpty(value)) {
