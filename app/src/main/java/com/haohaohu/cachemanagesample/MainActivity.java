@@ -5,9 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.haohaohu.cachemanage.CacheUtil;
-
+import com.haohaohu.cachemanage.CacheUtilConfig;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,8 +35,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-//        CacheUtil.init(MainActivity.this);
-        CacheUtil.init(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==", "haohaoha");
+        //        CacheUtil.init(MainActivity.this);
+        //CacheUtil.init(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==", "haohaoha");
+
+        CacheUtilConfig cc = CacheUtilConfig.builder(MainActivity.this)
+                .setDes3("WLIJkjdsfIlI789sd87dnu==")
+                .setIv("haohaoha")
+                .build();
+        CacheUtil.init(cc);
 
         mTextView = (TextView) findViewById(R.id.text2);
 
@@ -54,24 +59,67 @@ public class MainActivity extends AppCompatActivity {
                 String strKey14 = key14Test == null ? "" : key14Test.toString();
                 String strKey16 = key16Test == null ? "" : key16Test.toString();
 
-                String value = new StringBuilder()
-                        .append("不加密字符串测试:").append(check("测试数据1", CacheUtil.get("key1"))).append("\n")
-                        .append("加密字符串测试:").append(check("测试数据2", CacheUtil.get("key2", true))).append("\n")
-                        .append("特殊字符串测试:").append(check("~!@#$%^&*()_+{}[];':,.<>`", CacheUtil.get("key3"))).append("\n")
-                        .append("加密特殊字符串测试:").append(check("~!@#$%^&*()_+{}[];':,.<>`", CacheUtil.get("key4", true))).append("\n")
-                        .append("实体对象测试:").append(check(new Test(1, "2").toString(), strKey5)).append("\n")
-                        .append("加密实体对象测试:").append(check(new Test(1, "2").toString(), strKey6)).append("\n")
-                        .append("jsonObject对象测试:").append(check(jsonObject.toString(), CacheUtil.get("key7"))).append("\n")
-                        .append("加密jsonObject对象测试:").append(check(jsonObject.toString(), CacheUtil.get("key8", true))).append("\n")
-                        .append("jsonArray对象测试:").append(check(jsonArray.toString(), CacheUtil.get("key9"))).append("\n")
-                        .append("加密jsonArray对象测试:").append(check(jsonArray.toString(), CacheUtil.get("key10", true))).append("\n")
-                        .append("数字测试:").append(check(1 + "", CacheUtil.get("key11"))).append("\n")
-                        .append("加密数字测试:").append(check(1 + "", CacheUtil.get("key12", true))).append("\n")
-                        .append("保存数据5秒测试:").append(check("测试数据1", CacheUtil.get("key13"))).append("\n")
-                        .append("保存对象数据5秒测试:").append(check(new Test(1, "2").toString(), strKey14)).append("\n")
-                        .append("加密保存数据5秒测试:").append(check("测试数据1", CacheUtil.get("key15", true))).append("\n")
-                        .append("加密保存对象数据5秒测试:").append(check(new Test(1, "2").toString(), strKey16)).append("\n")
-                        .append("key加密保存数据测试:").append(check("123456", CacheUtil.get(CacheUtil.translateKey("key17"), true))).append("\n")
+                String value = new StringBuilder().append("不加密字符串测试:")
+                        .append(check("测试数据1", CacheUtil.get("key1")))
+                        .append("\n")
+                        .append(check("测试数据1 文本内容:", CacheUtil.get("key1", false)))
+                        .append("\n")
+                        .append("加密字符串测试:")
+                        .append(check("测试数据2", CacheUtil.get("key2", true)))
+                        .append("\n")
+                        .append(check("测试数据2 文本内容:", CacheUtil.get("key2", false)))
+                        .append("\n")
+                        .append("不加密字符串测试:")
+                        .append(check("测试数据18", CacheUtil.get("key18", false)))
+                        .append("\n")
+                        .append(check("不加密字符串测试 文本内容:", CacheUtil.get("key18", false)))
+                        .append("\n")
+                        .append("特殊字符串测试:")
+                        .append(check("~!@#$%^&*()_+{}[];':,.<>`", CacheUtil.get("key3")))
+                        .append("\n")
+                        .append("加密特殊字符串测试:")
+                        .append(check("~!@#$%^&*()_+{}[];':,.<>`", CacheUtil.get("key4", true)))
+                        .append("\n")
+                        .append("实体对象测试:")
+                        .append(check(new Test(1, "2").toString(), strKey5))
+                        .append("\n")
+                        .append("加密实体对象测试:")
+                        .append(check(new Test(1, "2").toString(), strKey6))
+                        .append("\n")
+                        .append("jsonObject对象测试:")
+                        .append(check(jsonObject.toString(), CacheUtil.get("key7")))
+                        .append("\n")
+                        .append("加密jsonObject对象测试:")
+                        .append(check(jsonObject.toString(), CacheUtil.get("key8", true)))
+                        .append("\n")
+                        .append("jsonArray对象测试:")
+                        .append(check(jsonArray.toString(), CacheUtil.get("key9")))
+                        .append("\n")
+                        .append("加密jsonArray对象测试:")
+                        .append(check(jsonArray.toString(), CacheUtil.get("key10", true)))
+                        .append("\n")
+                        .append("数字测试:")
+                        .append(check(1 + "", CacheUtil.get("key11")))
+                        .append("\n")
+                        .append("加密数字测试:")
+                        .append(check(1 + "", CacheUtil.get("key12", true)))
+                        .append("\n")
+                        .append("保存数据5秒测试:")
+                        .append(check("测试数据1", CacheUtil.get("key13")))
+                        .append("\n")
+                        .append("保存对象数据5秒测试:")
+                        .append(check(new Test(1, "2").toString(), strKey14))
+                        .append("\n")
+                        .append("加密保存数据5秒测试:")
+                        .append(check("测试数据1", CacheUtil.get("key15", true)))
+                        .append("\n")
+                        .append("加密保存对象数据5秒测试:")
+                        .append(check(new Test(1, "2").toString(), strKey16))
+                        .append("\n")
+                        .append("key加密保存数据测试:")
+                        .append(check("123456",
+                                CacheUtil.get(CacheUtil.translateKey("key17"), true)))
+                        .append("\n")
                         .toString();
                 mTextView.setText(value);
             }
@@ -97,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 CacheUtil.put("key15", "测试数据1", 5, true);//加密保存数据5秒
                 CacheUtil.put("key16", new Test(1, "2"), 5, true);//加密保存对象数据5秒
                 CacheUtil.put(CacheUtil.translateKey("key17"), "123456", true);//key加密
+                CacheUtil.put("key18", "测试数据18", false);//false代表不加密存储
                 Toast.makeText(MainActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
             }
         });
@@ -124,12 +173,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "清理成功", Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     public String check(String str, String str1) {
         return str.equals(str1) ? "ok" : "fail";
     }
-
 }
