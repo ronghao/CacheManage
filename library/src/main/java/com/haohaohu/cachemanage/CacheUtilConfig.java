@@ -67,17 +67,16 @@ public class CacheUtilConfig {
         }
 
         public Builder setDes3(String secretKey) {
-            isDes3 = true;
             this.secretKey = secretKey;
             return this;
         }
 
-        public Builder setNoDes3() {
-            isDes3 = false;
+        public Builder allowDes3(boolean isDes3) {
+            this.isDes3 = isDes3;
             return this;
         }
 
-        public Builder memoryCache(boolean memoryCache) {
+        public Builder allowMemoryCache(boolean memoryCache) {
             this.memoryCache = memoryCache;
             return this;
         }
