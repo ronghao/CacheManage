@@ -35,12 +35,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        //        CacheUtil.init(MainActivity.this);
-        //CacheUtil.init(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==", "haohaoha");
-
         CacheUtilConfig cc = CacheUtilConfig.builder(MainActivity.this)
-                .setDes3("WLIJkjdsfIlI789sd87dnu==")
-                .setIv("haohaoha")
+                //.setDes3("WLIJkjdsfIlI789sd87dnu==")
+                //.setIv("haohaoha")
                 .build();
         CacheUtil.init(cc);
 
@@ -62,17 +59,11 @@ public class MainActivity extends AppCompatActivity {
                 String value = new StringBuilder().append("不加密字符串测试:")
                         .append(check("测试数据1", CacheUtil.get("key1")))
                         .append("\n")
-                        .append(check("测试数据1 文本内容:", CacheUtil.get("key1", false)))
-                        .append("\n")
                         .append("加密字符串测试:")
                         .append(check("测试数据2", CacheUtil.get("key2", true)))
                         .append("\n")
-                        .append(check("测试数据2 文本内容:", CacheUtil.get("key2", false)))
-                        .append("\n")
                         .append("不加密字符串测试:")
                         .append(check("测试数据18", CacheUtil.get("key18", false)))
-                        .append("\n")
-                        .append(check("不加密字符串测试 文本内容:", CacheUtil.get("key18", false)))
                         .append("\n")
                         .append("特殊字符串测试:")
                         .append(check("~!@#$%^&*()_+{}[];':,.<>`", CacheUtil.get("key3")))
@@ -128,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.text1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CacheUtil.put("key1", "测试数据1");//默认不加密
+                CacheUtil.put("key1", "测试数据1");//默认加密状态
                 CacheUtil.put("key2", "测试数据2", true);//true代表加密存储
                 CacheUtil.put("key3", "~!@#$%^&*()_+{}[];':,.<>`");//特殊字符串测试
                 CacheUtil.put("key4", "~!@#$%^&*()_+{}[];':,.<>`", true);//加密特殊字符串测试
