@@ -36,10 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         CacheUtilConfig cc = CacheUtilConfig.builder(MainActivity.this)
-                //.setDes3("WLIJkjdsfIlI789sd87dnu==")
-                //.setIv("haohaoha")
+                .setDes3("WLIJkjdsfIlI789sd87dnu==")//自定义des3加密
+                .setIv("haohaoha")//自定义des3偏移量
+                .allowMemoryCache(true)//是否允许保存到内存
+                .allowDes3(true)//是否允许des3加密
                 .build();
-        CacheUtil.init(cc);
+        CacheUtil.init(cc);//初始化，必须调用
 
         mTextView = (TextView) findViewById(R.id.text2);
 
@@ -161,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 CacheUtil.clear("key15");
                 CacheUtil.clear("key16");
                 CacheUtil.clear(CacheUtil.translateKey("key17"));
+                CacheUtil.clear("key18");
                 Toast.makeText(MainActivity.this, "清理成功", Toast.LENGTH_SHORT).show();
             }
         });
