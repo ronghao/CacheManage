@@ -9,10 +9,10 @@
       app:showAsAction="never"/>
   <item
       android:id="@+id/action_ok"
-      android:title="切换到正确des3"
+      android:title="des3密钥切换1"
       app:showAsAction="never"/>
   <item
-      android:id="@+id/action_error"
-      android:title="切换到错误des3"
+      android:id="@+id/action_des_2"
+      android:title="des3密钥切换2"
       app:showAsAction="never"/>
 </menu>
