@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+  <item
+      android:id="@+id/action_default"
+      android:title="切换到自动生成密钥"
+      app:showAsAction="never"/>
+  <item
+      android:id="@+id/action_ok"
+      android:title="切换到正确des3"
+      app:showAsAction="never"/>
+  <item
+      android:id="@+id/action_error"
+      android:title="切换到错误des3"
+      app:showAsAction="never"/>
+</menu>

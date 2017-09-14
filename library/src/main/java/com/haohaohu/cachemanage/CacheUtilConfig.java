@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.provider.Settings;
 import android.text.TextUtils;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 
 /**
  * 配置项
@@ -89,7 +92,12 @@ public class CacheUtilConfig {
         public CacheUtilConfig build() {
             if (this.isDes3) {
                 if (TextUtils.isEmpty(this.secretKey)) {
-                    this.secretKey = createSecretKey();
+                    createKeyStoreSecretKey();
+                    this.secretKey = KeyStoreHelper.getSigningKey("SecretKey");
+                    this.secretKey = get24Str(this.secretKey);
+                    if (TextUtils.isEmpty(this.secretKey)) {
+                        this.secretKey = createSecretKey();
+                    }
                 }
             }
             return new CacheUtilConfig(this);
@@ -107,6 +115,14 @@ public class CacheUtilConfig {
             return secretKey;
         }
 
+        private String get24Str(String str) {
+            if (TextUtils.isEmpty(str)) return "";
+            if (str.length() >= 24) {
+                return str.substring(0, 24);
+            }
+            return str + getStr(24 - str.length());
+        }
+
         private String getStr(int num) {
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < num; i++) {
@@ -119,6 +135,18 @@ public class CacheUtilConfig {
         public String getAndroidID() {
             return Settings.Secure.getString(context.getContentResolver(),
                     Settings.Secure.ANDROID_ID);
+        }
+
+        public void createKeyStoreSecretKey() {
+            try {
+                KeyStoreHelper.createKeys(context, "SecretKey");
+            } catch (NoSuchProviderException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (InvalidAlgorithmParameterException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
