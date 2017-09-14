@@ -2,11 +2,20 @@ package com.haohaohu.cachemanagesample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.haohaohu.cachemanage.CacheUtil;
 import com.haohaohu.cachemanage.CacheUtilConfig;
+import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import javax.crypto.KeyGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,25 +39,50 @@ public class MainActivity extends AppCompatActivity {
 
         jsonArray = new JSONArray();
         jsonArray.put(jsonObject);
-
         init();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_ok:
+                initCacheConfig();
+                clearMemory();
+                break;
+            case R.id.action_error:
+                initCacheConfig1();
+                clearMemory();
+                break;
+            case R.id.action_default:
+                initCacheConfig2();
+                clearMemory();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initCacheConfig();
+    }
+
     private void init() {
-        CacheUtilConfig cc = CacheUtilConfig.builder(MainActivity.this)
-                .setDes3("WLIJkjdsfIlI789sd87dnu==")//自定义des3加密
-                .setIv("haohaoha")//自定义des3偏移量
-                .allowMemoryCache(true)//是否允许保存到内存
-                .allowDes3(true)//是否允许des3加密
-                .build();
-        CacheUtil.init(cc);//初始化，必须调用
+        mTextView = (TextView) findViewById(R.id.main_text3);
+        initEvent();
+    }
 
-        mTextView = (TextView) findViewById(R.id.text2);
-
-        findViewById(R.id.text).setOnClickListener(new View.OnClickListener() {
+    private void initEvent() {
+        findViewById(R.id.main_text).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Test key5Test = CacheUtil.get("key5", Test.class);
                 Test key6Test = CacheUtil.get("key6", Test.class, true);
                 Test key14Test = CacheUtil.get("key14", Test.class);
@@ -118,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.text1).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.main_text1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CacheUtil.put("key1", "测试数据1");//默认加密状态
@@ -143,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.text3).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.main_text2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CacheUtil.clear("key1");
@@ -167,6 +201,100 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "清理成功", Toast.LENGTH_SHORT).show();
             }
         });
+
+        findViewById(R.id.main_text4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CacheUtil.clearMemory("key1");
+                CacheUtil.clearMemory("key2");
+                CacheUtil.clearMemory("key3");
+                CacheUtil.clearMemory("key4");
+                CacheUtil.clearMemory("key5");
+                CacheUtil.clearMemory("key6");
+                CacheUtil.clearMemory("key7");
+                CacheUtil.clearMemory("key8");
+                CacheUtil.clearMemory("key9");
+                CacheUtil.clearMemory("key10");
+                CacheUtil.clearMemory("key11");
+                CacheUtil.clearMemory("key12");
+                CacheUtil.clearMemory("key13");
+                CacheUtil.clearMemory("key14");
+                CacheUtil.clearMemory("key15");
+                CacheUtil.clearMemory("key16");
+                CacheUtil.clearMemory(CacheUtil.translateKey("key17"));
+                CacheUtil.clearMemory("key18");
+                Toast.makeText(MainActivity.this, "清理内存成功", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void initCacheConfig() {
+        CacheUtilConfig cc = CacheUtilConfig.builder(MainActivity.this)
+                .setDes3("WLIJkjdsfIlI789sd87dnu==")//自定义des3加密
+                .setIv("haohaoha")//自定义des3偏移量
+                .allowMemoryCache(true)//是否允许保存到内存
+                .allowDes3(true)//是否允许des3加密
+                .build();
+        CacheUtil.init(cc);//初始化，必须调用
+    }
+
+    private void initCacheConfig1() {
+        CacheUtilConfig cc = CacheUtilConfig.builder(MainActivity.this)
+                .setDes3("WMIJkjdsfIlI789sd87dn14R")//自定义des3加密
+                .setIv("haohaoha")//自定义des3偏移量
+                .allowMemoryCache(true)//是否允许保存到内存
+                .allowDes3(true)//是否允许des3加密
+                .build();
+        CacheUtil.init(cc);//初始化，必须调用
+        KeyGenerator xd = null;
+        try {
+            xd = KeyGenerator.getInstance("DES");
+            String str = xd.generateKey().toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+            keyStore.load(null);
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initCacheConfig2() {
+        CacheUtilConfig cc =
+                CacheUtilConfig.builder(MainActivity.this).allowMemoryCache(true)//是否允许保存到内存
+                        .allowDes3(true)//是否允许des3加密
+                        .build();
+        CacheUtil.init(cc);//初始化，必须调用
+    }
+
+    public void clearMemory() {
+        CacheUtil.clearMemory("key1");
+        CacheUtil.clearMemory("key2");
+        CacheUtil.clearMemory("key3");
+        CacheUtil.clearMemory("key4");
+        CacheUtil.clearMemory("key5");
+        CacheUtil.clearMemory("key6");
+        CacheUtil.clearMemory("key7");
+        CacheUtil.clearMemory("key8");
+        CacheUtil.clearMemory("key9");
+        CacheUtil.clearMemory("key10");
+        CacheUtil.clearMemory("key11");
+        CacheUtil.clearMemory("key12");
+        CacheUtil.clearMemory("key13");
+        CacheUtil.clearMemory("key14");
+        CacheUtil.clearMemory("key15");
+        CacheUtil.clearMemory("key16");
+        CacheUtil.clearMemory(CacheUtil.translateKey("key17"));
+        CacheUtil.clearMemory("key18");
     }
 
     public String check(String str, String str1) {

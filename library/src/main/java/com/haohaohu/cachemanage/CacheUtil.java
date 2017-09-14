@@ -322,6 +322,16 @@ public class CacheUtil {
     }
 
     /**
+     * 根据key清理内存缓存
+     *
+     * @param key 要删除的key
+     */
+    public static void clearMemory(String key) {
+        if (TextUtils.isEmpty(key)) return;
+        getLruCache().remove(key);
+    }
+
+    /**
      * 以.开头的文件默认不显示
      */
     public static String translateKey(String key) {
