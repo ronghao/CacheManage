@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 initCacheConfig();
                 clearMemory();
                 break;
-            case R.id.action_error:
+            case R.id.action_des_2:
                 initCacheConfig1();
                 clearMemory();
                 break;
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        initCacheConfig();
+        initCacheConfig2();
     }
 
     private void init() {
