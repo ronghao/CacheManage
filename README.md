@@ -10,7 +10,8 @@
     + 大于1M的缓存文件，google建议使用getExternalCacheDir()缓存存储
 + 支持文件加密存储
     + 默认des3加密内容
-    + 默认生成des3唯一秘钥
+    + 默认生成des3唯一密钥（建议使用默认生成的密钥）
+        + 默认密钥存储在KeyStore中，防止逆向工程获取密钥
     + 支持String、byte、JSONObject、JSONArray
 + 双缓存：内存缓存和文件缓存
     + 先取内存数据，没有再从文件缓存中取
@@ -22,7 +23,7 @@
 # 使用方法
     
     CacheUtilConfig cc = CacheUtilConfig.builder(MainActivity.this)
-                .setDes3("WLIJkjdsfIlI789sd87dnu==")//自定义des3加密
+                .setDes3("WLIJkjdsfIlI789sd87dnu==")//自定义des3加密（建议使用默认生成的密钥）
                 .setIv("haohaoha")//自定义des3偏移量
                 .allowMemoryCache(true)//是否允许保存到内存
                 .allowDes3(true)//是否允许des3加密
