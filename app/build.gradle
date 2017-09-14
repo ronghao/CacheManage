@@ -23,5 +23,4 @@ dependencies {
   compile project(':library')
   //    compile 'com.github.ronghao:CacheManage:-SNAPSHOT'
   compile 'com.android.support:appcompat-v7:25.3.1'
-  compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
 }
