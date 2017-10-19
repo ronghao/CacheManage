@@ -43,7 +43,9 @@ public class CacheUtil {
      * @param config 配置
      */
     public static void init(CacheUtilConfig config) {
-        if (config == null) throw new NullPointerException("u should Builder first");
+        if (config == null) {
+            throw new NullPointerException("u should Builder first");
+        }
         getInstance().mConfig = config;
         if (getInstance().mConfig.isDes3()) {
             Des3Util.init(getInstance().mConfig.getSecretKey(), getInstance().mConfig.getIv());
@@ -51,7 +53,9 @@ public class CacheUtil {
     }
 
     private static CacheUtilConfig getConfig() {
-        if (getInstance().mConfig == null) throw new NullPointerException("u should Builder first");
+        if (getInstance().mConfig == null) {
+            throw new NullPointerException("u should Builder first");
+        }
         return getInstance().mConfig;
     }
 
@@ -61,7 +65,9 @@ public class CacheUtil {
      * @return ApplicationContext
      */
     public static Context getContext() {
-        if (getConfig().getContext() != null) return getConfig().getContext();
+        if (getConfig().getContext() != null) {
+            return getConfig().getContext();
+        }
         throw new NullPointerException("u should init first");
     }
 
@@ -95,7 +101,9 @@ public class CacheUtil {
      * @param isDes3 是否加密
      */
     public static void put(String key, String value, boolean isDes3) {
-        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) return;
+        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
+            return;
+        }
         if (getConfig().isMemoryCache()) {
             getLruCache().put(key, value);
         }
@@ -122,7 +130,9 @@ public class CacheUtil {
      * @param isDes3 是否加密
      */
     public static void put(String key, String value, int time, boolean isDes3) {
-        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) return;
+        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
+            return;
+        }
         if (getConfig().isMemoryCache()) {
             getLruCache().put(key, Utils.newStringWithDateInfo(time, value));
         }
@@ -149,7 +159,9 @@ public class CacheUtil {
      * @return 保存的value
      */
     public static String get(String key, boolean isDes3) {
-        if (TextUtils.isEmpty(key)) return "";
+        if (TextUtils.isEmpty(key)) {
+            return "";
+        }
         String value;
         if (getConfig().isMemoryCache()) {
             value = getLruCache().get(key);
@@ -193,7 +205,9 @@ public class CacheUtil {
      * @param isDes3 是否加密
      */
     public static <T> void put(String key, T value, boolean isDes3) {
-        if (TextUtils.isEmpty(key) || value == null) return;
+        if (TextUtils.isEmpty(key) || value == null) {
+            return;
+        }
         Gson gson = new Gson();
         String date;
         if (value instanceof JSONObject) {
@@ -231,7 +245,9 @@ public class CacheUtil {
      * @param isDes3 是否加密
      */
     public static <T> void put(String key, T value, int time, boolean isDes3) {
-        if (TextUtils.isEmpty(key) || value == null) return;
+        if (TextUtils.isEmpty(key) || value == null) {
+            return;
+        }
         Gson gson = new Gson();
         String date;
         if (value instanceof JSONObject) {
@@ -271,7 +287,9 @@ public class CacheUtil {
      * @return 实体对象
      */
     public static <T> T get(String key, Class<T> classOfT, boolean isDes3) {
-        if (TextUtils.isEmpty(key) || classOfT == null) return null;
+        if (TextUtils.isEmpty(key) || classOfT == null) {
+            return null;
+        }
         Gson gson = new Gson();
         String value;
         if (getConfig().isMemoryCache()) {
@@ -316,7 +334,9 @@ public class CacheUtil {
      * @param key 要删除的key
      */
     public static void clear(String key) {
-        if (TextUtils.isEmpty(key)) return;
+        if (TextUtils.isEmpty(key)) {
+            return;
+        }
         getLruCache().remove(key);
         ACache.get(getContext()).remove(key);
     }
@@ -327,7 +347,9 @@ public class CacheUtil {
      * @param key 要删除的key
      */
     public static void clearMemory(String key) {
-        if (TextUtils.isEmpty(key)) return;
+        if (TextUtils.isEmpty(key)) {
+            return;
+        }
         getLruCache().remove(key);
     }
 
@@ -346,7 +368,7 @@ public class CacheUtil {
      */
     private static class Utils {
 
-        private static final char mSeparator = ' ';
+        private static final char SEPARATOR = ' ';
 
         /**
          * 判断缓存的String数据是否到期
@@ -394,14 +416,14 @@ public class CacheUtil {
 
         private static String clearDateInfo(String strInfo) {
             if (strInfo != null && hasDateInfo(strInfo.getBytes())) {
-                strInfo = strInfo.substring(strInfo.indexOf(mSeparator) + 1, strInfo.length());
+                strInfo = strInfo.substring(strInfo.indexOf(SEPARATOR) + 1, strInfo.length());
             }
             return strInfo;
         }
 
         private static byte[] clearDateInfo(byte[] data) {
             if (hasDateInfo(data)) {
-                return copyOfRange(data, indexOf(data, mSeparator) + 1, data.length);
+                return copyOfRange(data, indexOf(data, SEPARATOR) + 1, data.length);
             }
             return data;
         }
@@ -410,13 +432,13 @@ public class CacheUtil {
             return data != null
                     && data.length > 15
                     && data[13] == '-'
-                    && indexOf(data, mSeparator) > 14;
+                    && indexOf(data, SEPARATOR) > 14;
         }
 
         private static String[] getDateInfoFromDate(byte[] data) {
             if (hasDateInfo(data)) {
                 String saveDate = new String(copyOfRange(data, 0, 13));
-                String deleteAfter = new String(copyOfRange(data, 14, indexOf(data, mSeparator)));
+                String deleteAfter = new String(copyOfRange(data, 14, indexOf(data, SEPARATOR)));
                 return new String[] { saveDate, deleteAfter };
             }
             return null;
@@ -433,7 +455,9 @@ public class CacheUtil {
 
         private static byte[] copyOfRange(byte[] original, int from, int to) {
             int newLength = to - from;
-            if (newLength < 0) throw new IllegalArgumentException(from + " > " + to);
+            if (newLength < 0) {
+                throw new IllegalArgumentException(from + " > " + to);
+            }
             byte[] copy = new byte[newLength];
             System.arraycopy(original, from, copy, 0, Math.min(original.length - from, newLength));
             return copy;
@@ -444,13 +468,13 @@ public class CacheUtil {
             while (currentTime.length() < 13) {
                 currentTime = "0" + currentTime;
             }
-            return currentTime + "-" + second + mSeparator;
+            return currentTime + "-" + second + SEPARATOR;
         }
 
         /*
          * Bitmap → byte[]
          */
-        private static byte[] Bitmap2Bytes(Bitmap bm) {
+        private static byte[] bitmap2Bytes(Bitmap bm) {
             if (bm == null) {
                 return null;
             }
@@ -462,7 +486,7 @@ public class CacheUtil {
         /*
          * byte[] → Bitmap
          */
-        private static Bitmap Bytes2Bimap(byte[] b) {
+        private static Bitmap bytes2Bimap(byte[] b) {
             if (b.length == 0) {
                 return null;
             }
