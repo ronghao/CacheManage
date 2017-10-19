@@ -21,7 +21,7 @@
     + 对应的本地缓存文件也加密
 
 # 使用方法
-    
+### 保存数据
     CacheUtilConfig cc = CacheUtilConfig.builder(MainActivity.this)
                 .setDes3("WLIJkjdsfIlI789sd87dnu==")//自定义des3加密（建议使用默认生成的密钥）
                 .setIv("haohaoha")//自定义des3偏移量
@@ -49,6 +49,14 @@
     CacheUtil.put(CacheUtil.translateKey("key17"), "123456", true);//key加密
     CacheUtil.put("key18", "测试数据18", false);//false代表不加密存储
 
+### 获取数据
+    CacheUtil.get("要查找的key")  
+    CacheUtil.get("要查找的key", 是否加密)
+    CacheUtil.get("要查找的key",对应的实体对象）
+    CacheUtil.get("要查找的key",对应的实体对象， 是否加密)
+    CacheUtil.get("要查找的key",对应的实体对象， 错误情况下返回数据)
+    CacheUtil.get("要查找的key",对应的实体对象， 错误情况下返回数据,是否加密O)
+
 # 项目添加方法
 在根 build.gradle中添加
 
@@ -62,11 +70,11 @@
 在项目build.gradle中添加
 
     dependencies {
-        compile 'com.github.ronghao:CacheManage:1.0.5'
+        compile 'com.github.ronghao:CacheManage:1.0.6'
     }
 
 # 特别注意
-+ 当未存储对象数据时，获取内部类对象可能会返回null，一般的对象（如果实现了默认构造函数）会返回一个新的对象实例
++ 当未存储对象数据时，获取实体对象可能会返回null，一般的对象（如果实现了默认构造函数）会返回一个新的对象实例
 
 # 待开发
 + 添加多线程控制
