@@ -366,14 +366,7 @@ public class CacheUtil {
                     return gson.fromJson(Utils.clearDateInfo(value), classOfT);
                 } else {
                     getLruCache().remove(key);
-                    try {
-                        return classOfT.newInstance();
-                    } catch (InstantiationException e) {
-                        return t;
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                        return t;
-                    }
+                    return t;
                 }
             }
         }
@@ -385,14 +378,7 @@ public class CacheUtil {
             }
             return gson.fromJson(value, classOfT);
         }
-        try {
-            return classOfT.newInstance();
-        } catch (InstantiationException e) {
-            return null;
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return t;
     }
 
     /**
