@@ -147,6 +147,14 @@ public class MainActivity extends AppCompatActivity {
                         .append(check("123456",
                                 CacheUtil.get(CacheUtil.translateKey("key17"), true)))
                         .append("\n")
+                        .append("未保存数据测试(Boolean类型):")
+                        .append(CacheUtil.get(CacheUtil.translateKey("null"), Boolean.class, false,
+                                true))
+                        .append("\n")
+                        .append("未保存数据测试(Test类):")
+                        .append(CacheUtil.get(CacheUtil.translateKey("null1"), Test.class,
+                                new Test(1, "默认"), true).toString())
+                        .append("\n")
                         .toString();
                 mTextView.setText(value);
             }
