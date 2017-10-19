@@ -70,7 +70,7 @@
 在项目build.gradle中添加
 
     dependencies {
-        compile 'com.github.ronghao:CacheManage:1.0.6'
+        compile 'com.github.ronghao:CacheManage:1.0.7'
     }
 
 # 特别注意
