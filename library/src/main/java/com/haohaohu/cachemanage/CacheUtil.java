@@ -329,6 +329,73 @@ public class CacheUtil {
     }
 
     /**
+     * 根据key获取对象
+     * 先从内存缓存提取，取不到再从文件缓存中获取
+     *
+     * @param <T> 对应的实体对象
+     * @param key 查找的key
+     * @param classOfT 对应的实体对象
+     * @param t 错误情况下返回数据
+     * @return 实体对象
+     */
+    public static <T> T get(String key, Class<T> classOfT, T t) {
+        return get(key, classOfT, t, getConfig().isDes3());
+    }
+
+    /**
+     * 根据key获取对象
+     * 先从内存缓存提取，取不到再从文件缓存中获取
+     *
+     * @param <T> 对应的实体对象
+     * @param key 查找的key
+     * @param classOfT 对应的实体对象
+     * @param t 错误情况下返回数据
+     * @param isDes3 是否加密
+     * @return 实体对象
+     */
+    public static <T> T get(String key, Class<T> classOfT, T t, boolean isDes3) {
+        if (TextUtils.isEmpty(key) || classOfT == null) {
+            return null;
+        }
+        Gson gson = new Gson();
+        String value;
+        if (getConfig().isMemoryCache()) {
+            value = getLruCache().get(key);
+            if (!TextUtils.isEmpty(value)) {
+                if (!Utils.isDue(value)) {
+                    return gson.fromJson(Utils.clearDateInfo(value), classOfT);
+                } else {
+                    getLruCache().remove(key);
+                    try {
+                        return classOfT.newInstance();
+                    } catch (InstantiationException e) {
+                        return t;
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                        return t;
+                    }
+                }
+            }
+        }
+        value = ACache.get(getContext()).getAsString(key, isDes3);
+
+        if (!TextUtils.isEmpty(value)) {
+            if (getConfig().isMemoryCache()) {
+                getLruCache().put(key, ACache.get(getContext()).getAsStringHasDate(key, isDes3));
+            }
+            return gson.fromJson(value, classOfT);
+        }
+        try {
+            return classOfT.newInstance();
+        } catch (InstantiationException e) {
+            return null;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
      * 根据key清理内存缓存和文件缓存
      *
      * @param key 要删除的key
