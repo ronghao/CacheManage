@@ -13,15 +13,15 @@
     + 默认生成des3唯一密钥（建议使用默认生成的密钥）
         + 默认密钥存储在KeyStore中，防止逆向工程获取密钥
     + 支持String、byte、JSONObject、JSONArray
-+ 双缓存：内存缓存和文件缓存
++ 二级缓存：内存缓存、文件缓存
     + 先取内存数据，没有再从文件缓存中取
-+ 添加内存缓存过期时间的判定
-+ 添加是否允许内存缓存
++ 缓存数据设置过期时间
++ 是否允许内存缓存
 + key值加密
     + 对应的本地缓存文件也加密
 
 # 使用方法
-### 保存数据
+### 初始化配置
     CacheUtilConfig cc = CacheUtilConfig.builder(MainActivity.this)
                 .setDes3("WLIJkjdsfIlI789sd87dnu==")//自定义des3加密（建议使用默认生成的密钥）
                 .setIv("haohaoha")//自定义des3偏移量
@@ -30,6 +30,7 @@
                 .build();
     CacheUtil.init(cc);//初始化，必须调用
 
+### 保存数据
     CacheUtil.put("key1", "测试数据1");//默认不加密
     CacheUtil.put("key2", "测试数据2", true);//true代表加密存储
     CacheUtil.put("key3", "~!@#$%^&*()_+{}[];':,.<>`");//特殊字符串测试
@@ -54,8 +55,8 @@
     CacheUtil.get("要查找的key", 是否加密)
     CacheUtil.get("要查找的key",对应的实体对象）
     CacheUtil.get("要查找的key",对应的实体对象， 是否加密)
-    CacheUtil.get("要查找的key",对应的实体对象， 错误情况下返回数据)
-    CacheUtil.get("要查找的key",对应的实体对象， 错误情况下返回数据,是否加密O)
+    CacheUtil.get("要查找的key",对应的实体对象， 错误情况下返回默认数据)
+    CacheUtil.get("要查找的key",对应的实体对象， 错误情况下返回默认数据,是否加密)
 
 # 项目添加方法
 在根 build.gradle中添加
@@ -74,7 +75,7 @@
     }
 
 # 特别注意
-+ 当未存储对象数据时，获取实体对象可能会返回null，一般的对象（如果实现了默认构造函数）会返回一个新的对象实例
+    当未存储对象数据时，获取数据可能会返回null，一般的对象（如果实现了默认构造函数）会返回一个新的对象实例
 
 # 待开发
 + 添加多线程控制
