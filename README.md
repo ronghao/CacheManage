@@ -21,65 +21,93 @@
     + 对应的本地缓存文件也加密
 
 # 使用方法
-### 初始化配置
-    CacheUtilConfig cc = CacheUtilConfig.builder(MainActivity.this)
+#### 初始化配置（必须调用 activity或者application）
+```java
+    CacheUtilConfig cc = CacheUtilConfig.builder(getApplication())
                 .setDes3("WLIJkjdsfIlI789sd87dnu==")//自定义des3加密（建议使用默认生成的密钥）
                 .setIv("haohaoha")//自定义des3偏移量
                 .allowMemoryCache(true)//是否允许保存到内存
                 .allowDes3(true)//是否允许des3加密
                 .build();
     CacheUtil.init(cc);//初始化，必须调用
+```
 
-### 保存数据
-    CacheUtil.put("key1", "测试数据1");//默认不加密
-    CacheUtil.put("key2", "测试数据2", true);//true代表加密存储
-    CacheUtil.put("key3", "~!@#$%^&*()_+{}[];':,.<>`");//特殊字符串测试
-    CacheUtil.put("key4", "~!@#$%^&*()_+{}[];':,.<>`", true);//加密特殊字符串测试
-    CacheUtil.put("key5", new Test(1, "2"));//实体对象测试
-    CacheUtil.put("key6", new Test(1, "2"), true);//加密实体对象测试
-    CacheUtil.put("key7", jsonObject);//jsonObject对象测试
-    CacheUtil.put("key8", jsonObject, true);//加密jsonObject对象测试
-    CacheUtil.put("key9", jsonArray);//jsonArray对象测试
-    CacheUtil.put("key10", jsonArray, true);//加密jsonArray对象测试
-    CacheUtil.put("key11", 1);//jsonArray对象测试
-    CacheUtil.put("key12", 1, true);//加密jsonArray对象测试
-    CacheUtil.put("key13", "测试数据1", 5);//保存数据5秒
-    CacheUtil.put("key14", new Test(1, "2"), 5);//保存对象数据5秒
-    CacheUtil.put("key15", "测试数据1", 5, true);//加密保存数据5秒
-    CacheUtil.put("key16", new Test(1, "2"), 5, true);//加密保存对象数据5秒
-    CacheUtil.put(CacheUtil.translateKey("key17"), "123456", true);//key加密
-    CacheUtil.put("key18", "测试数据18", false);//false代表不加密存储
-
-### 获取数据
-    CacheUtil.get("要查找的key")  
-    CacheUtil.get("要查找的key", 是否加密)
-    CacheUtil.get("要查找的key",对应的实体对象）
-    CacheUtil.get("要查找的key",对应的实体对象， 是否加密)
-    CacheUtil.get("要查找的key",对应的实体对象， 错误情况下返回默认数据)
-    CacheUtil.get("要查找的key",对应的实体对象， 错误情况下返回默认数据,是否加密)
+#### 保存数据
+```java
+CacheUtil.put("key1", "测试数据1");//默认不加密
+CacheUtil.put("key2", "测试数据2", true);//true代表加密存储
+CacheUtil.put("key3", "~!@#$%^&*()_+{}[];':,.<>`");//特殊字符串测试
+CacheUtil.put("key4", "~!@#$%^&*()_+{}[];':,.<>`", true);//加密特殊字符串测试
+CacheUtil.put("key5", new Test(1, "2"));//实体对象测试
+CacheUtil.put("key6", new Test(1, "2"), true);//加密实体对象测试
+CacheUtil.put("key7", jsonObject);//jsonObject对象测试
+CacheUtil.put("key8", jsonObject, true);//加密jsonObject对象测试
+CacheUtil.put("key9", jsonArray);//jsonArray对象测试
+CacheUtil.put("key10", jsonArray, true);//加密jsonArray对象测试
+CacheUtil.put("key11", 1);//jsonArray对象测试
+CacheUtil.put("key12", 1, true);//加密jsonArray对象测试
+CacheUtil.put("key13", "测试数据1", 5);//保存数据5秒
+CacheUtil.put("key14", new Test(1, "2"), 5);//保存对象数据5秒
+CacheUtil.put("key15", "测试数据1", 5, true);//加密保存数据5秒
+CacheUtil.put("key16", new Test(1, "2"), 5, true);//加密保存对象数据5秒
+CacheUtil.put(CacheUtil.translateKey("key17"), "123456", true);//key加密
+CacheUtil.put("key18", "测试数据18", false);//false代表不加密存储
+```
+#### 获取数据
+```java
+CacheUtil.get("要查找的key")  
+CacheUtil.get("要查找的key", 是否加密)
+CacheUtil.get("要查找的key",对应的实体对象）
+CacheUtil.get("要查找的key",对应的实体对象， 是否加密)
+CacheUtil.get("要查找的key",对应的实体对象， 错误情况下返回默认数据)
+CacheUtil.get("要查找的key",对应的实体对象， 错误情况下返回默认数据,是否加密)
+```
 
 # 项目添加方法
 在根 build.gradle中添加
-
-    allprojects {
-        repositories {
-            ...
-            maven { url 'https://jitpack.io' }
-        }
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
     }
+}
+```
 
-在项目build.gradle中添加
-
-    dependencies {
-        compile 'com.github.ronghao:CacheManage:1.0.7'
-    }
+在项目build.gradle中添加 [](https://jitpack.io/v/ronghao/CacheManage.svg)
+```
+dependencies {
+    compile 'com.github.ronghao:CacheManage:1.0.7'
+}
+```
 
 # 特别注意
-    当未存储对象数据时，获取数据可能会返回null，一般的对象（如果实现了默认构造函数）会返回一个新的对象实例
+```
+当未存储对象数据时，获取数据可能会返回null，一般的对象（如果实现了默认构造函数）会返回一个新的对象实例
+```
 
-# 待开发
+# TODO
 + 添加多线程控制
+
+# 版本更新说明
+
 
 # 关于
 + 个人博客：[www.haohaohu.com](http://www.haohaohu.com/)
 + 如果你也喜欢这个库，Star一下吧，欢迎Fork
+
+#License
+
+    Copyright 2016 lcodecorex
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
