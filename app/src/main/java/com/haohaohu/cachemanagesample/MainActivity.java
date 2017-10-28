@@ -71,11 +71,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        initCacheConfig2();
     }
 
     private void init() {
         mTextView = (TextView) findViewById(R.id.main_text3);
+        initCacheConfig2();
         initEvent();
     }
 
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initCacheConfig() {
-        CacheUtilConfig cc = CacheUtilConfig.builder(MainActivity.this)
+        CacheUtilConfig cc = CacheUtilConfig.builder(getApplication())
                 .setDes3("WLIJkjdsfIlI789sd87dnu==")//自定义des3加密
                 .setIv("haohaoha")//自定义des3偏移量
                 .allowMemoryCache(true)//是否允许保存到内存
@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initCacheConfig2() {
         CacheUtilConfig cc =
-                CacheUtilConfig.builder(MainActivity.this).allowMemoryCache(true)//是否允许保存到内存
+                CacheUtilConfig.builder(getApplication()).allowMemoryCache(true)//是否允许保存到内存
                         .allowDes3(true)//是否允许des3加密
                         .build();
         CacheUtil.init(cc);//初始化，必须调用
