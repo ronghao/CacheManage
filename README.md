@@ -5,6 +5,8 @@
 
 # 特点
 + 封装[ASimpleCache](https://github.com/yangfuhai/ASimpleCache)，继承其所有功能
++ 二级缓存：内存缓存、文件缓存
+    + 先取内存数据，没有再从文件缓存中取
 + 默认使用SD卡缓存
     + getCacheDir()获取的缓存文件较容易被删除
     + 大于1M的缓存文件，google建议使用getExternalCacheDir()缓存存储
@@ -13,8 +15,6 @@
     + 默认生成des3唯一密钥（建议使用默认生成的密钥）
         + 默认密钥存储在KeyStore中，防止逆向工程获取密钥
     + 支持String、byte、JSONObject、JSONArray
-+ 二级缓存：内存缓存、文件缓存
-    + 先取内存数据，没有再从文件缓存中取
 + 缓存数据设置过期时间
 + 是否允许内存缓存
 + key值加密
@@ -88,6 +88,7 @@ dependencies {
 
 # TODO
 + 添加多线程控制
++ 监控机制
 
 # 版本更新说明
 
