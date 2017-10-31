@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.LruCache;
 import com.google.gson.Gson;
@@ -89,7 +91,7 @@ public class CacheUtil {
      * @param key 保存的key
      * @param value 保存的value
      */
-    public static void put(String key, String value) {
+    public static void put(String key, @NonNull String value) {
         put(key, value, getConfig().isDes3());
     }
 
@@ -100,7 +102,7 @@ public class CacheUtil {
      * @param value 保存的value
      * @param isDes3 是否加密
      */
-    public static void put(String key, String value, boolean isDes3) {
+    public static void put(String key, @NonNull String value, boolean isDes3) {
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
             return;
         }
@@ -117,7 +119,7 @@ public class CacheUtil {
      * @param value 保存的value
      * @param time 过期时间
      */
-    public static void put(String key, String value, int time) {
+    public static void put(String key, @NonNull String value, int time) {
         put(key, value, time, getConfig().isDes3());
     }
 
@@ -129,7 +131,7 @@ public class CacheUtil {
      * @param time 过期时间
      * @param isDes3 是否加密
      */
-    public static void put(String key, String value, int time, boolean isDes3) {
+    public static void put(String key, @NonNull String value, int time, boolean isDes3) {
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
             return;
         }
@@ -146,6 +148,7 @@ public class CacheUtil {
      * @param key 要查找的key
      * @return 保存的value
      */
+    @Nullable
     public static String get(String key) {
         return get(key, getConfig().isDes3());
     }
@@ -158,6 +161,7 @@ public class CacheUtil {
      * @param isDes3 是否加密
      * @return 保存的value
      */
+    @Nullable
     public static String get(String key, boolean isDes3) {
         if (TextUtils.isEmpty(key)) {
             return "";
@@ -192,7 +196,7 @@ public class CacheUtil {
      * @param value 保存的value
      * @param <T> 对应的实体对象
      */
-    public static <T> void put(String key, T value) {
+    public static <T> void put(String key, @NonNull T value) {
         put(key, value, getConfig().isDes3());
     }
 
@@ -204,7 +208,7 @@ public class CacheUtil {
      * @param value 保存的value
      * @param isDes3 是否加密
      */
-    public static <T> void put(String key, T value, boolean isDes3) {
+    public static <T> void put(String key, @NonNull T value, boolean isDes3) {
         if (TextUtils.isEmpty(key) || value == null) {
             return;
         }
@@ -231,7 +235,7 @@ public class CacheUtil {
      * @param value 保存的value
      * @param time 过期时间 秒
      */
-    public static <T> void put(String key, T value, int time) {
+    public static <T> void put(String key, @NonNull T value, int time) {
         put(key, value, time, getConfig().isDes3());
     }
 
@@ -244,7 +248,7 @@ public class CacheUtil {
      * @param time 过期时间 秒
      * @param isDes3 是否加密
      */
-    public static <T> void put(String key, T value, int time, boolean isDes3) {
+    public static <T> void put(String key, @NonNull T value, int time, boolean isDes3) {
         if (TextUtils.isEmpty(key) || value == null) {
             return;
         }
@@ -272,6 +276,7 @@ public class CacheUtil {
      * @param <T> 对应的实体对象
      * @return 实体对象
      */
+    @Nullable
     public static <T> T get(String key, Class<T> classOfT) {
         return get(key, classOfT, getConfig().isDes3());
     }
@@ -286,6 +291,7 @@ public class CacheUtil {
      * @param isDes3 是否加密
      * @return 实体对象
      */
+    @Nullable
     public static <T> T get(String key, Class<T> classOfT, boolean isDes3) {
         if (TextUtils.isEmpty(key) || classOfT == null) {
             return null;
@@ -338,6 +344,7 @@ public class CacheUtil {
      * @param t 错误情况下返回数据
      * @return 实体对象
      */
+    @Nullable
     public static <T> T get(String key, Class<T> classOfT, T t) {
         return get(key, classOfT, t, getConfig().isDes3());
     }
@@ -353,6 +360,7 @@ public class CacheUtil {
      * @param isDes3 是否加密
      * @return 实体对象
      */
+    @Nullable
     public static <T> T get(String key, Class<T> classOfT, T t, boolean isDes3) {
         if (TextUtils.isEmpty(key) || classOfT == null) {
             return null;
@@ -399,7 +407,8 @@ public class CacheUtil {
      *
      * @param key 要删除的key
      */
-    public static void clearMemory(String key) {
+
+    public static void clearMemory(@NonNull String key) {
         if (TextUtils.isEmpty(key)) {
             return;
         }
@@ -409,7 +418,7 @@ public class CacheUtil {
     /**
      * 以.开头的文件默认不显示
      */
-    public static String translateKey(String key) {
+    public static String translateKey(@NonNull String key) {
         return "." + Base64Util.encode(key.getBytes());
     }
 
