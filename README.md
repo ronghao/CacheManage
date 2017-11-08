@@ -74,7 +74,7 @@ allprojects {
 }
 ```
 
-在项目build.gradle中添加 [](https://jitpack.io/v/ronghao/CacheManage.svg)
+在项目build.gradle中添加 ![](https://jitpack.io/v/ronghao/CacheManage.svg)
 ```
 dependencies {
     compile 'com.github.ronghao:CacheManage:1.0.7'
@@ -91,6 +91,15 @@ dependencies {
 + 监控机制
 
 # 版本更新说明
++ v1.0.8
+	+ 添加注解
+	+ 优化大量代码
++ v1.0.5
+	+ 添加KeyStore生成与存储密钥
++ v1.0.4
+	+ 添加配置项管理
+	+ 添加根据设备id自动生成des3秘钥
+	+ 默认des3加密
 
 
 # 关于
@@ -112,3 +121,4 @@ dependencies {
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
