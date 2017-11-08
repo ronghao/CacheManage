@@ -26,11 +26,11 @@ import org.json.JSONObject;
  */
 public class CacheUtil {
 
-    public static class CacheUtilHolder {
+    private static class CacheUtilHolder {
         private static CacheUtil mInstance = new CacheUtil();
     }
 
-    public static CacheUtil getInstance() {
+    private static CacheUtil getInstance() {
         return CacheUtilHolder.mInstance;
     }
 
@@ -66,7 +66,7 @@ public class CacheUtil {
      *
      * @return ApplicationContext
      */
-    public static Context getContext() {
+    private static Context getContext() {
         if (getConfig().getContext() != null) {
             return getConfig().getContext();
         }
@@ -209,7 +209,7 @@ public class CacheUtil {
      * @param isDes3 是否加密
      */
     public static <T> void put(String key, @NonNull T value, boolean isDes3) {
-        if (TextUtils.isEmpty(key) || value == null) {
+        if (TextUtils.isEmpty(key)) {
             return;
         }
         Gson gson = new Gson();
@@ -249,7 +249,7 @@ public class CacheUtil {
      * @param isDes3 是否加密
      */
     public static <T> void put(String key, @NonNull T value, int time, boolean isDes3) {
-        if (TextUtils.isEmpty(key) || value == null) {
+        if (TextUtils.isEmpty(key)) {
             return;
         }
         Gson gson = new Gson();
@@ -526,15 +526,17 @@ public class CacheUtil {
         }
 
         private static String createDateInfo(int second) {
-            String currentTime = System.currentTimeMillis() + "";
+            StringBuilder currentTime = new StringBuilder(System.currentTimeMillis() + "");
             while (currentTime.length() < 13) {
-                currentTime = "0" + currentTime;
+                currentTime.insert(0, "0");
             }
             return currentTime + "-" + second + SEPARATOR;
         }
 
-        /*
+        /**
          * Bitmap → byte[]
+         *
+         * @param bm 图片bitmap
          */
         private static byte[] bitmap2Bytes(Bitmap bm) {
             if (bm == null) {
@@ -545,7 +547,7 @@ public class CacheUtil {
             return baos.toByteArray();
         }
 
-        /*
+        /**
          * byte[] → Bitmap
          */
         private static Bitmap bytes2Bimap(byte[] b) {
@@ -555,7 +557,7 @@ public class CacheUtil {
             return BitmapFactory.decodeByteArray(b, 0, b.length);
         }
 
-        /*
+        /**
          * Drawable → Bitmap
          */
         private static Bitmap drawable2Bitmap(Drawable drawable) {
@@ -579,7 +581,7 @@ public class CacheUtil {
             return bitmap;
         }
 
-        /*
+        /**
          * Bitmap → Drawable
          */
         @SuppressWarnings("deprecation")
