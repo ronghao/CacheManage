@@ -110,6 +110,7 @@ public class CacheUtil {
             getLruCache().put(key, value);
         }
         ACache.get(getContext()).put(key, value, isDes3);
+        CacheObserver.getInstance().notifyDataChange(key, value);
     }
 
     /**

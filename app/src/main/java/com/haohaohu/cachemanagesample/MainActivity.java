@@ -8,8 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.haohaohu.cachemanage.CacheObserver;
 import com.haohaohu.cachemanage.CacheUtil;
 import com.haohaohu.cachemanage.CacheUtilConfig;
+import com.haohaohu.cachemanage.IDataChangeListener;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -77,6 +79,16 @@ public class MainActivity extends AppCompatActivity {
         mTextView = (TextView) findViewById(R.id.main_text3);
         initCacheConfig2();
         initEvent();
+        initObserver();
+    }
+
+    private void initObserver() {
+        CacheObserver.getInstance().addObserver("key1", new IDataChangeListener() {
+            @Override
+            public void onDataChange(String str) {
+                Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initEvent() {
