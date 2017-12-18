@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.gson.Gson;
 import com.haohaohu.cachemanage.CacheObserver;
 import com.haohaohu.cachemanage.CacheUtil;
 import com.haohaohu.cachemanage.CacheUtilConfig;
@@ -22,6 +23,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * 测试Activity
+ *
+ * @author ME
+ */
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextView;
@@ -32,6 +38,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initData();
+        init();
+    }
+
+    private void initData() {
         jsonObject = new JSONObject();
         try {
             jsonObject.put("11", "11");
@@ -41,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
         jsonArray = new JSONArray();
         jsonArray.put(jsonObject);
-        init();
     }
 
     @Override
@@ -65,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_default:
                 initCacheConfig2();
                 clearMemory();
+            default:
                 break;
         }
         return true;
@@ -85,8 +96,10 @@ public class MainActivity extends AppCompatActivity {
     private void initObserver() {
         CacheObserver.getInstance().addObserver("key1", new IDataChangeListener() {
             @Override
-            public void onDataChange(String str) {
+            public void onDataChange(String key, String str) {
                 Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
+                Gson gson = new Gson();
+                Test test = gson.fromJson(str, Test.class);
             }
         });
     }
@@ -103,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
                 String strKey6 = key6Test == null ? "" : key6Test.toString();
                 String strKey14 = key14Test == null ? "" : key14Test.toString();
                 String strKey16 = key16Test == null ? "" : key16Test.toString();
-
-                String value = new StringBuilder().append("不加密字符串测试:")
+                StringBuilder builder = new StringBuilder();
+                String value = builder.append("不加密字符串测试:")
                         .append(check("测试数据1", CacheUtil.get("key1")))
                         .append("\n")
                         .append("加密字符串测试:")

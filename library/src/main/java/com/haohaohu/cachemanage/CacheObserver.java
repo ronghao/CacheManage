@@ -61,7 +61,7 @@ public class CacheObserver {
         mListenerMap.put(key, list);
     }
 
-    public synchronized void removeObserver(String key) {
+    public synchronized void removeObservers(String key) {
         if (TextUtils.isEmpty(key)) {
             return;
         }
@@ -78,7 +78,7 @@ public class CacheObserver {
         }
         int size = list.size();
         for (int i = 0; i < size; i++) {
-            list.get(i).onDataChange(value);
+            list.get(i).onDataChange(key, value);
         }
     }
 }

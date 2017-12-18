@@ -140,6 +140,81 @@ public class CacheUtil {
             getLruCache().put(key, Utils.newStringWithDateInfo(time, value));
         }
         ACache.get(getContext()).put(key, value, time, isDes3);
+        CacheObserver.getInstance().notifyDataChange(key, value);
+    }
+
+    /**
+     * 保存key和value到内存缓存和文件缓存
+     *
+     * @param key 保存的key
+     * @param value 保存的value
+     * @param <T> 对应的实体对象
+     */
+    public static <T> void put(String key, @NonNull T value) {
+        put(key, value, getConfig().isDes3());
+    }
+
+    /**
+     * 保存key和value到内存缓存和文件缓存
+     *
+     * @param <T> 对应的实体对象
+     * @param key 保存的key
+     * @param value 保存的value
+     * @param isDes3 是否加密
+     */
+    public static <T> void put(String key, @NonNull T value, boolean isDes3) {
+        if (TextUtils.isEmpty(key)) {
+            return;
+        }
+        Gson gson = new Gson();
+        String date;
+        if (value instanceof JSONObject) {
+            date = value.toString();
+        } else if (value instanceof JSONArray) {
+            date = value.toString();
+        } else {
+            date = gson.toJson(value);
+        }
+
+        put(key, date, isDes3);
+    }
+
+    /**
+     * 保存key和value到内存缓存和文件缓存
+     *
+     * @param <T> 对应的实体对象
+     * @param key 保存的key
+     * @param value 保存的value
+     * @param time 过期时间 秒
+     */
+    public static <T> void put(String key, @NonNull T value, int time) {
+        put(key, value, time, getConfig().isDes3());
+    }
+
+    /**
+     * 保存key和value到内存缓存和文件缓存
+     *
+     * @param <T> 对应的实体对象
+     * @param key 保存的key
+     * @param value 保存的value
+     * @param time 过期时间 秒
+     * @param isDes3 是否加密
+     */
+    public static <T> void put(String key, @NonNull T value, int time, boolean isDes3) {
+        if (TextUtils.isEmpty(key)) {
+            return;
+        }
+        Gson gson = new Gson();
+        String date;
+        if (value instanceof JSONObject) {
+            date = value.toString();
+        } else if (value instanceof JSONArray) {
+            date = value.toString();
+        } else {
+            date = gson.toJson(value);
+        }
+
+        put(key, date, time, isDes3);
     }
 
     /**
@@ -188,84 +263,6 @@ public class CacheUtil {
             return value;
         }
         return "";
-    }
-
-    /**
-     * 保存key和value到内存缓存和文件缓存
-     *
-     * @param key 保存的key
-     * @param value 保存的value
-     * @param <T> 对应的实体对象
-     */
-    public static <T> void put(String key, @NonNull T value) {
-        put(key, value, getConfig().isDes3());
-    }
-
-    /**
-     * 保存key和value到内存缓存和文件缓存
-     *
-     * @param <T> 对应的实体对象
-     * @param key 保存的key
-     * @param value 保存的value
-     * @param isDes3 是否加密
-     */
-    public static <T> void put(String key, @NonNull T value, boolean isDes3) {
-        if (TextUtils.isEmpty(key)) {
-            return;
-        }
-        Gson gson = new Gson();
-        String date;
-        if (value instanceof JSONObject) {
-            date = value.toString();
-        } else if (value instanceof JSONArray) {
-            date = value.toString();
-        } else {
-            date = gson.toJson(value);
-        }
-        if (getConfig().isMemoryCache()) {
-            getLruCache().put(key, date);
-        }
-        ACache.get(getContext()).put(key, date, isDes3);
-    }
-
-    /**
-     * 保存key和value到内存缓存和文件缓存
-     *
-     * @param <T> 对应的实体对象
-     * @param key 保存的key
-     * @param value 保存的value
-     * @param time 过期时间 秒
-     */
-    public static <T> void put(String key, @NonNull T value, int time) {
-        put(key, value, time, getConfig().isDes3());
-    }
-
-    /**
-     * 保存key和value到内存缓存和文件缓存
-     *
-     * @param <T> 对应的实体对象
-     * @param key 保存的key
-     * @param value 保存的value
-     * @param time 过期时间 秒
-     * @param isDes3 是否加密
-     */
-    public static <T> void put(String key, @NonNull T value, int time, boolean isDes3) {
-        if (TextUtils.isEmpty(key)) {
-            return;
-        }
-        Gson gson = new Gson();
-        String date;
-        if (value instanceof JSONObject) {
-            date = value.toString();
-        } else if (value instanceof JSONArray) {
-            date = value.toString();
-        } else {
-            date = gson.toJson(value);
-        }
-        if (getConfig().isMemoryCache()) {
-            getLruCache().put(key, Utils.newStringWithDateInfo(time, date));
-        }
-        ACache.get(getContext()).put(key, date, time, isDes3);
     }
 
     /**

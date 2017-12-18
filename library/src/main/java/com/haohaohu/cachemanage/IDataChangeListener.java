@@ -10,5 +10,5 @@ public interface IDataChangeListener {
     /**
      * 数据变化
      */
-    void onDataChange(String str);
+    void onDataChange(String key, String value);
 }
