@@ -20,6 +20,7 @@
 + 是否允许内存缓存
 + key值加密
     + 对应的本地缓存文件也加密
++ 添加数据监控机制
 
 # 使用方法
 #### 初始化配置（必须调用 activity或者application）
@@ -69,6 +70,16 @@ CacheUtil.get("要查找的key",对应的实体对象， 错误情况下返回�
 CacheUtil.clearMemory("key1")
 ```
 
+#### 数据监听
+```java
+CacheObserver.getInstance().addObserver("key1", new IDataChangeListener() {
+            @Override
+            public void onDataChange(String str) {
+                Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
+            }
+        });
+```
+
 # 项目添加方法
 在根 build.gradle中添加
 ```
@@ -88,17 +99,16 @@ dependencies {
 ```
 
 # 特别注意
-```
-如未存储数据时，get（key）会返回的字符串为空字符串
-如未存储数据（实体对象）时，对象（如果实现了默认构造函数）会返回一个新的对象实例；如果未实现构造函数，获取数据会返回null
-```
++ 禁止传入空key
++ 如未存储数据时，get（key）会返回的字符串为空字符串
++ 如未存储数据（实体对象）时，对象（如果实现了默认构造函数）会返回一个新的对象实例；如果未实现构造函数，获取数据会返回null
 
 # TODO
 + 添加多线程控制
-+ 监控机制
-    + 数据变化监听
 
 # 版本更新说明
++ v1.1.1
+    + 添加数据监控机制
 + v1.1.0
 	+ 添加注解
 	+ 优化大量代码
