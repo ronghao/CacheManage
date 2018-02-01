@@ -57,6 +57,34 @@ CacheUtil.put("key18", "测试数据18", false);//false代表不加密存储
 ```
 #### 获取数据
 ```java
+String key1Value = CacheUtil.get("key1");
+String key2Value = CacheUtil.get("key2", true);
+String key3Value = CacheUtil.get("key3");
+String key4Value = CacheUtil.get("key4", true);
+Test key5Test = CacheUtil.get("key5", Test.class);//可能为null
+String key5Value = key5Test == null ? "" : key5Test.toString();
+Test key6Test = CacheUtil.get("key6", Test.class, true);//可能为null
+String key6Value = key6Test == null ? "" : key6Test.toString();
+String key7Value = CacheUtil.get("key7");
+String key8Value = CacheUtil.get("key8", true);
+String key9Value = CacheUtil.get("key9");
+String key10Value = CacheUtil.get("key10", true);
+String key11Value = CacheUtil.get("key11");
+String key12Value = CacheUtil.get("key12", true);
+String key13Value = CacheUtil.get("key13");
+Test key14Test = CacheUtil.get("key14", Test.class);
+String key14Value = key14Test == null ? "" : key14Test.toString();
+String key15Value = CacheUtil.get("key15", true);
+Test key16Test = CacheUtil.get("key16", Test.class, true);
+String key16Value = key16Test == null ? "" : key16Test.toString();
+String key17Value = CacheUtil.get(CacheUtil.translateKey("key17"), true);
+String key18Value = CacheUtil.get("key18", false);
+Boolean key19Value =
+        CacheUtil.get(CacheUtil.translateKey("key19"), Boolean.class, false, true);//key19未存储的数据，返回默认值
+Test key20Value = CacheUtil.get(CacheUtil.translateKey("key20"), Test.class,
+        new Test(1, "默认值"), true);//key20未存储的数据，返回默认值
+```
+```java
 CacheUtil.get("要查找的key")  
 CacheUtil.get("要查找的key", 是否加密)
 CacheUtil.get("要查找的key",对应的实体对象）
@@ -94,7 +122,7 @@ allprojects {
 在项目build.gradle中添加 ![](https://jitpack.io/v/ronghao/CacheManage.svg)
 ```
 dependencies {
-    compile 'com.github.ronghao:CacheManage:1.1.0'
+    compile 'com.github.ronghao:CacheManage:1.1.1'
 }
 ```
 
@@ -139,4 +167,3 @@ dependencies {
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
