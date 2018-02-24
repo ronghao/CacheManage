@@ -95,7 +95,8 @@ CacheUtil.get("要查找的key",对应的实体对象， 错误情况下返回�
 
 #### 删除数据
 ```java
-CacheUtil.clearMemory("key1")
+CacheUtil.clearMemory("key1");//内存删除
+CacheUtil.clear("key8");//内存和缓存都删除
 ```
 
 #### 数据监听
