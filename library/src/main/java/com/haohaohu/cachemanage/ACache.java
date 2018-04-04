@@ -9,10 +9,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.widget.ImageView;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -26,6 +22,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,19 +30,22 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class ACache {
     public static final int TIME_HOUR = 60 * 60;
     public static final int TIME_DAY = TIME_HOUR * 24;
-    private static final int MAX_SIZE = 1000 * 1000 * 50; // 500 mb
-    private static final int MAX_COUNT = Integer.MAX_VALUE; // 不限制存放数据的数量
+    // 500 mb
+    private static final int MAX_SIZE = 1000 * 1000 * 50;
+    //不限制存放数据的数量
+    private static final int MAX_COUNT = Integer.MAX_VALUE;
     private static Map<String, ACache> mInstanceMap = new HashMap<>();
     private ACacheManager mCache;
 
     private ACache(File cacheDir, long max_size, int max_count) {
         if (!cacheDir.exists() && !cacheDir.mkdirs()) {
-            throw new RuntimeException("can't make dirs in "
-                    + cacheDir.getAbsolutePath());
+            throw new RuntimeException("can't make dirs in " + cacheDir.getAbsolutePath());
         }
         mCache = new ACacheManager(cacheDir, max_size, max_count);
     }
@@ -88,7 +88,7 @@ public class ACache {
     /**
      * 保存 String数据 到 缓存中
      *
-     * @param key   保存的key
+     * @param key 保存的key
      * @param value 保存的String数据
      */
     public void put(String key, String value) {
@@ -115,8 +115,8 @@ public class ACache {
     /**
      * 保存 String数据 到 缓存中
      *
-     * @param key      保存的key
-     * @param value    保存的String数据
+     * @param key 保存的key
+     * @param value 保存的String数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, String value, int saveTime) {
@@ -131,8 +131,9 @@ public class ACache {
      */
     public String getAsString(String key) {
         File file = mCache.get(key);
-        if (!file.exists())
+        if (!file.exists()) {
             return null;
+        }
         boolean removeFile = false;
         BufferedReader in = null;
         try {
@@ -159,8 +160,9 @@ public class ACache {
                     e.printStackTrace();
                 }
             }
-            if (removeFile)
+            if (removeFile) {
                 remove(key);
+            }
         }
     }
 
@@ -171,7 +173,7 @@ public class ACache {
     /**
      * 保存 JSONObject数据 到 缓存中
      *
-     * @param key   保存的key
+     * @param key 保存的key
      * @param value 保存的JSON数据
      */
     public void put(String key, JSONObject value) {
@@ -181,8 +183,8 @@ public class ACache {
     /**
      * 保存 JSONObject数据 到 缓存中
      *
-     * @param key      保存的key
-     * @param value    保存的JSONObject数据
+     * @param key 保存的key
+     * @param value 保存的JSONObject数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, JSONObject value, int saveTime) {
@@ -196,10 +198,9 @@ public class ACache {
      * @return JSONObject数据
      */
     public JSONObject getAsJSONObject(String key) {
-        String JSONString = getAsString(key);
+        String mJSONString = getAsString(key);
         try {
-            JSONObject obj = new JSONObject(JSONString);
-            return obj;
+            return new JSONObject(mJSONString);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -213,7 +214,7 @@ public class ACache {
     /**
      * 保存 JSONArray数据 到 缓存中
      *
-     * @param key   保存的key
+     * @param key 保存的key
      * @param value 保存的JSONArray数据
      */
     public void put(String key, JSONArray value) {
@@ -223,8 +224,8 @@ public class ACache {
     /**
      * 保存 JSONArray数据 到 缓存中
      *
-     * @param key      保存的key
-     * @param value    保存的JSONArray数据
+     * @param key 保存的key
+     * @param value 保存的JSONArray数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, JSONArray value, int saveTime) {
@@ -238,10 +239,9 @@ public class ACache {
      * @return JSONArray数据
      */
     public JSONArray getAsJSONArray(String key) {
-        String JSONString = getAsString(key);
+        String mJSONString = getAsString(key);
         try {
-            JSONArray obj = new JSONArray(JSONString);
-            return obj;
+            return new JSONArray(mJSONString);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -255,7 +255,7 @@ public class ACache {
     /**
      * 保存 byte数据 到 缓存中
      *
-     * @param key   保存的key
+     * @param key 保存的key
      * @param value 保存的数据
      */
     public void put(String key, byte[] value) {
@@ -282,8 +282,8 @@ public class ACache {
     /**
      * 保存 byte数据 到 缓存中
      *
-     * @param key      保存的key
-     * @param value    保存的数据
+     * @param key 保存的key
+     * @param value 保存的数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, byte[] value, int saveTime) {
@@ -297,15 +297,16 @@ public class ACache {
      * @return byte 数据
      */
     public byte[] getAsBinary(String key) {
-        RandomAccessFile RAFile = null;
+        RandomAccessFile mRAFile = null;
         boolean removeFile = false;
         try {
             File file = mCache.get(key);
-            if (!file.exists())
+            if (!file.exists()) {
                 return null;
-            RAFile = new RandomAccessFile(file, "r");
-            byte[] byteArray = new byte[(int) RAFile.length()];
-            RAFile.read(byteArray);
+            }
+            mRAFile = new RandomAccessFile(file, "r");
+            byte[] byteArray = new byte[(int) mRAFile.length()];
+            mRAFile.read(byteArray);
             if (!Utils.isDue(byteArray)) {
                 return Utils.clearDateInfo(byteArray);
             } else {
@@ -316,15 +317,16 @@ public class ACache {
             e.printStackTrace();
             return null;
         } finally {
-            if (RAFile != null) {
+            if (mRAFile != null) {
                 try {
-                    RAFile.close();
+                    mRAFile.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            if (removeFile)
+            if (removeFile) {
                 remove(key);
+            }
         }
     }
 
@@ -335,7 +337,7 @@ public class ACache {
     /**
      * 保存 Serializable数据 到 缓存中
      *
-     * @param key   保存的key
+     * @param key 保存的key
      * @param value 保存的value
      */
     public void put(String key, Serializable value) {
@@ -345,8 +347,8 @@ public class ACache {
     /**
      * 保存 Serializable数据到 缓存中
      *
-     * @param key      保存的key
-     * @param value    保存的value
+     * @param key 保存的key
+     * @param value 保存的value
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, Serializable value, int saveTime) {
@@ -366,8 +368,10 @@ public class ACache {
             e.printStackTrace();
         } finally {
             try {
-                oos.close();
-            } catch (IOException e) {
+                if (oos != null) {
+                    oos.close();
+                }
+            } catch (IOException ignored) {
             }
         }
     }
@@ -386,28 +390,28 @@ public class ACache {
             try {
                 bais = new ByteArrayInputStream(data);
                 ois = new ObjectInputStream(bais);
-                Object reObject = ois.readObject();
-                return reObject;
+                return ois.readObject();
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             } finally {
                 try {
-                    if (bais != null)
+                    if (bais != null) {
                         bais.close();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 try {
-                    if (ois != null)
+                    if (ois != null) {
                         ois.close();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
         return null;
-
     }
 
     // =======================================
@@ -417,22 +421,22 @@ public class ACache {
     /**
      * 保存 bitmap 到 缓存中
      *
-     * @param key   保存的key
+     * @param key 保存的key
      * @param value 保存的bitmap数据
      */
     public void put(String key, Bitmap value) {
-        put(key, Utils.Bitmap2Bytes(value));
+        put(key, Utils.bitmap2Bytes(value));
     }
 
     /**
      * 保存 bitmap 到 缓存中
      *
-     * @param key      保存的key
-     * @param value    保存的 bitmap 数据
+     * @param key 保存的key
+     * @param value 保存的 bitmap 数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, Bitmap value, int saveTime) {
-        put(key, Utils.Bitmap2Bytes(value), saveTime);
+        put(key, Utils.bitmap2Bytes(value), saveTime);
     }
 
     /**
@@ -445,14 +449,14 @@ public class ACache {
         if (getAsBinary(key) == null) {
             return null;
         }
-        return Utils.Bytes2Bimap(getAsBinary(key));
+        return Utils.bytes2Bimap(getAsBinary(key));
     }
 
     public void getBitmap(final ImageView imageView, String key) {
         if (getAsBinary(key) == null) {
             return;
         }
-        imageView.setImageBitmap(Utils.Bytes2Bimap(getAsBinary(key)));
+        imageView.setImageBitmap(Utils.bytes2Bimap(getAsBinary(key)));
     }
 
     // =======================================
@@ -462,7 +466,7 @@ public class ACache {
     /**
      * 保存 drawable 到 缓存中
      *
-     * @param key   保存的key
+     * @param key 保存的key
      * @param value 保存的drawable数据
      */
     public void put(String key, Drawable value) {
@@ -472,8 +476,8 @@ public class ACache {
     /**
      * 保存 drawable 到 缓存中
      *
-     * @param key      保存的key
-     * @param value    保存的 drawable 数据
+     * @param key 保存的key
+     * @param value 保存的 drawable 数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, Drawable value, int saveTime) {
@@ -490,7 +494,7 @@ public class ACache {
         if (getAsBinary(key) == null) {
             return null;
         }
-        return Utils.bitmap2Drawable(Utils.Bytes2Bimap(getAsBinary(key)));
+        return Utils.bitmap2Drawable(Utils.bytes2Bimap(getAsBinary(key)));
     }
 
     /**
@@ -501,8 +505,9 @@ public class ACache {
      */
     public File file(String key) {
         File f = mCache.newFile(key);
-        if (f.exists())
+        if (f.exists()) {
             return f;
+        }
         return null;
     }
 
@@ -531,7 +536,7 @@ public class ACache {
      */
     private static class Utils {
 
-        private static final char mSeparator = ' ';
+        private static final char M_SEPARATOR = ' ';
 
         /**
          * 判断缓存的String数据是否到期
@@ -554,8 +559,7 @@ public class ACache {
             if (strs != null && strs.length == 2) {
                 String saveTimeStr = strs[0];
                 while (saveTimeStr.startsWith("0")) {
-                    saveTimeStr = saveTimeStr
-                            .substring(1, saveTimeStr.length());
+                    saveTimeStr = saveTimeStr.substring(1, saveTimeStr.length());
                 }
                 long saveTime = Long.valueOf(saveTimeStr);
                 long deleteAfter = Long.valueOf(strs[1]);
@@ -580,31 +584,30 @@ public class ACache {
 
         private static String clearDateInfo(String strInfo) {
             if (strInfo != null && hasDateInfo(strInfo.getBytes())) {
-                strInfo = strInfo.substring(strInfo.indexOf(mSeparator) + 1,
-                        strInfo.length());
+                strInfo = strInfo.substring(strInfo.indexOf(M_SEPARATOR) + 1, strInfo.length());
             }
             return strInfo;
         }
 
         private static byte[] clearDateInfo(byte[] data) {
             if (hasDateInfo(data)) {
-                return copyOfRange(data, indexOf(data, mSeparator) + 1,
-                        data.length);
+                return copyOfRange(data, indexOf(data, M_SEPARATOR) + 1, data.length);
             }
             return data;
         }
 
         private static boolean hasDateInfo(byte[] data) {
-            return data != null && data.length > 15 && data[13] == '-'
-                    && indexOf(data, mSeparator) > 14;
+            return data != null
+                    && data.length > 15
+                    && data[13] == '-'
+                    && indexOf(data, M_SEPARATOR) > 14;
         }
 
         private static String[] getDateInfoFromDate(byte[] data) {
             if (hasDateInfo(data)) {
                 String saveDate = new String(copyOfRange(data, 0, 13));
-                String deleteAfter = new String(copyOfRange(data, 14,
-                        indexOf(data, mSeparator)));
-                return new String[]{saveDate, deleteAfter};
+                String deleteAfter = new String(copyOfRange(data, 14, indexOf(data, M_SEPARATOR)));
+                return new String[] { saveDate, deleteAfter };
             }
             return null;
         }
@@ -620,26 +623,26 @@ public class ACache {
 
         private static byte[] copyOfRange(byte[] original, int from, int to) {
             int newLength = to - from;
-            if (newLength < 0)
+            if (newLength < 0) {
                 throw new IllegalArgumentException(from + " > " + to);
+            }
             byte[] copy = new byte[newLength];
-            System.arraycopy(original, from, copy, 0,
-                    Math.min(original.length - from, newLength));
+            System.arraycopy(original, from, copy, 0, Math.min(original.length - from, newLength));
             return copy;
         }
 
         private static String createDateInfo(int second) {
-            String currentTime = System.currentTimeMillis() + "";
+            StringBuilder currentTime = new StringBuilder(System.currentTimeMillis() + "");
             while (currentTime.length() < 13) {
-                currentTime = "0" + currentTime;
+                currentTime.insert(0, "0");
             }
-            return currentTime + "-" + second + mSeparator;
+            return currentTime + "-" + second + M_SEPARATOR;
         }
 
-        /*
+        /**
          * Bitmap → byte[]
          */
-        private static byte[] Bitmap2Bytes(Bitmap bm) {
+        private static byte[] bitmap2Bytes(Bitmap bm) {
             if (bm == null) {
                 return null;
             }
@@ -648,17 +651,17 @@ public class ACache {
             return baos.toByteArray();
         }
 
-        /*
+        /**
          * byte[] → Bitmap
          */
-        private static Bitmap Bytes2Bimap(byte[] b) {
+        private static Bitmap bytes2Bimap(byte[] b) {
             if (b.length == 0) {
                 return null;
             }
             return BitmapFactory.decodeByteArray(b, 0, b.length);
         }
 
-        /*
+        /**
          * Drawable → Bitmap
          */
         private static Bitmap drawable2Bitmap(Drawable drawable) {
@@ -669,8 +672,9 @@ public class ACache {
             int w = drawable.getIntrinsicWidth();
             int h = drawable.getIntrinsicHeight();
             // 取 drawable 的颜色格式
-            Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
-                    : Bitmap.Config.RGB_565;
+            Bitmap.Config config =
+                    drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
+                            : Bitmap.Config.RGB_565;
             // 建立对应 bitmap
             Bitmap bitmap = Bitmap.createBitmap(w, h, config);
             // 建立对应 bitmap 的画布
@@ -681,7 +685,7 @@ public class ACache {
             return bitmap;
         }
 
-        /*
+        /**
          * Bitmap → Drawable
          */
         @SuppressWarnings("deprecation")
@@ -704,8 +708,8 @@ public class ACache {
         private final AtomicInteger cacheCount;
         private final long sizeLimit;
         private final int countLimit;
-        private final Map<File, Long> lastUsageDates = Collections
-                .synchronizedMap(new HashMap<File, Long>());
+        private final Map<File, Long> lastUsageDates =
+                Collections.synchronizedMap(new HashMap<File, Long>());
         protected File cacheDir;
 
         private ACacheManager(File cacheDir, long sizeLimit, int countLimit) {
@@ -731,8 +735,7 @@ public class ACache {
                         for (File cachedFile : cachedFiles) {
                             size += calculateSize(cachedFile);
                             count += 1;
-                            lastUsageDates.put(cachedFile,
-                                    cachedFile.lastModified());
+                            lastUsageDates.put(cachedFile, cachedFile.lastModified());
                         }
                         cacheSize.set(size);
                         cacheCount.set(count);
@@ -788,7 +791,9 @@ public class ACache {
             File[] files = cacheDir.listFiles();
             if (files != null) {
                 for (File f : files) {
-                    f.delete();
+                    if (f.exists()) {
+                        f.delete();
+                    }
                 }
             }
         }
@@ -820,7 +825,7 @@ public class ACache {
             }
 
             long fileSize = calculateSize(mostLongUsedFile);
-            if (mostLongUsedFile.delete()) {
+            if (mostLongUsedFile != null && mostLongUsedFile.delete()) {
                 lastUsageDates.remove(mostLongUsedFile);
             }
             return fileSize;
@@ -833,14 +838,14 @@ public class ACache {
 
     /**
      * 获取缓存文件目录，优先获取SD卡缓存目录
-     *
-     * @param context
-     * @return
      */
     public static String getDiskCacheDir(Context context) {
         String cachePath;
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-                || !Environment.isExternalStorageRemovable()) {
+        boolean contentCachePath =
+                context.getExternalCacheDir() != null && (Environment.MEDIA_MOUNTED.equals(
+                        Environment.getExternalStorageState())
+                        || !Environment.isExternalStorageRemovable());
+        if (contentCachePath) {
             cachePath = context.getExternalCacheDir().getPath();
         } else {
             cachePath = context.getCacheDir().getPath();
@@ -848,12 +853,11 @@ public class ACache {
         return cachePath;
     }
 
-
     /**
      * 保存 String数据 到 缓存中
      *
-     * @param key    保存的key
-     * @param value  保存的String数据
+     * @param key 保存的key
+     * @param value 保存的String数据
      * @param isDes3 是否加密
      */
     public void put(String key, String value, boolean isDes3) {
@@ -885,40 +889,40 @@ public class ACache {
     /**
      * 保存 String数据 到 缓存中
      *
-     * @param key      保存的key
-     * @param value    保存的String数据
+     * @param key 保存的key
+     * @param value 保存的String数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, String value, int saveTime, boolean isDes3) {
         put(key, Utils.newStringWithDateInfo(saveTime, value), isDes3);
     }
 
-
     /**
      * 读取 String数据
      *
-     * @param key    保存的key
+     * @param key 保存的key
      * @param isDes3 是否加密
      * @return String 数据
      */
     public String getAsString(String key, boolean isDes3) {
         File file = mCache.get(key);
-        if (!file.exists())
+        if (!file.exists()) {
             return null;
+        }
         boolean removeFile = false;
         BufferedReader in = null;
         try {
             in = new BufferedReader(new FileReader(file));
-            String readString = "";
+            StringBuilder readString = new StringBuilder();
             String currentLine;
             while ((currentLine = in.readLine()) != null) {
-                readString += currentLine;
+                readString.append(currentLine);
             }
             if (isDes3) {
-                readString = Des3Util.decode(readString);
+                readString = new StringBuilder(Des3Util.decode(readString.toString()));
             }
-            if (!Utils.isDue(readString)) {
-                return Utils.clearDateInfo(readString);
+            if (!Utils.isDue(readString.toString())) {
+                return Utils.clearDateInfo(readString.toString());
             } else {
                 removeFile = true;
                 return null;
@@ -937,36 +941,38 @@ public class ACache {
                     e.printStackTrace();
                 }
             }
-            if (removeFile)
+            if (removeFile) {
                 remove(key);
+            }
         }
     }
 
     /**
      * 读取 String数据 ,返回数据没有去除时间
      *
-     * @param key    保存的key
+     * @param key 保存的key
      * @param isDes3 是否加密
      * @return String 数据
      */
     public String getAsStringHasDate(String key, boolean isDes3) {
         File file = mCache.get(key);
-        if (!file.exists())
+        if (!file.exists()) {
             return null;
+        }
         boolean removeFile = false;
         BufferedReader in = null;
         try {
             in = new BufferedReader(new FileReader(file));
-            String readString = "";
+            StringBuilder readString = new StringBuilder();
             String currentLine;
             while ((currentLine = in.readLine()) != null) {
-                readString += currentLine;
+                readString.append(currentLine);
             }
             if (isDes3) {
-                readString = Des3Util.decode(readString);
+                readString = new StringBuilder(Des3Util.decode(readString.toString()));
             }
-            if (!Utils.isDue(readString)) {
-                return readString;
+            if (!Utils.isDue(readString.toString())) {
+                return readString.toString();
             } else {
                 removeFile = true;
                 return null;
@@ -985,11 +991,11 @@ public class ACache {
                     e.printStackTrace();
                 }
             }
-            if (removeFile)
+            if (removeFile) {
                 remove(key);
+            }
         }
     }
-
 
     public void put(String key, JSONObject value, boolean isDes3) {
         put(key, value.toString(), isDes3);
@@ -1000,14 +1006,13 @@ public class ACache {
     }
 
     public JSONObject getAsJSONObject(String key, boolean isDes3) {
-        String JSONString = getAsString(key);
+        String mJSONString = getAsString(key);
 
         try {
             if (isDes3) {
-                JSONString = Des3Util.decode(JSONString);
+                mJSONString = Des3Util.decode(mJSONString);
             }
-            JSONObject obj = new JSONObject(JSONString);
-            return obj;
+            return new JSONObject(mJSONString);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -1023,13 +1028,12 @@ public class ACache {
     }
 
     public JSONArray getAsJSONArray(String key, boolean isDes3) {
-        String JSONString = getAsString(key);
+        String mJSONString = getAsString(key);
         try {
             if (isDes3) {
-                JSONString = Des3Util.decode(JSONString);
+                mJSONString = Des3Util.decode(mJSONString);
             }
-            JSONArray obj = new JSONArray(JSONString);
-            return obj;
+            return new JSONArray(mJSONString);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -1065,23 +1069,23 @@ public class ACache {
     }
 
     public byte[] getAsBinary(String key, boolean isDes3) {
-        RandomAccessFile RAFile = null;
+        RandomAccessFile mRAFile = null;
         boolean removeFile = false;
         try {
             File file = mCache.get(key);
-            if (!file.exists())
+            if (!file.exists()) {
                 return null;
-            RAFile = new RandomAccessFile(file, "r");
-            byte[] byteArray = new byte[(int) RAFile.length()];
-            RAFile.read(byteArray);
+            }
+            mRAFile = new RandomAccessFile(file, "r");
+            byte[] byteArray = new byte[(int) mRAFile.length()];
+            mRAFile.read(byteArray);
             if (!Utils.isDue(byteArray)) {
                 if (isDes3) {
-                    byteArray = Des3Util.decode(byteArray.toString()).getBytes();
+                    byteArray = Des3Util.decode(Arrays.toString(byteArray)).getBytes();
                     return Utils.clearDateInfo(byteArray);
                 } else {
                     return Utils.clearDateInfo(byteArray);
                 }
-
             } else {
                 removeFile = true;
                 return null;
@@ -1090,16 +1094,16 @@ public class ACache {
             e.printStackTrace();
             return null;
         } finally {
-            if (RAFile != null) {
+            if (mRAFile != null) {
                 try {
-                    RAFile.close();
+                    mRAFile.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            if (removeFile)
+            if (removeFile) {
                 remove(key);
+            }
         }
     }
-
 }

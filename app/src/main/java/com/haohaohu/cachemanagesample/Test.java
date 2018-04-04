@@ -8,10 +8,7 @@ public class Test {
     private int d;
     private String str;
 
-    public Test() {
-    }
-
-    public Test(int d, String str) {
+    Test(int d, String str) {
         this.d = d;
         this.str = str;
     }
