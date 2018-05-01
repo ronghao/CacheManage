@@ -15,6 +15,6 @@ public class Test {
 
     @Override
     public String toString() {
-        return "d:" + d + "   str:" + str;
+        return "{d:" + d + "   str:" + str + "}";
     }
 }

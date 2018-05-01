@@ -21,6 +21,7 @@ public class CacheUtilConfig {
     private boolean memoryCache;
     private String secretKey;
     private String iv;
+    private ACache aCache;
 
     private CacheUtilConfig(Builder builder) {
         context = builder.context;
@@ -28,6 +29,7 @@ public class CacheUtilConfig {
         memoryCache = builder.memoryCache;
         secretKey = builder.secretKey;
         iv = builder.iv;
+        aCache = builder.aCache;
     }
 
     public static Builder builder(Context context) {
@@ -58,12 +60,21 @@ public class CacheUtilConfig {
         this.secretKey = secretKey;
     }
 
+    public ACache getACache() {
+        return aCache;
+    }
+
+    public void setACache(ACache aCache) {
+        this.aCache = aCache;
+    }
+
     public static class Builder {
         private Context context;
         private boolean isDes3 = true;//默认不加密
         private boolean memoryCache = true;//默认保存到内存
         private String secretKey;//秘钥
         private String iv = "haohaoha";//移动位置
+        private ACache aCache;//ACache示例
 
         public Builder(Context context) {
             this.context = context;
@@ -89,6 +100,11 @@ public class CacheUtilConfig {
             return this;
         }
 
+        public Builder setACache(ACache aCache) {
+            this.aCache = aCache;
+            return this;
+        }
+
         public CacheUtilConfig build() {
             if (this.isDes3) {
                 if (TextUtils.isEmpty(this.secretKey)) {
@@ -97,6 +113,9 @@ public class CacheUtilConfig {
                     this.secretKey = get24Str(this.secretKey);
                     if (TextUtils.isEmpty(this.secretKey)) {
                         this.secretKey = createSecretKey();
+                    }
+                    if (this.aCache == null) {
+                        this.aCache = ACache.get(context);
                     }
                 }
             }

@@ -109,7 +109,7 @@ public class CacheUtil {
         if (getConfig().isMemoryCache()) {
             getLruCache().put(key, value);
         }
-        ACache.get(getContext()).put(key, value, isDes3);
+        getConfig().getACache().put(key, value, isDes3);
         CacheObserver.getInstance().notifyDataChange(key, value);
     }
 
@@ -139,7 +139,7 @@ public class CacheUtil {
         if (getConfig().isMemoryCache()) {
             getLruCache().put(key, Utils.newStringWithDateInfo(time, value));
         }
-        ACache.get(getContext()).put(key, value, time, isDes3);
+        getConfig().getACache().put(key, value, time, isDes3);
         CacheObserver.getInstance().notifyDataChange(key, value);
     }
 
@@ -255,10 +255,10 @@ public class CacheUtil {
             }
         }
 
-        value = ACache.get(getContext()).getAsString(key, isDes3);
+        value = getConfig().getACache().getAsString(key, isDes3);
         if (!TextUtils.isEmpty(value)) {
             if (getConfig().isMemoryCache()) {
-                getLruCache().put(key, ACache.get(getContext()).getAsStringHasDate(key, isDes3));
+                getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isDes3));
             }
             return value;
         }
@@ -314,11 +314,11 @@ public class CacheUtil {
                 }
             }
         }
-        value = ACache.get(getContext()).getAsString(key, isDes3);
+        value = getConfig().getACache().getAsString(key, isDes3);
 
         if (!TextUtils.isEmpty(value)) {
             if (getConfig().isMemoryCache()) {
-                getLruCache().put(key, ACache.get(getContext()).getAsStringHasDate(key, isDes3));
+                getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isDes3));
             }
             return gson.fromJson(value, classOfT);
         }
@@ -376,11 +376,11 @@ public class CacheUtil {
                 }
             }
         }
-        value = ACache.get(getContext()).getAsString(key, isDes3);
+        value = getConfig().getACache().getAsString(key, isDes3);
 
         if (!TextUtils.isEmpty(value)) {
             if (getConfig().isMemoryCache()) {
-                getLruCache().put(key, ACache.get(getContext()).getAsStringHasDate(key, isDes3));
+                getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isDes3));
             }
             return gson.fromJson(value, classOfT);
         }
@@ -397,7 +397,7 @@ public class CacheUtil {
             return;
         }
         getLruCache().remove(key);
-        ACache.get(getContext()).remove(key);
+        getConfig().getACache().remove(key);
     }
 
     /**

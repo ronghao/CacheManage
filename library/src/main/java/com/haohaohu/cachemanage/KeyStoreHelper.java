@@ -29,10 +29,10 @@ import javax.security.auth.x500.X500Principal;
 import static java.security.spec.RSAKeyGenParameterSpec.F4;
 
 /**
- * KeyStore 帮助类
+ * KeyStore 帮助类 用来缓存密钥，防止破解
  * {转自 https://gist.github.com/alphamu/cf44b2783fb2fd81cc53aca91276d481}
  *
- * @author ME
+ * @author haohao on 2017/8/24 10:37
  * @version v1.0
  */
 public class KeyStoreHelper {

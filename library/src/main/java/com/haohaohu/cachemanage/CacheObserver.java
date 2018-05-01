@@ -8,7 +8,6 @@ import java.util.List;
 /**
  * 数据监控器
  * 1、当数据变化时候，回调所有监听器
- * 2、
  *
  * @author haohao(ronghao3508@gmail.com) on 2017/12/16 下午 05:30
  * @version v1.0

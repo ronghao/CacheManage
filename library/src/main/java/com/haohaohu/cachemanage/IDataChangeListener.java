@@ -1,7 +1,7 @@
 package com.haohaohu.cachemanage;
 
 /**
- * 数据变化监听
+ * 数据变化监听接口
  *
  * @author haohao(ronghao3508@gmail.com) on 2017/12/16 下午 05:31
  * @version v1.0
