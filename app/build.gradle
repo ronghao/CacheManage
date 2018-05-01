@@ -1,15 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.3"
+
+  compileSdkVersion compile_sdk_version
+  buildToolsVersion build_tools_version
+
   defaultConfig {
     applicationId "com.haohaohu.cachemanagesample"
-    minSdkVersion 14
-    targetSdkVersion 25
-    versionCode 1
-    versionName "1.0"
+    minSdkVersion min_sdk_version
+    targetSdkVersion compile_sdk_version
+    versionCode version_code
+    versionName version_name
   }
+
   buildTypes {
     release {
       minifyEnabled false
@@ -20,7 +23,7 @@ android {
 
 dependencies {
   compile fileTree(include: ['*.jar'], dir: 'libs')
-  compile project(':library')
-  //    compile 'com.github.ronghao:CacheManage:-SNAPSHOT'
+  //  compile project(':library')
+  compile 'com.github.ronghao:CacheManage:1.1.2'
   compile 'com.android.support:appcompat-v7:25.3.1'
 }

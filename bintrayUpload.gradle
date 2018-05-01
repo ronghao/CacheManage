@@ -1,5 +1,16 @@
 def projectVersionName = android.defaultConfig.versionName
-def javadocName = "CacheManage"
+
+// load properties
+Properties properties = new Properties()
+File localPropertiesFile = project.file("local.properties");
+if (localPropertiesFile.exists()) {
+  properties.load(localPropertiesFile.newDataInputStream())
+}
+File projectPropertiesFile = project.file("project.properties");
+if (projectPropertiesFile.exists()) {
+  properties.load(projectPropertiesFile.newDataInputStream())
+}
+def javadocName = properties.getProperty("javadoc.name")
 
 // This generates sources.jar
 task sourcesJar(type: Jar) {
@@ -25,7 +36,7 @@ artifacts {
 
 // javadoc configuration
 javadoc {
-  options{
+  options {
     encoding "UTF-8"
     charSet 'UTF-8'
     author true
