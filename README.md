@@ -1,23 +1,26 @@
 
 # [CacheManage](https://github.com/ronghao/CacheManage)  [![](https://jitpack.io/v/ronghao/CacheManage.svg)](https://jitpack.io/#ronghao/CacheManage) [![](https://travis-ci.org/ronghao/CacheManage.svg?branch=master)](https://travis-ci.org/ronghao/CacheManage) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/ronghao/CacheManage/master/LICENSE) [ ![Download](https://api.bintray.com/packages/haohao/maven/CacheManage/images/download.svg?version=1.0.3) ](https://bintray.com/haohao/maven/CacheManage/1.0.3/link)
 
-> android缓存管理器，分为内存缓存和文件缓存两种；先取内存数据，没有再从文件缓存中获取
+> android缓存管理器，分为两级缓存：内存缓存和文件缓存；先取内存数据，没有再从文件缓存中获取
 
 # 特点
 + 封装[ASimpleCache](https://github.com/yangfuhai/ASimpleCache)，继承其所有功能
-+ 二级缓存：内存缓存、文件缓存（由ASimpleCache实现）
-    + 先取内存数据，没有再从文件缓存中取
++ 二级缓存
+	+ 内存缓存（采用SoftReference和LruCache，防止内存溢出）
+	+ 文件缓存（由ASimpleCache实现）
 + 默认使用SD卡缓存
     + getCacheDir()获取的缓存文件较容易被删除
     + 大于1M的缓存文件，google建议使用getExternalCacheDir()缓存存储
+    + 默认存储位置为app数据缓存位置
 + 支持文件加密存储
     + 默认des3加密内容
     + 默认生成des3唯一密钥（建议使用默认生成的密钥）
         + 默认生成的默认密钥，每个客户端都是唯一的，互不相同
         + 默认密钥存储在KeyStore中，防止逆向工程获取密钥
-+ 支持String、byte、JSONObject、JSONArray
-+ 缓存数据设置过期时间
-+ 是否允许内存缓存
++ 支持基本数据类型、String、JSONObject、JSONArray、实体对象（Test类）
+	+ 不支持数据类型可转换成String存储
++ 缓存数据可设置过期时间，到期自动销毁
++ 允许内存缓存
 + key值加密
     + 对应的本地缓存文件也加密
 + 添加数据监控机制
@@ -63,7 +66,7 @@ String key3Value = CacheUtil.get("key3");
 String key4Value = CacheUtil.get("key4", true);
 Test key5Test = CacheUtil.get("key5", Test.class);//可能为null
 String key5Value = key5Test == null ? "" : key5Test.toString();
-Test key6Test = CacheUtil.get("key6", Test.class, true);//可能为null
+Test key6Test = CacheUtil.get("key6", Test.class, true);
 String key6Value = key6Test == null ? "" : key6Test.toString();
 String key7Value = CacheUtil.get("key7");
 String key8Value = CacheUtil.get("key8", true);
@@ -80,9 +83,13 @@ String key16Value = key16Test == null ? "" : key16Test.toString();
 String key17Value = CacheUtil.get(CacheUtil.translateKey("key17"), true);
 String key18Value = CacheUtil.get("key18", false);
 Boolean key19Value =
-        CacheUtil.get(CacheUtil.translateKey("key19"), Boolean.class, false, true);//key19未存储的数据，返回默认值
-Test key20Value = CacheUtil.get(CacheUtil.translateKey("key20"), Test.class,
-        new Test(1, "默认值"), true);//key20未存储的数据，返回默认值
+        CacheUtil.get(CacheUtil.translateKey("null"), Boolean.class, false, true);
+//key19未存储的数据，返回默认值
+Test key20Value = CacheUtil.get(CacheUtil.translateKey("null1"), Test.class,
+        new Test(1, "默认值"), true);
+//key20未存储的数据，返回默认值
+Test key21Value = CacheUtil.get(CacheUtil.translateKey("null1"), Test.class, true);
+//key21未存储的数据，且无默认构造方法,返回null
 ```
 ```java
 CacheUtil.get("要查找的key")  
@@ -123,21 +130,27 @@ allprojects {
 在项目build.gradle中添加 ![](https://jitpack.io/v/ronghao/CacheManage.svg)
 ```
 dependencies {
-    compile 'com.github.ronghao:CacheManage:1.1.1'
+    compile 'com.github.ronghao:CacheManage:1.1.2'
 }
 ```
 
 # 特别注意
++ **文件缓存默认缓存到app缓存文件，在手机清理缓存空间时可被清理，请悉知：如不想被清理，请指定缓存位置存储**
 + 禁止传入空key
 + 如未存储数据时，get（key）会返回的字符串为空字符串
-+ 如未存储数据（实体对象）时，对象（如果实现了默认构造函数）会返回一个新的对象实例；如果未实现构造函数，获取数据会返回null
-+ **缓存到app默认缓存位置，在手机清理缓存空间时可被清理，请悉知**
++ 如未存储数据（实体对象）时获取数据，
+	+ 如果实现了默认构造函数，会返回一个新的对象实例；
+	+ 如果未实现构造函数，会返回null
+
 
 # TODO
 + 自定义加密算法
 + 添加多线程控制
 
 # 版本更新说明
++ v1.1.2
+    + 添加自定义ACache
+	    + 在CacheUtilConfig配置
 + v1.1.1
     + 添加数据监控机制
 + v1.1.0
