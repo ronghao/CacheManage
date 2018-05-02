@@ -1,7 +1,6 @@
 package com.haohaohu.cachemanage;
 
 import android.text.TextUtils;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -24,7 +23,7 @@ public class Des3Util {
      * 初始化工具类
      *
      * @param secretKey 密钥
-     * @param iv        向量
+     * @param iv 向量
      */
     public static void init(String secretKey, String iv) {
         Des3Util.secretKey = secretKey;
@@ -39,8 +38,9 @@ public class Des3Util {
      * @throws Exception
      */
     public static String encode(String plainText) throws Exception {
-        if (TextUtils.isEmpty(secretKey) || TextUtils.isEmpty(iv))
+        if (TextUtils.isEmpty(secretKey) || TextUtils.isEmpty(iv)) {
             throw new NullPointerException("u should init first");
+        }
         SecretKey deskey = null;
         DESedeKeySpec spec = new DESedeKeySpec(secretKey.getBytes());
         SecretKeyFactory keyfactory = SecretKeyFactory.getInstance("desede");
@@ -59,8 +59,9 @@ public class Des3Util {
      * @throws Exception
      */
     public static String decode(String encryptText) throws Exception {
-        if (TextUtils.isEmpty(secretKey) || TextUtils.isEmpty(iv))
+        if (TextUtils.isEmpty(secretKey) || TextUtils.isEmpty(iv)) {
             throw new NullPointerException("u should init first");
+        }
         SecretKey deskey = null;
         DESedeKeySpec spec = new DESedeKeySpec(secretKey.getBytes());
         SecretKeyFactory keyfactory = SecretKeyFactory.getInstance("desede");

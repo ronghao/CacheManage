@@ -14,15 +14,11 @@ import java.util.List;
  */
 public class CacheObserver {
 
+    private HashMap<String, List<IDataChangeListener>> mListenerMap = new HashMap<>();
+
     public static CacheObserver getInstance() {
         return Holder.observer;
     }
-
-    private static class Holder {
-        private static CacheObserver observer = new CacheObserver();
-    }
-
-    private HashMap<String, List<IDataChangeListener>> mListenerMap = new HashMap<>();
 
     public synchronized void addObserver(String key, IDataChangeListener listener) {
         if (TextUtils.isEmpty(key) || listener == null) {
@@ -79,5 +75,9 @@ public class CacheObserver {
         for (int i = 0; i < size; i++) {
             list.get(i).onDataChange(key, value);
         }
+    }
+
+    private static class Holder {
+        private static CacheObserver observer = new CacheObserver();
     }
 }

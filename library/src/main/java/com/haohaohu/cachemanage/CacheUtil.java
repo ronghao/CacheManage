@@ -26,18 +26,13 @@ import org.json.JSONObject;
  */
 public class CacheUtil {
 
-    private static class CacheUtilHolder {
-        private static CacheUtil mInstance = new CacheUtil();
-    }
+    private CacheUtilConfig mConfig;
+    private SoftReference<LruCache<String, String>> mLuCache =
+            new SoftReference<>(new LruCache<String, String>(50));
 
     private static CacheUtil getInstance() {
         return CacheUtilHolder.mInstance;
     }
-
-    private CacheUtilConfig mConfig;
-
-    private SoftReference<LruCache<String, String>> mLuCache =
-            new SoftReference<>(new LruCache<String, String>(50));
 
     /**
      * 初始化工具类，使用之前调用
@@ -418,6 +413,10 @@ public class CacheUtil {
      */
     public static String translateKey(@NonNull String key) {
         return "." + Base64Util.encode(key.getBytes());
+    }
+
+    private static class CacheUtilHolder {
+        private static CacheUtil mInstance = new CacheUtil();
     }
 
     /**

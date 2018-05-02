@@ -86,6 +86,23 @@ public class ACache {
     // =======================================
 
     /**
+     * 获取缓存文件目录，优先获取SD卡缓存目录
+     */
+    public static String getDiskCacheDir(Context context) {
+        String cachePath;
+        boolean contentCachePath =
+                context.getExternalCacheDir() != null && (Environment.MEDIA_MOUNTED.equals(
+                        Environment.getExternalStorageState())
+                        || !Environment.isExternalStorageRemovable());
+        if (contentCachePath) {
+            cachePath = context.getExternalCacheDir().getPath();
+        } else {
+            cachePath = context.getCacheDir().getPath();
+        }
+        return cachePath;
+    }
+
+    /**
      * 保存 String数据 到 缓存中
      *
      * @param key 保存的key
@@ -122,6 +139,10 @@ public class ACache {
     public void put(String key, String value, int saveTime) {
         put(key, Utils.newStringWithDateInfo(saveTime, value));
     }
+
+    // =======================================
+    // ============= JSONObject 数据 读写 ==============
+    // =======================================
 
     /**
      * 读取 String数据
@@ -166,10 +187,6 @@ public class ACache {
         }
     }
 
-    // =======================================
-    // ============= JSONObject 数据 读写 ==============
-    // =======================================
-
     /**
      * 保存 JSONObject数据 到 缓存中
      *
@@ -191,6 +208,10 @@ public class ACache {
         put(key, value.toString(), saveTime);
     }
 
+    // =======================================
+    // ============ JSONArray 数据 读写 =============
+    // =======================================
+
     /**
      * 读取JSONObject数据
      *
@@ -206,10 +227,6 @@ public class ACache {
             return null;
         }
     }
-
-    // =======================================
-    // ============ JSONArray 数据 读写 =============
-    // =======================================
 
     /**
      * 保存 JSONArray数据 到 缓存中
@@ -232,6 +249,10 @@ public class ACache {
         put(key, value.toString(), saveTime);
     }
 
+    // =======================================
+    // ============== byte 数据 读写 =============
+    // =======================================
+
     /**
      * 读取JSONArray数据
      *
@@ -247,10 +268,6 @@ public class ACache {
             return null;
         }
     }
-
-    // =======================================
-    // ============== byte 数据 读写 =============
-    // =======================================
 
     /**
      * 保存 byte数据 到 缓存中
@@ -289,6 +306,10 @@ public class ACache {
     public void put(String key, byte[] value, int saveTime) {
         put(key, Utils.newByteArrayWithDateInfo(saveTime, value));
     }
+
+    // =======================================
+    // ============= 序列化 数据 读写 ===============
+    // =======================================
 
     /**
      * 获取 byte 数据
@@ -329,10 +350,6 @@ public class ACache {
             }
         }
     }
-
-    // =======================================
-    // ============= 序列化 数据 读写 ===============
-    // =======================================
 
     /**
      * 保存 Serializable数据 到 缓存中
@@ -376,6 +393,10 @@ public class ACache {
         }
     }
 
+    // =======================================
+    // ============== bitmap 数据 读写 =============
+    // =======================================
+
     /**
      * 读取 Serializable数据
      *
@@ -414,10 +435,6 @@ public class ACache {
         return null;
     }
 
-    // =======================================
-    // ============== bitmap 数据 读写 =============
-    // =======================================
-
     /**
      * 保存 bitmap 到 缓存中
      *
@@ -452,16 +469,16 @@ public class ACache {
         return Utils.bytes2Bimap(getAsBinary(key));
     }
 
+    // =======================================
+    // ============= drawable 数据 读写 =============
+    // =======================================
+
     public void getBitmap(final ImageView imageView, String key) {
         if (getAsBinary(key) == null) {
             return;
         }
         imageView.setImageBitmap(Utils.bytes2Bimap(getAsBinary(key)));
     }
-
-    // =======================================
-    // ============= drawable 数据 读写 =============
-    // =======================================
 
     /**
      * 保存 drawable 到 缓存中
@@ -526,6 +543,260 @@ public class ACache {
      */
     public void clear() {
         mCache.clear();
+    }
+
+    /**
+     * 保存 String数据 到 缓存中
+     *
+     * @param key 保存的key
+     * @param value 保存的String数据
+     * @param isDes3 是否加密
+     */
+    public void put(String key, String value, boolean isDes3) {
+        File file = mCache.newFile(key);
+        BufferedWriter out = null;
+        try {
+            out = new BufferedWriter(new FileWriter(file), 1024);
+            if (isDes3) {
+                value = Des3Util.encode(value);
+            }
+            out.write(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                try {
+                    out.flush();
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            mCache.put(file);
+        }
+    }
+
+    /**
+     * 保存 String数据 到 缓存中
+     *
+     * @param key 保存的key
+     * @param value 保存的String数据
+     * @param saveTime 保存的时间，单位：秒
+     */
+    public void put(String key, String value, int saveTime, boolean isDes3) {
+        put(key, Utils.newStringWithDateInfo(saveTime, value), isDes3);
+    }
+
+    /**
+     * 读取 String数据
+     *
+     * @param key 保存的key
+     * @param isDes3 是否加密
+     * @return String 数据
+     */
+    public String getAsString(String key, boolean isDes3) {
+        File file = mCache.get(key);
+        if (!file.exists()) {
+            return null;
+        }
+        boolean removeFile = false;
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new FileReader(file));
+            StringBuilder readString = new StringBuilder();
+            String currentLine;
+            while ((currentLine = in.readLine()) != null) {
+                readString.append(currentLine);
+            }
+            if (isDes3) {
+                readString = new StringBuilder(Des3Util.decode(readString.toString()));
+            }
+            if (!Utils.isDue(readString.toString())) {
+                return Utils.clearDateInfo(readString.toString());
+            } else {
+                removeFile = true;
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (removeFile) {
+                remove(key);
+            }
+        }
+    }
+
+    /**
+     * 读取 String数据 ,返回数据没有去除时间
+     *
+     * @param key 保存的key
+     * @param isDes3 是否加密
+     * @return String 数据
+     */
+    public String getAsStringHasDate(String key, boolean isDes3) {
+        File file = mCache.get(key);
+        if (!file.exists()) {
+            return null;
+        }
+        boolean removeFile = false;
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new FileReader(file));
+            StringBuilder readString = new StringBuilder();
+            String currentLine;
+            while ((currentLine = in.readLine()) != null) {
+                readString.append(currentLine);
+            }
+            if (isDes3) {
+                readString = new StringBuilder(Des3Util.decode(readString.toString()));
+            }
+            if (!Utils.isDue(readString.toString())) {
+                return readString.toString();
+            } else {
+                removeFile = true;
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (removeFile) {
+                remove(key);
+            }
+        }
+    }
+
+    public void put(String key, JSONObject value, boolean isDes3) {
+        put(key, value.toString(), isDes3);
+    }
+
+    public void put(String key, JSONObject value, int saveTime, boolean isDes3) {
+        put(key, value.toString(), saveTime, isDes3);
+    }
+
+    public JSONObject getAsJSONObject(String key, boolean isDes3) {
+        String mJSONString = getAsString(key);
+
+        try {
+            if (isDes3) {
+                mJSONString = Des3Util.decode(mJSONString);
+            }
+            return new JSONObject(mJSONString);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void put(String key, JSONArray value, boolean isDes3) {
+        put(key, value.toString(), isDes3);
+    }
+
+    public void put(String key, JSONArray value, int saveTime, boolean isDes3) {
+        put(key, value.toString(), saveTime, isDes3);
+    }
+
+    public JSONArray getAsJSONArray(String key, boolean isDes3) {
+        String mJSONString = getAsString(key);
+        try {
+            if (isDes3) {
+                mJSONString = Des3Util.decode(mJSONString);
+            }
+            return new JSONArray(mJSONString);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void put(String key, byte[] value, boolean isDes3) {
+        File file = mCache.newFile(key);
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            if (isDes3) {
+                value = Des3Util.encode(new String(value)).getBytes();
+            }
+            out.write(value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                try {
+                    out.flush();
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            mCache.put(file);
+        }
+    }
+
+    public void put(String key, byte[] value, int saveTime, boolean isDes3) {
+        put(key, Utils.newByteArrayWithDateInfo(saveTime, value), isDes3);
+    }
+
+    public byte[] getAsBinary(String key, boolean isDes3) {
+        RandomAccessFile mRAFile = null;
+        boolean removeFile = false;
+        try {
+            File file = mCache.get(key);
+            if (!file.exists()) {
+                return null;
+            }
+            mRAFile = new RandomAccessFile(file, "r");
+            byte[] byteArray = new byte[(int) mRAFile.length()];
+            mRAFile.read(byteArray);
+            if (!Utils.isDue(byteArray)) {
+                if (isDes3) {
+                    byteArray = Des3Util.decode(Arrays.toString(byteArray)).getBytes();
+                    return Utils.clearDateInfo(byteArray);
+                } else {
+                    return Utils.clearDateInfo(byteArray);
+                }
+            } else {
+                removeFile = true;
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (mRAFile != null) {
+                try {
+                    mRAFile.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (removeFile) {
+                remove(key);
+            }
+        }
     }
 
     /**
@@ -833,277 +1104,6 @@ public class ACache {
 
         private long calculateSize(File file) {
             return file.length();
-        }
-    }
-
-    /**
-     * 获取缓存文件目录，优先获取SD卡缓存目录
-     */
-    public static String getDiskCacheDir(Context context) {
-        String cachePath;
-        boolean contentCachePath =
-                context.getExternalCacheDir() != null && (Environment.MEDIA_MOUNTED.equals(
-                        Environment.getExternalStorageState())
-                        || !Environment.isExternalStorageRemovable());
-        if (contentCachePath) {
-            cachePath = context.getExternalCacheDir().getPath();
-        } else {
-            cachePath = context.getCacheDir().getPath();
-        }
-        return cachePath;
-    }
-
-    /**
-     * 保存 String数据 到 缓存中
-     *
-     * @param key 保存的key
-     * @param value 保存的String数据
-     * @param isDes3 是否加密
-     */
-    public void put(String key, String value, boolean isDes3) {
-        File file = mCache.newFile(key);
-        BufferedWriter out = null;
-        try {
-            out = new BufferedWriter(new FileWriter(file), 1024);
-            if (isDes3) {
-                value = Des3Util.encode(value);
-            }
-            out.write(value);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) {
-                try {
-                    out.flush();
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            mCache.put(file);
-        }
-    }
-
-    /**
-     * 保存 String数据 到 缓存中
-     *
-     * @param key 保存的key
-     * @param value 保存的String数据
-     * @param saveTime 保存的时间，单位：秒
-     */
-    public void put(String key, String value, int saveTime, boolean isDes3) {
-        put(key, Utils.newStringWithDateInfo(saveTime, value), isDes3);
-    }
-
-    /**
-     * 读取 String数据
-     *
-     * @param key 保存的key
-     * @param isDes3 是否加密
-     * @return String 数据
-     */
-    public String getAsString(String key, boolean isDes3) {
-        File file = mCache.get(key);
-        if (!file.exists()) {
-            return null;
-        }
-        boolean removeFile = false;
-        BufferedReader in = null;
-        try {
-            in = new BufferedReader(new FileReader(file));
-            StringBuilder readString = new StringBuilder();
-            String currentLine;
-            while ((currentLine = in.readLine()) != null) {
-                readString.append(currentLine);
-            }
-            if (isDes3) {
-                readString = new StringBuilder(Des3Util.decode(readString.toString()));
-            }
-            if (!Utils.isDue(readString.toString())) {
-                return Utils.clearDateInfo(readString.toString());
-            } else {
-                removeFile = true;
-                return null;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (removeFile) {
-                remove(key);
-            }
-        }
-    }
-
-    /**
-     * 读取 String数据 ,返回数据没有去除时间
-     *
-     * @param key 保存的key
-     * @param isDes3 是否加密
-     * @return String 数据
-     */
-    public String getAsStringHasDate(String key, boolean isDes3) {
-        File file = mCache.get(key);
-        if (!file.exists()) {
-            return null;
-        }
-        boolean removeFile = false;
-        BufferedReader in = null;
-        try {
-            in = new BufferedReader(new FileReader(file));
-            StringBuilder readString = new StringBuilder();
-            String currentLine;
-            while ((currentLine = in.readLine()) != null) {
-                readString.append(currentLine);
-            }
-            if (isDes3) {
-                readString = new StringBuilder(Des3Util.decode(readString.toString()));
-            }
-            if (!Utils.isDue(readString.toString())) {
-                return readString.toString();
-            } else {
-                removeFile = true;
-                return null;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (removeFile) {
-                remove(key);
-            }
-        }
-    }
-
-    public void put(String key, JSONObject value, boolean isDes3) {
-        put(key, value.toString(), isDes3);
-    }
-
-    public void put(String key, JSONObject value, int saveTime, boolean isDes3) {
-        put(key, value.toString(), saveTime, isDes3);
-    }
-
-    public JSONObject getAsJSONObject(String key, boolean isDes3) {
-        String mJSONString = getAsString(key);
-
-        try {
-            if (isDes3) {
-                mJSONString = Des3Util.decode(mJSONString);
-            }
-            return new JSONObject(mJSONString);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public void put(String key, JSONArray value, boolean isDes3) {
-        put(key, value.toString(), isDes3);
-    }
-
-    public void put(String key, JSONArray value, int saveTime, boolean isDes3) {
-        put(key, value.toString(), saveTime, isDes3);
-    }
-
-    public JSONArray getAsJSONArray(String key, boolean isDes3) {
-        String mJSONString = getAsString(key);
-        try {
-            if (isDes3) {
-                mJSONString = Des3Util.decode(mJSONString);
-            }
-            return new JSONArray(mJSONString);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public void put(String key, byte[] value, boolean isDes3) {
-        File file = mCache.newFile(key);
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(file);
-            if (isDes3) {
-                value = Des3Util.encode(new String(value)).getBytes();
-            }
-            out.write(value);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) {
-                try {
-                    out.flush();
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            mCache.put(file);
-        }
-    }
-
-    public void put(String key, byte[] value, int saveTime, boolean isDes3) {
-        put(key, Utils.newByteArrayWithDateInfo(saveTime, value), isDes3);
-    }
-
-    public byte[] getAsBinary(String key, boolean isDes3) {
-        RandomAccessFile mRAFile = null;
-        boolean removeFile = false;
-        try {
-            File file = mCache.get(key);
-            if (!file.exists()) {
-                return null;
-            }
-            mRAFile = new RandomAccessFile(file, "r");
-            byte[] byteArray = new byte[(int) mRAFile.length()];
-            mRAFile.read(byteArray);
-            if (!Utils.isDue(byteArray)) {
-                if (isDes3) {
-                    byteArray = Des3Util.decode(Arrays.toString(byteArray)).getBytes();
-                    return Utils.clearDateInfo(byteArray);
-                } else {
-                    return Utils.clearDateInfo(byteArray);
-                }
-            } else {
-                removeFile = true;
-                return null;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            if (mRAFile != null) {
-                try {
-                    mRAFile.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (removeFile) {
-                remove(key);
-            }
         }
     }
 }

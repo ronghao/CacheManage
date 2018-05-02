@@ -15,9 +15,15 @@ import java.nio.ByteBuffer;
  * @version v1.0
  */
 public class Base64Util {
-    public static final char[] BASE64_CODE = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/', '='};
+    public static final char[] BASE64_CODE = new char[] {
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
+            'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+            'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y',
+            'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/', '='
+    };
     public static final int MAX_BUFF_SIZE = 4000000;
-    private static final char[] legalChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
+    private static final char[] legalChars =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
 
     public Base64Util() {
     }
@@ -115,7 +121,8 @@ public class Base64Util {
                 break;
             }
 
-            int tri = (decode(s.charAt(i)) << 18) + (decode(s.charAt(i + 1)) << 12) + (decode(s.charAt(i + 2)) << 6) + decode(s.charAt(i + 3));
+            int tri = (decode(s.charAt(i)) << 18) + (decode(s.charAt(i + 1)) << 12) + (decode(
+                    s.charAt(i + 2)) << 6) + decode(s.charAt(i + 3));
             os.write(tri >> 16 & 255);
             if (s.charAt(i + 2) == 61) {
                 break;
@@ -129,11 +136,11 @@ public class Base64Util {
             os.write(tri & 255);
             i += 4;
         }
-
     }
 
     public static boolean check(String str) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(new StringBufferInputStream(str)));
+        BufferedReader br =
+                new BufferedReader(new InputStreamReader(new StringBufferInputStream(str)));
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         String line = null;
         String lastLine = null;
@@ -159,7 +166,11 @@ public class Base64Util {
 
         for (int i = 0; i < var10.length - equalsNum; ++i) {
             char c = (char) var10[i];
-            if ((c < 97 || c > 122) && (c < 65 || c > 90) && (c < 48 || c > 57) && c != 43 && c != 47) {
+            if ((c < 97 || c > 122)
+                    && (c < 65 || c > 90)
+                    && (c < 48 || c > 57)
+                    && c != 43
+                    && c != 47) {
                 return false;
             }
         }
