@@ -12,6 +12,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.LruCache;
 import com.google.gson.Gson;
+import com.haohaohu.cachemanage.observer.CacheObserver;
+import com.haohaohu.cachemanage.util.Base64Util;
 import java.io.ByteArrayOutputStream;
 import java.lang.ref.SoftReference;
 import org.json.JSONArray;
@@ -44,12 +46,9 @@ public class CacheUtil {
             throw new NullPointerException("u should Builder first");
         }
         getInstance().mConfig = config;
-        if (getInstance().mConfig.isDes3()) {
-            Des3Util.init(getInstance().mConfig.getSecretKey(), getInstance().mConfig.getIv());
-        }
     }
 
-    private static CacheUtilConfig getConfig() {
+    protected static CacheUtilConfig getConfig() {
         if (getInstance().mConfig == null) {
             throw new NullPointerException("u should Builder first");
         }
@@ -87,7 +86,7 @@ public class CacheUtil {
      * @param value 保存的value
      */
     public static void put(String key, @NonNull String value) {
-        put(key, value, getConfig().isDes3());
+        put(key, value, getConfig().isEncrypt());
     }
 
     /**
@@ -95,16 +94,16 @@ public class CacheUtil {
      *
      * @param key 保存的key
      * @param value 保存的value
-     * @param isDes3 是否加密
+     * @param isEncrypt 是否加密
      */
-    public static void put(String key, @NonNull String value, boolean isDes3) {
+    public static void put(String key, @NonNull String value, boolean isEncrypt) {
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
             return;
         }
         if (getConfig().isMemoryCache()) {
             getLruCache().put(key, value);
         }
-        getConfig().getACache().put(key, value, isDes3);
+        getConfig().getACache().put(key, value, isEncrypt);
         CacheObserver.getInstance().notifyDataChange(key, value);
     }
 
@@ -116,7 +115,7 @@ public class CacheUtil {
      * @param time 过期时间
      */
     public static void put(String key, @NonNull String value, int time) {
-        put(key, value, time, getConfig().isDes3());
+        put(key, value, time, getConfig().isEncrypt());
     }
 
     /**
@@ -146,7 +145,7 @@ public class CacheUtil {
      * @param <T> 对应的实体对象
      */
     public static <T> void put(String key, @NonNull T value) {
-        put(key, value, getConfig().isDes3());
+        put(key, value, getConfig().isEncrypt());
     }
 
     /**
@@ -183,7 +182,7 @@ public class CacheUtil {
      * @param time 过期时间 秒
      */
     public static <T> void put(String key, @NonNull T value, int time) {
-        put(key, value, time, getConfig().isDes3());
+        put(key, value, time, getConfig().isEncrypt());
     }
 
     /**
@@ -221,7 +220,7 @@ public class CacheUtil {
      */
     @Nullable
     public static String get(String key) {
-        return get(key, getConfig().isDes3());
+        return get(key, getConfig().isEncrypt());
     }
 
     /**
@@ -271,7 +270,7 @@ public class CacheUtil {
      */
     @Nullable
     public static <T> T get(String key, Class<T> classOfT) {
-        return get(key, classOfT, getConfig().isDes3());
+        return get(key, classOfT, getConfig().isEncrypt());
     }
 
     /**
@@ -339,7 +338,7 @@ public class CacheUtil {
      */
     @Nullable
     public static <T> T get(String key, Class<T> classOfT, T t) {
-        return get(key, classOfT, t, getConfig().isDes3());
+        return get(key, classOfT, t, getConfig().isEncrypt());
     }
 
     /**

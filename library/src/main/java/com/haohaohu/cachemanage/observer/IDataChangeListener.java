@@ -1,4 +1,4 @@
-package com.haohaohu.cachemanage;
+package com.haohaohu.cachemanage.observer;
 
 /**
  * 数据变化监听接口

@@ -1,4 +1,4 @@
-package com.haohaohu.cachemanage;
+package com.haohaohu.cachemanage.observer;
 
 import android.text.TextUtils;
 import java.util.ArrayList;

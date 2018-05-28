@@ -1,4 +1,4 @@
-package com.haohaohu.cachemanage;
+package com.haohaohu.cachemanage.util;
 
 import android.annotation.TargetApi;
 import android.content.Context;

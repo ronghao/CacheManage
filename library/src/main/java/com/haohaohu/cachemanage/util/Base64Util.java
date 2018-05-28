@@ -1,4 +1,4 @@
-package com.haohaohu.cachemanage;
+package com.haohaohu.cachemanage.util;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

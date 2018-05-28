@@ -1,4 +1,4 @@
-package com.haohaohu.cachemanage;
+package com.haohaohu.cachemanage.util;
 
 import android.text.TextUtils;
 import javax.crypto.Cipher;
@@ -15,29 +15,18 @@ import javax.crypto.spec.IvParameterSpec;
  */
 public class Des3Util {
     public static final String DESEDE_CBC_PKCS5_PADDING = "desede/CBC/PKCS5Padding";
-    private static String secretKey = "";//加密密钥
-    private static String iv = "";//8位
     private static String encoding = "utf-8";
-
-    /**
-     * 初始化工具类
-     *
-     * @param secretKey 密钥
-     * @param iv 向量
-     */
-    public static void init(String secretKey, String iv) {
-        Des3Util.secretKey = secretKey;
-        Des3Util.iv = iv;
-    }
 
     /**
      * 加密
      *
      * @param plainText 要加密文字
+     * @param iv 偏移量
+     * @param secretKey 密钥
      * @return 加密文字
      * @throws Exception
      */
-    public static String encode(String plainText) throws Exception {
+    public static String encode(String plainText, String secretKey, String iv) throws Exception {
         if (TextUtils.isEmpty(secretKey) || TextUtils.isEmpty(iv)) {
             throw new NullPointerException("u should init first");
         }
@@ -53,12 +42,14 @@ public class Des3Util {
     }
 
     /***
-     *  解密
+     * 解密
      * @param encryptText 要解密文字
+     * @param secretKey  密钥
+     * @param iv 偏移量
      * @return 解密文字
      * @throws Exception
      */
-    public static String decode(String encryptText) throws Exception {
+    public static String decode(String encryptText, String secretKey, String iv) throws Exception {
         if (TextUtils.isEmpty(secretKey) || TextUtils.isEmpty(iv)) {
             throw new NullPointerException("u should init first");
         }

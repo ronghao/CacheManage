@@ -10,10 +10,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.haohaohu.cachemanage.ACache;
-import com.haohaohu.cachemanage.CacheObserver;
 import com.haohaohu.cachemanage.CacheUtil;
 import com.haohaohu.cachemanage.CacheUtilConfig;
-import com.haohaohu.cachemanage.IDataChangeListener;
+import com.haohaohu.cachemanage.observer.CacheObserver;
+import com.haohaohu.cachemanage.observer.IDataChangeListener;
+import com.haohaohu.cachemanage.strategy.Des3EncryptStrategy;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -285,20 +286,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void initCacheConfig() {
         CacheUtilConfig cc = CacheUtilConfig.builder(getApplication())
-                .setDes3("WLIJkjdsfIlI789sd87dnu==")//自定义des3加密
-                .setIv("haohaoha")//自定义des3偏移量
+                .setIEncryptStrategy(
+                        new Des3EncryptStrategy(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==",
+                                "haohaoha"))
                 .allowMemoryCache(true)//是否允许保存到内存
-                .allowDes3(true)//是否允许des3加密
+                .allowEncrypt(true)//是否允许des3加密
                 .build();
         CacheUtil.init(cc);//初始化，必须调用
     }
 
     private void initCacheConfig1() {
         CacheUtilConfig cc = CacheUtilConfig.builder(MainActivity.this)
-                .setDes3("WMIJkjdsfIlI789sd87dn14R")//自定义des3加密
-                .setIv("haohaoha")//自定义des3偏移量
+                .setIEncryptStrategy(
+                        new Des3EncryptStrategy(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==",
+                                "haohaoha"))
                 .allowMemoryCache(true)//是否允许保存到内存
-                .allowDes3(true)//是否允许des3加密
+                .allowEncrypt(true)//是否允许加密
                 .build();
         CacheUtil.init(cc);//初始化，必须调用
         KeyGenerator xd;
@@ -327,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
     private void initCacheConfig2() {
         CacheUtilConfig cc =
                 CacheUtilConfig.builder(getApplication()).allowMemoryCache(true)//是否允许保存到内存
-                        .allowDes3(true)//是否允许des3加密
+                        .allowEncrypt(true)//是否允许加密
                         .setACache(ACache.get(MainActivity.this))//自定义ACache
                         .build();
         CacheUtil.init(cc);//初始化，必须调用

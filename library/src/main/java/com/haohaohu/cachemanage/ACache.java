@@ -550,15 +550,15 @@ public class ACache {
      *
      * @param key 保存的key
      * @param value 保存的String数据
-     * @param isDes3 是否加密
+     * @param isEncrypt 是否加密
      */
-    public void put(String key, String value, boolean isDes3) {
+    public void put(String key, String value, boolean isEncrypt) {
         File file = mCache.newFile(key);
         BufferedWriter out = null;
         try {
             out = new BufferedWriter(new FileWriter(file), 1024);
-            if (isDes3) {
-                value = Des3Util.encode(value);
+            if (isEncrypt) {
+                value = CacheUtil.getConfig().getIEncryptStrategy().encrypt(value);
             }
             out.write(value);
         } catch (IOException e) {
@@ -585,18 +585,18 @@ public class ACache {
      * @param value 保存的String数据
      * @param saveTime 保存的时间，单位：秒
      */
-    public void put(String key, String value, int saveTime, boolean isDes3) {
-        put(key, Utils.newStringWithDateInfo(saveTime, value), isDes3);
+    public void put(String key, String value, int saveTime, boolean isEncrypt) {
+        put(key, Utils.newStringWithDateInfo(saveTime, value), isEncrypt);
     }
 
     /**
      * 读取 String数据
      *
      * @param key 保存的key
-     * @param isDes3 是否加密
+     * @param isEncrypt 是否加密
      * @return String 数据
      */
-    public String getAsString(String key, boolean isDes3) {
+    public String getAsString(String key, boolean isEncrypt) {
         File file = mCache.get(key);
         if (!file.exists()) {
             return null;
@@ -610,8 +610,9 @@ public class ACache {
             while ((currentLine = in.readLine()) != null) {
                 readString.append(currentLine);
             }
-            if (isDes3) {
-                readString = new StringBuilder(Des3Util.decode(readString.toString()));
+            if (isEncrypt) {
+                readString = new StringBuilder(
+                        CacheUtil.getConfig().getIEncryptStrategy().decode(readString.toString()));
             }
             if (!Utils.isDue(readString.toString())) {
                 return Utils.clearDateInfo(readString.toString());
@@ -643,10 +644,10 @@ public class ACache {
      * 读取 String数据 ,返回数据没有去除时间
      *
      * @param key 保存的key
-     * @param isDes3 是否加密
+     * @param isEncrypt 是否加密
      * @return String 数据
      */
-    public String getAsStringHasDate(String key, boolean isDes3) {
+    public String getAsStringHasDate(String key, boolean isEncrypt) {
         File file = mCache.get(key);
         if (!file.exists()) {
             return null;
@@ -660,8 +661,9 @@ public class ACache {
             while ((currentLine = in.readLine()) != null) {
                 readString.append(currentLine);
             }
-            if (isDes3) {
-                readString = new StringBuilder(Des3Util.decode(readString.toString()));
+            if (isEncrypt) {
+                readString = new StringBuilder(
+                        CacheUtil.getConfig().getIEncryptStrategy().decode(readString.toString()));
             }
             if (!Utils.isDue(readString.toString())) {
                 return readString.toString();
@@ -689,20 +691,20 @@ public class ACache {
         }
     }
 
-    public void put(String key, JSONObject value, boolean isDes3) {
-        put(key, value.toString(), isDes3);
+    public void put(String key, JSONObject value, boolean isEncrypt) {
+        put(key, value.toString(), isEncrypt);
     }
 
-    public void put(String key, JSONObject value, int saveTime, boolean isDes3) {
-        put(key, value.toString(), saveTime, isDes3);
+    public void put(String key, JSONObject value, int saveTime, boolean isEncrypt) {
+        put(key, value.toString(), saveTime, isEncrypt);
     }
 
-    public JSONObject getAsJSONObject(String key, boolean isDes3) {
+    public JSONObject getAsJSONObject(String key, boolean isEncrypt) {
         String mJSONString = getAsString(key);
 
         try {
-            if (isDes3) {
-                mJSONString = Des3Util.decode(mJSONString);
+            if (isEncrypt) {
+                mJSONString = CacheUtil.getConfig().getIEncryptStrategy().decode(mJSONString);
             }
             return new JSONObject(mJSONString);
         } catch (Exception e) {
@@ -711,19 +713,19 @@ public class ACache {
         }
     }
 
-    public void put(String key, JSONArray value, boolean isDes3) {
-        put(key, value.toString(), isDes3);
+    public void put(String key, JSONArray value, boolean isEncrypt) {
+        put(key, value.toString(), isEncrypt);
     }
 
-    public void put(String key, JSONArray value, int saveTime, boolean isDes3) {
-        put(key, value.toString(), saveTime, isDes3);
+    public void put(String key, JSONArray value, int saveTime, boolean isEncrypt) {
+        put(key, value.toString(), saveTime, isEncrypt);
     }
 
-    public JSONArray getAsJSONArray(String key, boolean isDes3) {
+    public JSONArray getAsJSONArray(String key, boolean isEncrypt) {
         String mJSONString = getAsString(key);
         try {
-            if (isDes3) {
-                mJSONString = Des3Util.decode(mJSONString);
+            if (isEncrypt) {
+                mJSONString = CacheUtil.getConfig().getIEncryptStrategy().decode(mJSONString);
             }
             return new JSONArray(mJSONString);
         } catch (Exception e) {
@@ -738,7 +740,10 @@ public class ACache {
         try {
             out = new FileOutputStream(file);
             if (isDes3) {
-                value = Des3Util.encode(new String(value)).getBytes();
+                value = CacheUtil.getConfig()
+                        .getIEncryptStrategy()
+                        .encrypt(new String(value))
+                        .getBytes();
             }
             out.write(value);
         } catch (Exception e) {
@@ -773,7 +778,10 @@ public class ACache {
             mRAFile.read(byteArray);
             if (!Utils.isDue(byteArray)) {
                 if (isDes3) {
-                    byteArray = Des3Util.decode(Arrays.toString(byteArray)).getBytes();
+                    byteArray = CacheUtil.getConfig()
+                            .getIEncryptStrategy()
+                            .decode(Arrays.toString(byteArray))
+                            .getBytes();
                     return Utils.clearDateInfo(byteArray);
                 } else {
                     return Utils.clearDateInfo(byteArray);
