@@ -24,6 +24,8 @@
 + key值加密
     + 对应的本地缓存文件也加密
 + 添加数据监控机制
++ 支持自定义加密算法
+
 
 # 使用方法
 #### 初始化配置（必须调用 activity或者application）
@@ -131,7 +133,7 @@ allprojects {
 在项目build.gradle中添加 ![](https://jitpack.io/v/ronghao/CacheManage.svg)
 ```
 dependencies {
-    compile 'com.github.ronghao:CacheManage:1.1.2'
+    compile 'com.github.ronghao:CacheManage:1.2.0'
 }
 ```
 
