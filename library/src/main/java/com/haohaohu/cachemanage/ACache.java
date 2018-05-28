@@ -734,12 +734,12 @@ public class ACache {
         }
     }
 
-    public void put(String key, byte[] value, boolean isDes3) {
+    public void put(String key, byte[] value, boolean isEncrypt) {
         File file = mCache.newFile(key);
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(file);
-            if (isDes3) {
+            if (isEncrypt) {
                 value = CacheUtil.getConfig()
                         .getIEncryptStrategy()
                         .encrypt(new String(value))
@@ -761,11 +761,11 @@ public class ACache {
         }
     }
 
-    public void put(String key, byte[] value, int saveTime, boolean isDes3) {
-        put(key, Utils.newByteArrayWithDateInfo(saveTime, value), isDes3);
+    public void put(String key, byte[] value, int saveTime, boolean isEncrypt) {
+        put(key, Utils.newByteArrayWithDateInfo(saveTime, value), isEncrypt);
     }
 
-    public byte[] getAsBinary(String key, boolean isDes3) {
+    public byte[] getAsBinary(String key, boolean isEncrypt) {
         RandomAccessFile mRAFile = null;
         boolean removeFile = false;
         try {
@@ -777,7 +777,7 @@ public class ACache {
             byte[] byteArray = new byte[(int) mRAFile.length()];
             mRAFile.read(byteArray);
             if (!Utils.isDue(byteArray)) {
-                if (isDes3) {
+                if (isEncrypt) {
                     byteArray = CacheUtil.getConfig()
                             .getIEncryptStrategy()
                             .decode(Arrays.toString(byteArray))

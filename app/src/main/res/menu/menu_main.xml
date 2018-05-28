@@ -8,11 +8,11 @@
       android:title="切换到自动生成密钥"
       app:showAsAction="never"/>
   <item
-      android:id="@+id/action_ok"
+      android:id="@+id/action_config1"
       android:title="des3密钥切换1"
       app:showAsAction="never"/>
   <item
-      android:id="@+id/action_des_2"
+      android:id="@+id/action_config2"
       android:title="des3密钥切换2"
       app:showAsAction="never"/>
 </menu>

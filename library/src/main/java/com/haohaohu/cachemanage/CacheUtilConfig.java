@@ -61,7 +61,7 @@ public class CacheUtilConfig {
 
     public static class Builder {
         private Context context;
-        private boolean isEncrypt = true;//默认不加密
+        private boolean isEncrypt = true;//默认加密
         private boolean memoryCache = true;//默认保存到内存
 
         private ACache aCache;//ACache示例
@@ -69,7 +69,6 @@ public class CacheUtilConfig {
 
         public Builder(Context context) {
             this.context = context;
-            iEncryptStrategy = new Des3EncryptStrategy(context);
         }
 
         public Builder allowMemoryCache(boolean memoryCache) {
@@ -87,15 +86,19 @@ public class CacheUtilConfig {
             return this;
         }
 
-        public Builder allowEncrypt(boolean b) {
+        public Builder allowEncrypt(boolean isEncrypt) {
             this.isEncrypt = isEncrypt;
             return this;
         }
 
         public CacheUtilConfig build() {
+            if (this.iEncryptStrategy == null) {
+                iEncryptStrategy = new Des3EncryptStrategy(context);
+            }
             if (this.aCache == null) {
                 this.aCache = ACache.get(context);
             }
+
             return new CacheUtilConfig(this);
         }
     }

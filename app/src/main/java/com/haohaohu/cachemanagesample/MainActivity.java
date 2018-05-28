@@ -66,17 +66,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_ok:
-                initCacheConfig();
+            case R.id.action_default:
+                initCacheConfigDefault();
                 clearMemory();
-                break;
-            case R.id.action_des_2:
+            case R.id.action_config1:
                 initCacheConfig1();
                 clearMemory();
                 break;
-            case R.id.action_default:
+            case R.id.action_config2:
                 initCacheConfig2();
                 clearMemory();
+                break;
+
             default:
                 break;
         }
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         mTextView = (TextView) findViewById(R.id.main_text3);
-        initCacheConfig2();
+        initCacheConfigDefault();
         initEvent();
         initObserver();
     }
@@ -171,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                         + "jsonArray对象(不加密):"
                         + check(jsonArray.toString(), key9Value)
                         + "\n"
-                        + "jsonArray对象(不加密):"
+                        + "jsonArray对象(加密):"
                         + check(jsonArray.toString(), key10Value)
                         + "\n"
                         + "数字(不加密):"
@@ -284,18 +285,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initCacheConfig() {
+    private void initCacheConfigDefault() {
+        CacheUtilConfig cc =
+                CacheUtilConfig.builder(getApplication()).allowMemoryCache(true)//是否允许保存到内存
+                        .allowEncrypt(false)//是否允许加密
+                        .setACache(ACache.get(MainActivity.this))//自定义ACache
+                        .build();
+        CacheUtil.init(cc);//初始化，必须调用
+    }
+
+    private void initCacheConfig1() {
         CacheUtilConfig cc = CacheUtilConfig.builder(getApplication())
                 .setIEncryptStrategy(
                         new Des3EncryptStrategy(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==",
                                 "haohaoha"))
                 .allowMemoryCache(true)//是否允许保存到内存
-                .allowEncrypt(true)//是否允许des3加密
+                .allowEncrypt(false)//是否允许加密
                 .build();
         CacheUtil.init(cc);//初始化，必须调用
     }
 
-    private void initCacheConfig1() {
+    private void initCacheConfig2() {
         CacheUtilConfig cc = CacheUtilConfig.builder(MainActivity.this)
                 .setIEncryptStrategy(
                         new Des3EncryptStrategy(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==",
@@ -325,15 +335,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void initCacheConfig2() {
-        CacheUtilConfig cc =
-                CacheUtilConfig.builder(getApplication()).allowMemoryCache(true)//是否允许保存到内存
-                        .allowEncrypt(true)//是否允许加密
-                        .setACache(ACache.get(MainActivity.this))//自定义ACache
-                        .build();
-        CacheUtil.init(cc);//初始化，必须调用
     }
 
     public void clearMemory() {

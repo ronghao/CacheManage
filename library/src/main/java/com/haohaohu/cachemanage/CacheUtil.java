@@ -124,16 +124,16 @@ public class CacheUtil {
      * @param key 保存的key
      * @param value 保存的value
      * @param time 过期时间
-     * @param isDes3 是否加密
+     * @param isEncrypt 是否加密
      */
-    public static void put(String key, @NonNull String value, int time, boolean isDes3) {
+    public static void put(String key, @NonNull String value, int time, boolean isEncrypt) {
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
             return;
         }
         if (getConfig().isMemoryCache()) {
             getLruCache().put(key, Utils.newStringWithDateInfo(time, value));
         }
-        getConfig().getACache().put(key, value, time, isDes3);
+        getConfig().getACache().put(key, value, time, isEncrypt);
         CacheObserver.getInstance().notifyDataChange(key, value);
     }
 
@@ -154,9 +154,9 @@ public class CacheUtil {
      * @param <T> 对应的实体对象
      * @param key 保存的key
      * @param value 保存的value
-     * @param isDes3 是否加密
+     * @param isEncrypt 是否加密
      */
-    public static <T> void put(String key, @NonNull T value, boolean isDes3) {
+    public static <T> void put(String key, @NonNull T value, boolean isEncrypt) {
         if (TextUtils.isEmpty(key)) {
             return;
         }
@@ -170,7 +170,7 @@ public class CacheUtil {
             date = gson.toJson(value);
         }
 
-        put(key, date, isDes3);
+        put(key, date, isEncrypt);
     }
 
     /**
@@ -192,9 +192,9 @@ public class CacheUtil {
      * @param key 保存的key
      * @param value 保存的value
      * @param time 过期时间 秒
-     * @param isDes3 是否加密
+     * @param isEncrypt 是否加密
      */
-    public static <T> void put(String key, @NonNull T value, int time, boolean isDes3) {
+    public static <T> void put(String key, @NonNull T value, int time, boolean isEncrypt) {
         if (TextUtils.isEmpty(key)) {
             return;
         }
@@ -208,7 +208,7 @@ public class CacheUtil {
             date = gson.toJson(value);
         }
 
-        put(key, date, time, isDes3);
+        put(key, date, time, isEncrypt);
     }
 
     /**
@@ -228,11 +228,11 @@ public class CacheUtil {
      * 先从内存缓存提取，取不到再从文件缓存中获取
      *
      * @param key 要查找的key
-     * @param isDes3 是否加密
+     * @param isEncrypt 是否加密
      * @return 保存的value
      */
     @Nullable
-    public static String get(String key, boolean isDes3) {
+    public static String get(String key, boolean isEncrypt) {
         if (TextUtils.isEmpty(key)) {
             return "";
         }
@@ -249,10 +249,10 @@ public class CacheUtil {
             }
         }
 
-        value = getConfig().getACache().getAsString(key, isDes3);
+        value = getConfig().getACache().getAsString(key, isEncrypt);
         if (!TextUtils.isEmpty(value)) {
             if (getConfig().isMemoryCache()) {
-                getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isDes3));
+                getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isEncrypt));
             }
             return value;
         }
@@ -280,11 +280,11 @@ public class CacheUtil {
      * @param <T> 对应的实体对象
      * @param key 查找的key
      * @param classOfT 对应的实体对象
-     * @param isDes3 是否加密
+     * @param isEncrypt 是否加密
      * @return 实体对象
      */
     @Nullable
-    public static <T> T get(String key, Class<T> classOfT, boolean isDes3) {
+    public static <T> T get(String key, Class<T> classOfT, boolean isEncrypt) {
         if (TextUtils.isEmpty(key) || classOfT == null) {
             return null;
         }
@@ -308,11 +308,11 @@ public class CacheUtil {
                 }
             }
         }
-        value = getConfig().getACache().getAsString(key, isDes3);
+        value = getConfig().getACache().getAsString(key, isEncrypt);
 
         if (!TextUtils.isEmpty(value)) {
             if (getConfig().isMemoryCache()) {
-                getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isDes3));
+                getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isEncrypt));
             }
             return gson.fromJson(value, classOfT);
         }
@@ -349,11 +349,11 @@ public class CacheUtil {
      * @param key 查找的key
      * @param classOfT 对应的实体对象
      * @param t 错误情况下返回数据
-     * @param isDes3 是否加密
+     * @param isEncrypt 是否加密
      * @return 实体对象
      */
     @Nullable
-    public static <T> T get(String key, Class<T> classOfT, T t, boolean isDes3) {
+    public static <T> T get(String key, Class<T> classOfT, T t, boolean isEncrypt) {
         if (TextUtils.isEmpty(key) || classOfT == null) {
             return null;
         }
@@ -370,11 +370,11 @@ public class CacheUtil {
                 }
             }
         }
-        value = getConfig().getACache().getAsString(key, isDes3);
+        value = getConfig().getACache().getAsString(key, isEncrypt);
 
         if (!TextUtils.isEmpty(value)) {
             if (getConfig().isMemoryCache()) {
-                getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isDes3));
+                getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isEncrypt));
             }
             return gson.fromJson(value, classOfT);
         }
