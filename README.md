@@ -29,12 +29,13 @@
 #### 初始化配置（必须调用 activity或者application）
 ```java
     CacheUtilConfig cc = CacheUtilConfig.builder(getApplication())
-                .setDes3("WLIJkjdsfIlI789sd87dnu==")//自定义des3加密（建议使用默认生成的密钥）
-                .setIv("haohaoha")//自定义des3偏移量
+                .setIEncryptStrategy(
+                        new Des3EncryptStrategy(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==",
+                                "haohaoha"))//自定义des3加密
                 .allowMemoryCache(true)//是否允许保存到内存
-                .allowDes3(true)//是否允许des3加密
+                .allowEncrypt(false)//是否允许加密
                 .build();
-    CacheUtil.init(cc);//初始化，必须调用
+        CacheUtil.init(cc);//初始化，必须调用
 ```
 
 #### 保存数据
@@ -144,10 +145,11 @@ dependencies {
 
 
 # TODO
-+ 自定义加密算法
 + 添加多线程控制
 
 # 版本更新说明
++ v1.1.3
+	+ 添加自定义加密算法，只需实现IEncryptStrategy接口，参见Des3EncryptStrategy
 + v1.1.2
     + 添加自定义ACache
 	    + 在CacheUtilConfig配置

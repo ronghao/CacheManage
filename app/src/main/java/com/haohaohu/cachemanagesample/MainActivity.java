@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
         CacheUtilConfig cc = CacheUtilConfig.builder(getApplication())
                 .setIEncryptStrategy(
                         new Des3EncryptStrategy(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==",
-                                "haohaoha"))
+                                "haohaoha"))//自定义des3加密
                 .allowMemoryCache(true)//是否允许保存到内存
                 .allowEncrypt(false)//是否允许加密
                 .build();
