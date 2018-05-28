@@ -148,7 +148,7 @@ dependencies {
 + 添加多线程控制
 
 # 版本更新说明
-+ v1.1.3
++ v1.2.0
 	+ 添加自定义加密算法，只需实现IEncryptStrategy接口，参见Des3EncryptStrategy
 + v1.1.2
     + 添加自定义ACache
