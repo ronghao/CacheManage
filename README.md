@@ -151,10 +151,10 @@ dependencies {
 
 # 版本更新说明
 + v1.2.0
-	+ 添加自定义加密算法，只需实现IEncryptStrategy接口，参见Des3EncryptStrategy
+	+ 添加自定义加密算法，只需实现IEncryptStrategy接口，参见[Des3EncryptStrategy](https://github.com/ronghao/CacheManage/blob/master/library/src/main/java/com/haohaohu/cachemanage/strategy/Des3EncryptStrategy.java)
 + v1.1.2
     + 添加自定义ACache
-	    + 在CacheUtilConfig配置
+	    + 在[CacheUtilConfig](https://github.com/ronghao/CacheManage/blob/master/library/src/main/java/com/haohaohu/cachemanage/CacheUtilConfig.java)配置
 + v1.1.1
     + 添加数据监控机制
 + v1.1.0
