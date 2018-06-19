@@ -103,6 +103,13 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, key + "：" + str, Toast.LENGTH_SHORT).show();
             }
         });
+
+        CacheObserver.addListener("key2", new IDataChangeListener() {
+            @Override
+            public void onDataChange(String key, String str) {
+                Toast.makeText(MainActivity.this, key + "：" + str, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initEvent() {

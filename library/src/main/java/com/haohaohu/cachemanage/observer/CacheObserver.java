@@ -20,6 +20,10 @@ public class CacheObserver {
         return Holder.observer;
     }
 
+    public static void addListener(String key, IDataChangeListener listener) {
+        CacheObserver.getInstance().addObserver(key, listener);
+    }
+
     public synchronized void addObserver(String key, IDataChangeListener listener) {
         if (TextUtils.isEmpty(key) || listener == null) {
             return;
