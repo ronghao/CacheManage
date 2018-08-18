@@ -40,6 +40,22 @@
       />
 
   <TextView
+      android:id="@+id/main_text5"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="5dp"
+      android:text="清理内存缓存(clearAllMemory方法)"
+      />
+
+  <TextView
+      android:id="@+id/main_text6"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="5dp"
+      android:text="清理内存缓存和文件缓存(clearAll方法)"
+      />
+
+  <TextView
       android:id="@+id/main_text3"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

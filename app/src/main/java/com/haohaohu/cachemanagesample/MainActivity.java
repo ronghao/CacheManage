@@ -290,6 +290,22 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "清理内存成功", Toast.LENGTH_SHORT).show();
             }
         });
+
+        findViewById(R.id.main_text5).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CacheUtil.clearAllMemory();
+                Toast.makeText(MainActivity.this, "清理所有内存缓存成功", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        findViewById(R.id.main_text6).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CacheUtil.clearAll();
+                Toast.makeText(MainActivity.this, "清理缓存成功", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initCacheConfigDefault() {

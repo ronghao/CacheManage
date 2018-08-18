@@ -408,6 +408,21 @@ public class CacheUtil {
     }
 
     /**
+     * 清理所有内存缓存
+     */
+    public static void clearAllMemory() {
+        getLruCache().evictAll();
+    }
+
+    /**
+     * 清理所有缓存
+     */
+    public static void clearAll() {
+        getLruCache().evictAll();
+        getConfig().getACache().clear();
+    }
+
+    /**
      * 以.开头的文件默认不显示
      */
     public static String translateKey(@NonNull String key) {
