@@ -105,8 +105,10 @@ CacheUtil.get("要查找的key",对应的实体对象， 错误情况下返回�
 
 #### 删除数据
 ```java
-CacheUtil.clearMemory("key1");//内存删除
-CacheUtil.clear("key8");//内存和缓存都删除
+CacheUtil.clearMemory("key1");//指定key内存缓存删除
+CacheUtil.clear("key8");//指定key内存缓存和文件缓存都删除
+CacheUtil.clearAllMemory();//所有内存缓存删除
+CacheUtil.clearAll();//所有内存缓存和文件缓存都删除
 ```
 
 #### 数据监听
@@ -150,6 +152,8 @@ dependencies {
 + 添加多线程控制
 
 # 版本更新说明
++ v1.2.1
+  + 添加clearAll()和clearAllMemory()方法
 + v1.2.0
 	+ 添加自定义加密算法，只需实现IEncryptStrategy接口，参见[Des3EncryptStrategy](https://github.com/ronghao/CacheManage/blob/master/library/src/main/java/com/haohaohu/cachemanage/strategy/Des3EncryptStrategy.java)
 + v1.1.2
