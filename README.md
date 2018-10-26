@@ -135,12 +135,13 @@ allprojects {
 在项目build.gradle中添加 ![](https://jitpack.io/v/ronghao/CacheManage.svg)
 ```
 dependencies {
-    compile 'com.github.ronghao:CacheManage:1.2.0'
+    compile 'com.github.ronghao:CacheManage:1.2.2'
 }
 ```
 
 # 特别注意
 + **文件缓存默认缓存到app缓存文件，在手机清理缓存空间时可被清理，请悉知：如不想被清理，请指定缓存位置存储**
+	+ 先默认存在app缓存文件的父文件夹下，防止清理缓存时清理掉
 + 禁止传入空key
 + 如未存储数据时，get（key）会返回的字符串为空字符串
 + 如未存储数据（实体对象）时获取数据，
@@ -152,6 +153,8 @@ dependencies {
 + 添加多线程控制
 
 # 版本更新说明
++ v1.2.2
+  + 修改默认缓存位置，防止被清理
 + v1.2.1
   + 添加clearAll()和clearAllMemory()方法
 + v1.2.0
