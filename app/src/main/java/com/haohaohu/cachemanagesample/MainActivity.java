@@ -15,6 +15,7 @@ import com.haohaohu.cachemanage.CacheUtilConfig;
 import com.haohaohu.cachemanage.observer.CacheObserver;
 import com.haohaohu.cachemanage.observer.IDataChangeListener;
 import com.haohaohu.cachemanage.strategy.Des3EncryptStrategy;
+import java.io.File;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -77,7 +78,10 @@ public class MainActivity extends AppCompatActivity {
                 initCacheConfig2();
                 clearMemory();
                 break;
-
+            case R.id.action_config3:
+                initCacheConfig3();
+                clearMemory();
+                break;
             default:
                 break;
         }
@@ -312,7 +316,6 @@ public class MainActivity extends AppCompatActivity {
         CacheUtilConfig cc =
                 CacheUtilConfig.builder(getApplication()).allowMemoryCache(true)//是否允许保存到内存
                         .allowEncrypt(false)//是否允许加密
-                        .setACache(ACache.get(MainActivity.this))//自定义ACache
                         .build();
         CacheUtil.init(cc);//初始化，必须调用
     }
@@ -358,6 +361,17 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void initCacheConfig3() {
+        File file = new File(ACache.getDiskCacheDir(MainActivity.this));
+        File file1 = new File(file.getParent(), "cachemanage");
+        CacheUtilConfig cc =
+                CacheUtilConfig.builder(getApplication()).allowMemoryCache(true)//是否允许保存到内存
+                        .allowEncrypt(false)//是否允许加密
+                        .setACache(ACache.get(file1))//自定义ACache
+                        .build();
+        CacheUtil.init(cc);//初始化，必须调用
     }
 
     public void clearMemory() {

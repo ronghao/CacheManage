@@ -3,6 +3,7 @@ package com.haohaohu.cachemanage;
 import android.content.Context;
 import com.haohaohu.cachemanage.strategy.Des3EncryptStrategy;
 import com.haohaohu.cachemanage.strategy.IEncryptStrategy;
+import java.io.File;
 
 /**
  * 配置项
@@ -63,6 +64,7 @@ public class CacheUtilConfig {
         private Context context;
         private boolean isEncrypt = true;//默认加密
         private boolean memoryCache = true;//默认保存到内存
+        private File file;
 
         private ACache aCache;//ACache示例
         public IEncryptStrategy iEncryptStrategy;
@@ -96,7 +98,9 @@ public class CacheUtilConfig {
                 iEncryptStrategy = new Des3EncryptStrategy(context);
             }
             if (this.aCache == null) {
-                this.aCache = ACache.get(context);
+                File file = new File(ACache.getDiskCacheDir(context));
+                File cacheFile = new File(file.getParent(), "cachemanage");
+                this.aCache = ACache.get(cacheFile);
             }
 
             return new CacheUtilConfig(this);

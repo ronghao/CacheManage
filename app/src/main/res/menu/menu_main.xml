@@ -15,4 +15,8 @@
       android:id="@+id/action_config2"
       android:title="des3密钥切换2"
       app:showAsAction="never"/>
+  <item
+      android:id="@+id/action_config3"
+      android:title="切换缓存地址"
+      app:showAsAction="never"/>
 </menu>
