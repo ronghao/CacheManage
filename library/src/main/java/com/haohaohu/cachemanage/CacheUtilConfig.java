@@ -1,8 +1,11 @@
 package com.haohaohu.cachemanage;
 
 import android.content.Context;
+import android.os.Build;
+
 import com.haohaohu.cachemanage.strategy.Des3EncryptStrategy;
 import com.haohaohu.cachemanage.strategy.IEncryptStrategy;
+
 import java.io.File;
 
 /**
@@ -65,6 +68,7 @@ public class CacheUtilConfig {
         private boolean isEncrypt = true;//默认加密
         private boolean memoryCache = true;//默认保存到内存
         private File file;
+        private boolean isPreventPowerDelete = false;//防止被删除
 
         private ACache aCache;//ACache示例
         public IEncryptStrategy iEncryptStrategy;
@@ -93,14 +97,39 @@ public class CacheUtilConfig {
             return this;
         }
 
+        public Builder preventPowerDelete(boolean isPreventPowerDelete) {
+            this.isPreventPowerDelete = isPreventPowerDelete;
+            return this;
+        }
+
         public CacheUtilConfig build() {
             if (this.iEncryptStrategy == null) {
                 iEncryptStrategy = new Des3EncryptStrategy(context);
             }
             if (this.aCache == null) {
-                File file = new File(ACache.getDiskCacheDir(context));
-                File cacheFile = new File(file.getParent(), "cachemanage");
-                this.aCache = ACache.get(cacheFile);
+                if (isPreventPowerDelete) {
+                    File file = context.getDatabasePath("cachetest");
+                    if (file == null || !file.exists()) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            context.openOrCreateDatabase("cachetest",
+                                    Context.MODE_ENABLE_WRITE_AHEAD_LOGGING, null);
+                        }
+                        file = context.getDatabasePath("cachetest");
+                    }
+                    File cacheFile = new File(file.getParent(), "cachemanage/");
+                    if (cacheFile.exists() && cacheFile.isFile()) {
+                        cacheFile.delete();
+                    }
+                    if (!cacheFile.exists()) {
+                        cacheFile.mkdirs();
+                    }
+
+                    this.aCache = ACache.get(cacheFile);
+                } else {
+                    File file = new File(ACache.getDiskCacheDir(context));
+                    File cacheFile = new File(file.getParent(), "cachemanage/");
+                    this.aCache = ACache.get(cacheFile);
+                }
             }
 
             return new CacheUtilConfig(this);

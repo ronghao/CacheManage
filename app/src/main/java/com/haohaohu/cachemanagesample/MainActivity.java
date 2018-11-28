@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         mTextView = (TextView) findViewById(R.id.main_text3);
-        initCacheConfigDefault();
+        initCacheConfig4();
         initEvent();
         initObserver();
     }
@@ -370,6 +370,19 @@ public class MainActivity extends AppCompatActivity {
                 CacheUtilConfig.builder(getApplication()).allowMemoryCache(true)//是否允许保存到内存
                         .allowEncrypt(false)//是否允许加密
                         .setACache(ACache.get(file1))//自定义ACache
+                        .build();
+        CacheUtil.init(cc);//初始化，必须调用
+    }
+
+    private void initCacheConfig4() {
+//        openOrCreateDatabase("cachemanage",MODE_ENABLE_WRITE_AHEAD_LOGGING,null);
+//        File file = getDatabasePath("cachemanage");
+//        File file1 = new File(file.getParent(), "cache");
+        CacheUtilConfig cc =
+                CacheUtilConfig.builder(getApplication()).allowMemoryCache(true)//是否允许保存到内存
+                        .allowEncrypt(false)//是否允许加密
+                        .preventPowerDelete(true)
+//                        .setACache(ACache.get(file1))//自定义ACache
                         .build();
         CacheUtil.init(cc);//初始化，必须调用
     }
