@@ -9,22 +9,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.haohaohu.cachemanage.ACache;
 import com.haohaohu.cachemanage.CacheUtil;
 import com.haohaohu.cachemanage.CacheUtilConfig;
 import com.haohaohu.cachemanage.observer.CacheObserver;
 import com.haohaohu.cachemanage.observer.IDataChangeListener;
 import com.haohaohu.cachemanage.strategy.Des3EncryptStrategy;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+
 import javax.crypto.KeyGenerator;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * 测试Activity
@@ -36,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView mTextView;
     private JSONArray jsonArray;
     private JSONObject jsonObject;
+    private Integer index = 0;
+    private CountDownLatch countDownLatch = new CountDownLatch(100);
+    private ReentrantLock lock = new ReentrantLock(true);
+    final Condition writeCon = lock.newCondition();//写线程条件
+//    final Condition notEmpty = lock.newCondition();//读线程条件
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,68 +260,87 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.main_text2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CacheUtil.clear("key1");
-                CacheUtil.clear("key2");
-                CacheUtil.clear("key3");
-                CacheUtil.clear("key4");
-                CacheUtil.clear("key5");
-                CacheUtil.clear("key6");
-                CacheUtil.clear("key7");
-                CacheUtil.clear("key8");
-                CacheUtil.clear("key9");
-                CacheUtil.clear("key10");
-                CacheUtil.clear("key11");
-                CacheUtil.clear("key12");
-                CacheUtil.clear("key13");
-                CacheUtil.clear("key14");
-                CacheUtil.clear("key15");
-                CacheUtil.clear("key16");
-                CacheUtil.clear(CacheUtil.translateKey("key17"));
-                CacheUtil.clear("key18");
-                Toast.makeText(MainActivity.this, "清理成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "压力测试，看Log", Toast.LENGTH_SHORT).show();
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        doTask();
+                    }
+                });
+                thread.start();
             }
         });
 
-        findViewById(R.id.main_text4).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CacheUtil.clearMemory("key1");
-                CacheUtil.clearMemory("key2");
-                CacheUtil.clearMemory("key3");
-                CacheUtil.clearMemory("key4");
-                CacheUtil.clearMemory("key5");
-                CacheUtil.clearMemory("key6");
-                CacheUtil.clearMemory("key7");
-                CacheUtil.clearMemory("key8");
-                CacheUtil.clearMemory("key9");
-                CacheUtil.clearMemory("key10");
-                CacheUtil.clearMemory("key11");
-                CacheUtil.clearMemory("key12");
-                CacheUtil.clearMemory("key13");
-                CacheUtil.clearMemory("key14");
-                CacheUtil.clearMemory("key15");
-                CacheUtil.clearMemory("key16");
-                CacheUtil.clearMemory(CacheUtil.translateKey("key17"));
-                CacheUtil.clearMemory("key18");
-                Toast.makeText(MainActivity.this, "清理内存成功", Toast.LENGTH_SHORT).show();
-            }
-        });
+        findViewById(R.id.main_text4).
 
-        findViewById(R.id.main_text5).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CacheUtil.clearAllMemory();
-                Toast.makeText(MainActivity.this, "清理所有内存缓存成功", Toast.LENGTH_SHORT).show();
-            }
-        });
+                setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CacheUtil.clearMemory("key1");
+                        CacheUtil.clearMemory("key2");
+                        CacheUtil.clearMemory("key3");
+                        CacheUtil.clearMemory("key4");
+                        CacheUtil.clearMemory("key5");
+                        CacheUtil.clearMemory("key6");
+                        CacheUtil.clearMemory("key7");
+                        CacheUtil.clearMemory("key8");
+                        CacheUtil.clearMemory("key9");
+                        CacheUtil.clearMemory("key10");
+                        CacheUtil.clearMemory("key11");
+                        CacheUtil.clearMemory("key12");
+                        CacheUtil.clearMemory("key13");
+                        CacheUtil.clearMemory("key14");
+                        CacheUtil.clearMemory("key15");
+                        CacheUtil.clearMemory("key16");
+                        CacheUtil.clearMemory(CacheUtil.translateKey("key17"));
+                        CacheUtil.clearMemory("key18");
+                        Toast.makeText(MainActivity.this, "清理内存成功", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-        findViewById(R.id.main_text6).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CacheUtil.clearAll();
-                Toast.makeText(MainActivity.this, "清理缓存成功", Toast.LENGTH_SHORT).show();
-            }
-        });
+        findViewById(R.id.main_text5).
+
+                setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CacheUtil.clearAllMemory();
+                        Toast.makeText(MainActivity.this, "清理所有内存缓存成功", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        findViewById(R.id.main_text6).
+
+                setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CacheUtil.clearAll();
+                        Toast.makeText(MainActivity.this, "清理缓存成功", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void doTask() {
+
+        long startTime = System.currentTimeMillis();   //获取开始时间
+        for (int i = 0; i < 100; i++) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    index++;
+                    Log.e("time", "次数： " + index);
+                    CacheUtil.put("key1", "测试数据1" + (index));//默认加密状态
+                    countDownLatch.countDown();
+                }
+            });
+            thread.start();
+        }
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        long endTime = System.currentTimeMillis(); //获取结束时间
+        Log.e("time", "程序运行时间： " + (endTime - startTime) + "ms");
     }
 
     private void initCacheConfigDefault() {
