@@ -123,7 +123,10 @@ public class CacheUtilConfig {
                     if (!cacheFile.exists()) {
                         cacheFile.mkdirs();
                     }
-
+                    //删除临时创建的数据库文件
+                    if (file.exists()) {
+                        file.delete();
+                    }
                     this.aCache = ACache.get(cacheFile);
                 } else {
                     File file = new File(ACache.getDiskCacheDir(context));
