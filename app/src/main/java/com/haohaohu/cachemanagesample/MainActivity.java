@@ -411,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
         CacheUtilConfig cc =
                 CacheUtilConfig.builder(getApplication()).allowMemoryCache(true)//是否允许保存到内存
                         .allowEncrypt(false)//是否允许加密
-                        .preventPowerDelete(true)
+                        .preventPowerDelete(true)//强力防止删除，将缓存数据存储在app数据库目录下的cachemanage文件夹下
 //                        .setACache(ACache.get(file1))//自定义ACache
                         .build();
         CacheUtil.init(cc);//初始化，必须调用

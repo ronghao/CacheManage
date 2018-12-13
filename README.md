@@ -12,6 +12,7 @@
     + getCacheDir()获取的缓存文件较容易被删除
     + 大于1M的缓存文件，google建议使用getExternalCacheDir()缓存存储
     + 默认存储位置为app数据缓存位置
+	    + 为处理防止被删除，在项目数据库文件夹下创建cachemanage文件夹，数据存储在该文件夹下
 + 支持文件加密存储
     + 默认des3加密内容
     + 默认生成des3唯一密钥（建议使用默认生成的密钥）
@@ -33,9 +34,11 @@
     CacheUtilConfig cc = CacheUtilConfig.builder(getApplication())
                 .setIEncryptStrategy(
                         new Des3EncryptStrategy(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==",
-                                "haohaoha"))//自定义des3加密
+                                "haohaoha"))//自定义加密算法
                 .allowMemoryCache(true)//是否允许保存到内存
                 .allowEncrypt(false)//是否允许加密
+				.preventPowerDelete(true)//强力防止删除，将缓存数据存储在app数据库目录下的cachemanage文件夹下
+				.setACache(ACache.get(file1))//自定义ACache，file1为缓存自定义存储文件夹
                 .build();
         CacheUtil.init(cc);//初始化，必须调用
 ```
@@ -135,7 +138,7 @@ allprojects {
 在项目build.gradle中添加 ![](https://jitpack.io/v/ronghao/CacheManage.svg)
 ```
 dependencies {
-    compile 'com.github.ronghao:CacheManage:1.2.3'
+    compile 'com.github.ronghao:CacheManage:1.2.4'
 }
 ```
 
@@ -148,12 +151,10 @@ dependencies {
 	+ 如果实现了默认构造函数，会返回一个新的对象实例；
 	+ 如果未实现构造函数，会返回null
 
-
-# TODO
-+ 添加多线程控制
-
 # 版本更新说明
-+ v1.2.2
++ v1.2.4
+  + 添加线程锁，测试多线程下数据情况
++ v1.2.3
   + 修改默认缓存位置，防止被清理
 + v1.2.1
   + 添加clearAll()和clearAllMemory()方法
