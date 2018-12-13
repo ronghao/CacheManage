@@ -11,13 +11,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.LruCache;
+
 import com.google.gson.Gson;
 import com.haohaohu.cachemanage.observer.CacheObserver;
 import com.haohaohu.cachemanage.util.Base64Util;
-import java.io.ByteArrayOutputStream;
-import java.lang.ref.SoftReference;
+import com.haohaohu.cachemanage.util.LockUtil;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.lang.ref.SoftReference;
 
 /**
  * 数据缓存类，包括内存缓存和文件缓存
@@ -82,7 +86,7 @@ public class CacheUtil {
     /**
      * 保存key和value到内存缓存和文件缓存
      *
-     * @param key 保存的key
+     * @param key   保存的key
      * @param value 保存的value
      */
     public static void put(String key, @NonNull String value) {
@@ -92,27 +96,31 @@ public class CacheUtil {
     /**
      * 保存key和value到内存缓存和文件缓存
      *
-     * @param key 保存的key
-     * @param value 保存的value
+     * @param key       保存的key
+     * @param value     保存的value
      * @param isEncrypt 是否加密
      */
     public static void put(String key, @NonNull String value, boolean isEncrypt) {
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
             return;
         }
+
+        LockUtil.getInstance().writeLock().lock();
+//        Log.e("time", "设置值:" + value);测试插入是否正确
         if (getConfig().isMemoryCache()) {
             getLruCache().put(key, value);
         }
         getConfig().getACache().put(key, value, isEncrypt);
         CacheObserver.getInstance().notifyDataChange(key, value);
+        LockUtil.getInstance().writeLock().unlock();
     }
 
     /**
      * 保存key和value到内存缓存和文件缓存
      *
-     * @param key 保存的key
+     * @param key   保存的key
      * @param value 保存的value
-     * @param time 过期时间
+     * @param time  过期时间
      */
     public static void put(String key, @NonNull String value, int time) {
         put(key, value, time, getConfig().isEncrypt());
@@ -121,28 +129,30 @@ public class CacheUtil {
     /**
      * 保存key和value到内存缓存和文件缓存
      *
-     * @param key 保存的key
-     * @param value 保存的value
-     * @param time 过期时间
+     * @param key       保存的key
+     * @param value     保存的value
+     * @param time      过期时间
      * @param isEncrypt 是否加密
      */
     public static void put(String key, @NonNull String value, int time, boolean isEncrypt) {
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
             return;
         }
+        LockUtil.getInstance().writeLock().lock();
         if (getConfig().isMemoryCache()) {
             getLruCache().put(key, Utils.newStringWithDateInfo(time, value));
         }
         getConfig().getACache().put(key, value, time, isEncrypt);
         CacheObserver.getInstance().notifyDataChange(key, value);
+        LockUtil.getInstance().writeLock().unlock();
     }
 
     /**
      * 保存key和value到内存缓存和文件缓存
      *
-     * @param key 保存的key
+     * @param key   保存的key
      * @param value 保存的value
-     * @param <T> 对应的实体对象
+     * @param <T>   对应的实体对象
      */
     public static <T> void put(String key, @NonNull T value) {
         put(key, value, getConfig().isEncrypt());
@@ -151,9 +161,9 @@ public class CacheUtil {
     /**
      * 保存key和value到内存缓存和文件缓存
      *
-     * @param <T> 对应的实体对象
-     * @param key 保存的key
-     * @param value 保存的value
+     * @param <T>       对应的实体对象
+     * @param key       保存的key
+     * @param value     保存的value
      * @param isEncrypt 是否加密
      */
     public static <T> void put(String key, @NonNull T value, boolean isEncrypt) {
@@ -176,10 +186,10 @@ public class CacheUtil {
     /**
      * 保存key和value到内存缓存和文件缓存
      *
-     * @param <T> 对应的实体对象
-     * @param key 保存的key
+     * @param <T>   对应的实体对象
+     * @param key   保存的key
      * @param value 保存的value
-     * @param time 过期时间 秒
+     * @param time  过期时间 秒
      */
     public static <T> void put(String key, @NonNull T value, int time) {
         put(key, value, time, getConfig().isEncrypt());
@@ -188,10 +198,10 @@ public class CacheUtil {
     /**
      * 保存key和value到内存缓存和文件缓存
      *
-     * @param <T> 对应的实体对象
-     * @param key 保存的key
-     * @param value 保存的value
-     * @param time 过期时间 秒
+     * @param <T>       对应的实体对象
+     * @param key       保存的key
+     * @param value     保存的value
+     * @param time      过期时间 秒
      * @param isEncrypt 是否加密
      */
     public static <T> void put(String key, @NonNull T value, int time, boolean isEncrypt) {
@@ -216,6 +226,7 @@ public class CacheUtil {
      * 先从内存缓存提取，取不到再从文件缓存中获取
      *
      * @param key 要查找的key
+     *
      * @return 保存的value
      */
     @Nullable
@@ -227,8 +238,9 @@ public class CacheUtil {
      * 根据key获取保存的value
      * 先从内存缓存提取，取不到再从文件缓存中获取
      *
-     * @param key 要查找的key
+     * @param key       要查找的key
      * @param isEncrypt 是否加密
+     *
      * @return 保存的value
      */
     @Nullable
@@ -236,36 +248,44 @@ public class CacheUtil {
         if (TextUtils.isEmpty(key)) {
             return "";
         }
-        String value;
-        if (getConfig().isMemoryCache()) {
-            value = getLruCache().get(key);
-            if (!TextUtils.isEmpty(value)) {
-                if (!Utils.isDue(value)) {
-                    return Utils.clearDateInfo(value);
-                } else {
-                    getLruCache().remove(key);
-                    return "";
+        try {
+            LockUtil.getInstance().readLock().lock();
+            String value;
+            if (getConfig().isMemoryCache()) {
+                value = getLruCache().get(key);
+                if (!TextUtils.isEmpty(value)) {
+                    if (!Utils.isDue(value)) {
+                        return Utils.clearDateInfo(value);
+                    } else {
+                        getLruCache().remove(key);
+                        return "";
+                    }
                 }
             }
-        }
 
-        value = getConfig().getACache().getAsString(key, isEncrypt);
-        if (!TextUtils.isEmpty(value)) {
-            if (getConfig().isMemoryCache()) {
-                getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isEncrypt));
+            value = getConfig().getACache().getAsString(key, isEncrypt);
+            if (!TextUtils.isEmpty(value)) {
+                if (getConfig().isMemoryCache()) {
+                    getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isEncrypt));
+                }
+                return value;
             }
-            return value;
+            return "";
+        } catch (Exception e) {
+            return "";
+        } finally {
+            LockUtil.getInstance().readLock().unlock();
         }
-        return "";
     }
 
     /**
      * 根据key获取对象
      * 先从内存缓存提取，取不到再从文件缓存中获取
      *
-     * @param key 查找的key
+     * @param key      查找的key
      * @param classOfT 对应的实体对象
-     * @param <T> 对应的实体对象
+     * @param <T>      对应的实体对象
+     *
      * @return 实体对象
      */
     @Nullable
@@ -277,10 +297,11 @@ public class CacheUtil {
      * 根据key获取对象
      * 先从内存缓存提取，取不到再从文件缓存中获取
      *
-     * @param <T> 对应的实体对象
-     * @param key 查找的key
-     * @param classOfT 对应的实体对象
+     * @param <T>       对应的实体对象
+     * @param key       查找的key
+     * @param classOfT  对应的实体对象
      * @param isEncrypt 是否加密
+     *
      * @return 实体对象
      */
     @Nullable
@@ -288,41 +309,41 @@ public class CacheUtil {
         if (TextUtils.isEmpty(key) || classOfT == null) {
             return null;
         }
-        Gson gson = new Gson();
-        String value;
-        if (getConfig().isMemoryCache()) {
-            value = getLruCache().get(key);
-            if (!TextUtils.isEmpty(value)) {
-                if (!Utils.isDue(value)) {
-                    return gson.fromJson(Utils.clearDateInfo(value), classOfT);
-                } else {
-                    getLruCache().remove(key);
-                    try {
-                        return classOfT.newInstance();
-                    } catch (InstantiationException e) {
-                        return null;
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                        return null;
+        try {
+            LockUtil.getInstance().readLock().lock();
+            Gson gson = new Gson();
+            String value;
+            if (getConfig().isMemoryCache()) {
+                value = getLruCache().get(key);
+                if (!TextUtils.isEmpty(value)) {
+                    if (!Utils.isDue(value)) {
+                        return gson.fromJson(Utils.clearDateInfo(value), classOfT);
+                    } else {
+                        getLruCache().remove(key);
+                        try {
+                            return classOfT.newInstance();
+                        } catch (InstantiationException e) {
+                            return null;
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                            return null;
+                        }
                     }
                 }
             }
-        }
-        value = getConfig().getACache().getAsString(key, isEncrypt);
+            value = getConfig().getACache().getAsString(key, isEncrypt);
 
-        if (!TextUtils.isEmpty(value)) {
-            if (getConfig().isMemoryCache()) {
-                getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isEncrypt));
+            if (!TextUtils.isEmpty(value)) {
+                if (getConfig().isMemoryCache()) {
+                    getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isEncrypt));
+                }
+                return gson.fromJson(value, classOfT);
             }
-            return gson.fromJson(value, classOfT);
-        }
-        try {
             return classOfT.newInstance();
-        } catch (InstantiationException e) {
+        } catch (Exception e) {
             return null;
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
+        } finally {
+            LockUtil.getInstance().readLock().unlock();
         }
     }
 
@@ -330,10 +351,11 @@ public class CacheUtil {
      * 根据key获取对象
      * 先从内存缓存提取，取不到再从文件缓存中获取
      *
-     * @param <T> 对应的实体对象
-     * @param key 查找的key
+     * @param <T>      对应的实体对象
+     * @param key      查找的key
      * @param classOfT 对应的实体对象
-     * @param t 错误情况下返回数据
+     * @param t        错误情况下返回数据
+     *
      * @return 实体对象
      */
     @Nullable
@@ -345,11 +367,12 @@ public class CacheUtil {
      * 根据key获取对象
      * 先从内存缓存提取，取不到再从文件缓存中获取
      *
-     * @param <T> 对应的实体对象
-     * @param key 查找的key
-     * @param classOfT 对应的实体对象
-     * @param t 错误情况下返回数据
+     * @param <T>       对应的实体对象
+     * @param key       查找的key
+     * @param classOfT  对应的实体对象
+     * @param t         错误情况下返回数据
      * @param isEncrypt 是否加密
+     *
      * @return 实体对象
      */
     @Nullable
@@ -357,28 +380,35 @@ public class CacheUtil {
         if (TextUtils.isEmpty(key) || classOfT == null) {
             return null;
         }
-        Gson gson = new Gson();
-        String value;
-        if (getConfig().isMemoryCache()) {
-            value = getLruCache().get(key);
-            if (!TextUtils.isEmpty(value)) {
-                if (!Utils.isDue(value)) {
-                    return gson.fromJson(Utils.clearDateInfo(value), classOfT);
-                } else {
-                    getLruCache().remove(key);
-                    return t;
+        try {
+            LockUtil.getInstance().readLock().lock();
+            Gson gson = new Gson();
+            String value;
+            if (getConfig().isMemoryCache()) {
+                value = getLruCache().get(key);
+                if (!TextUtils.isEmpty(value)) {
+                    if (!Utils.isDue(value)) {
+                        return gson.fromJson(Utils.clearDateInfo(value), classOfT);
+                    } else {
+                        getLruCache().remove(key);
+                        return t;
+                    }
                 }
             }
-        }
-        value = getConfig().getACache().getAsString(key, isEncrypt);
+            value = getConfig().getACache().getAsString(key, isEncrypt);
 
-        if (!TextUtils.isEmpty(value)) {
-            if (getConfig().isMemoryCache()) {
-                getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isEncrypt));
+            if (!TextUtils.isEmpty(value)) {
+                if (getConfig().isMemoryCache()) {
+                    getLruCache().put(key, getConfig().getACache().getAsStringHasDate(key, isEncrypt));
+                }
+                return gson.fromJson(value, classOfT);
             }
-            return gson.fromJson(value, classOfT);
+            return t;
+        } catch (Exception e) {
+            return null;
+        } finally {
+            LockUtil.getInstance().readLock().unlock();
         }
-        return t;
     }
 
     /**
@@ -390,8 +420,10 @@ public class CacheUtil {
         if (TextUtils.isEmpty(key)) {
             return;
         }
+        LockUtil.getInstance().writeLock().lock();
         getLruCache().remove(key);
         getConfig().getACache().remove(key);
+        LockUtil.getInstance().writeLock().unlock();
     }
 
     /**
@@ -447,6 +479,7 @@ public class CacheUtil {
          * 判断缓存的String数据是否到期
          *
          * @param str 保存的str
+         *
          * @return true：到期了 false：还没有到期
          */
         private static boolean isDue(String str) {
@@ -457,6 +490,7 @@ public class CacheUtil {
          * 判断缓存的byte数据是否到期
          *
          * @param data 保存的data
+         *
          * @return true：到期了 false：还没有到期
          */
         private static boolean isDue(byte[] data) {
@@ -512,7 +546,7 @@ public class CacheUtil {
             if (hasDateInfo(data)) {
                 String saveDate = new String(copyOfRange(data, 0, 13));
                 String deleteAfter = new String(copyOfRange(data, 14, indexOf(data, SEPARATOR)));
-                return new String[] { saveDate, deleteAfter };
+                return new String[]{saveDate, deleteAfter};
             }
             return null;
         }

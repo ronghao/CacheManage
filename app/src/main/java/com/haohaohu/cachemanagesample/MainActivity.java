@@ -28,7 +28,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.crypto.KeyGenerator;
@@ -44,10 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private JSONArray jsonArray;
     private JSONObject jsonObject;
     private Integer index = 0;
-    private CountDownLatch countDownLatch = new CountDownLatch(100);
+    private CountDownLatch countDownLatch = new CountDownLatch(10);
     private ReentrantLock lock = new ReentrantLock(true);
-    final Condition writeCon = lock.newCondition();//写线程条件
-//    final Condition notEmpty = lock.newCondition();//读线程条件
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -260,6 +257,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.main_text2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                index = 0;
+                countDownLatch = new CountDownLatch(10);
                 Toast.makeText(MainActivity.this, "压力测试，看Log", Toast.LENGTH_SHORT).show();
                 Thread thread = new Thread(new Runnable() {
                     @Override
@@ -272,7 +271,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.main_text4).
-
                 setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -299,7 +297,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         findViewById(R.id.main_text5).
-
                 setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -320,15 +317,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void doTask() {
-
         long startTime = System.currentTimeMillis();   //获取开始时间
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    index++;
-                    Log.e("time", "次数： " + index);
-                    CacheUtil.put("key1", "测试数据1" + (index));//默认加密状态
+                    synchronized (MainActivity.this) {
+                        index++;
+                    }
+                    CacheUtil.put("key0", "" + (index));//默认加密状态
                     countDownLatch.countDown();
                 }
             });
@@ -339,6 +336,8 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        String str1 = CacheUtil.get("key0");
+        Log.e("time", str1);
         long endTime = System.currentTimeMillis(); //获取结束时间
         Log.e("time", "程序运行时间： " + (endTime - startTime) + "ms");
     }
