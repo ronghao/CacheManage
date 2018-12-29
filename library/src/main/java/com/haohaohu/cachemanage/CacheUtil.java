@@ -106,7 +106,6 @@ public class CacheUtil {
         }
 
         LockUtil.getInstance().writeLock().lock();
-//        Log.e("time", "设置值:" + value);测试插入是否正确
         if (getConfig().isMemoryCache()) {
             getLruCache().put(key, value);
         }
