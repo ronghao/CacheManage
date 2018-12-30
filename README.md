@@ -37,7 +37,7 @@ CacheUtilConfig cc = CacheUtilConfig.builder(getApplication())
                 .allowKeyEncrypt(true)//是否允许Key加密
                 .preventPowerDelete(true)//强力防止删除，将缓存数据存储在app数据库目录下的cachemanage文件夹下
                 .setACache(ACache.get(file1))//自定义ACache，file1为缓存自定义存储文件夹,设置该项，preventPowerDelete失效
-                .setAlias("")//默认KeyStore加密算法私钥，可不设置.自定义加密算法，该功能失效
+                .setAlias("")//默认KeyStore加密算法私钥，建议设置.自定义加密算法，该功能失效
                 .setIEncryptStrategy(
                         new Des3EncryptStrategy(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==",
                                 "haohaoha"))//自定义des3加密
@@ -152,7 +152,7 @@ allprojects {
 在项目build.gradle中添加 ![](https://jitpack.io/v/ronghao/CacheManage.svg)
 ```
 dependencies {
-    compile 'com.github.ronghao:CacheManage:1.2.4'
+    compile 'com.github.ronghao:CacheManage:1.3.0'
 }
 ```
 
@@ -169,19 +169,21 @@ dependencies {
 	+ 如果未实现构造函数，会返回null
 
 # 版本更新说明
++ v1.3.0
+  	+ 提高底层加密算法、增加安全性
 + v1.2.4
-  + 添加线程锁，测试多线程下数据情况
+ 	+ 添加线程锁，测试多线程下数据情况
 + v1.2.3
-  + 修改默认缓存位置，防止被清理
+  	+ 修改默认缓存位置，防止被清理
 + v1.2.1
-  + 添加clearAll()和clearAllMemory()方法
+  	+ 添加clearAll()和clearAllMemory()方法
 + v1.2.0
 	+ 添加自定义加密算法，只需实现IEncryptStrategy接口，参见[Des3EncryptStrategy](https://github.com/ronghao/CacheManage/blob/master/library/src/main/java/com/haohaohu/cachemanage/strategy/Des3EncryptStrategy.java)
 + v1.1.2
-    + 添加自定义ACache
+	+ 添加自定义ACache
 	    + 在[CacheUtilConfig](https://github.com/ronghao/CacheManage/blob/master/library/src/main/java/com/haohaohu/cachemanage/CacheUtilConfig.java)配置
 + v1.1.1
-    + 添加数据监控机制
+	+ 添加数据监控机制
 + v1.1.0
 	+ 添加注解
 	+ 优化大量代码
