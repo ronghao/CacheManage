@@ -1,6 +1,7 @@
 package com.haohaohu.cachemanage.observer;
 
 import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

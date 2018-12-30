@@ -10,7 +10,7 @@ public interface IDataChangeListener {
     /**
      * 数据变化
      *
-     * @param key 主键
+     * @param key   主键
      * @param value 值
      */
     void onDataChange(String key, String value);

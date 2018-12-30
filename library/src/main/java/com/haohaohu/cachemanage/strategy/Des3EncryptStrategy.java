@@ -7,7 +7,6 @@ import android.text.TextUtils;
 
 import com.haohaohu.cachemanage.util.Des3Util;
 import com.haohaohu.cachemanage.util.KeyStoreHelper;
-import com.haohaohu.cachemanage.util.Md5Utils;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;

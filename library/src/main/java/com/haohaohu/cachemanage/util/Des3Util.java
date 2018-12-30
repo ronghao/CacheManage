@@ -1,6 +1,7 @@
 package com.haohaohu.cachemanage.util;
 
 import android.text.TextUtils;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -21,8 +22,9 @@ public class Des3Util {
      * 加密
      *
      * @param plainText 要加密文字
-     * @param iv 偏移量
+     * @param iv        偏移量
      * @param secretKey 密钥
+     *
      * @return 加密文字
      * @throws Exception
      */

@@ -71,15 +71,14 @@ public class CacheUtilConfig {
     }
 
     public static class Builder {
+        public IEncryptStrategy iEncryptStrategy;
         private Context context;
         private boolean isEncrypt = true;//默认加密
         private boolean isKeyEncrypt = true;//key默认加密
         private boolean memoryCache = true;//默认保存到内存
         private boolean isPreventPowerDelete = false;//防止被删除
         private String alias;//私钥
-
         private ACache aCache;//ACache示例
-        public IEncryptStrategy iEncryptStrategy;
 
         public Builder(Context context) {
             this.context = context;

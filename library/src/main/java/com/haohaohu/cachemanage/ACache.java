@@ -9,6 +9,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.widget.ImageView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -30,8 +34,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class ACache {
     public static final int TIME_HOUR = 60 * 60;
@@ -105,7 +107,7 @@ public class ACache {
     /**
      * 保存 String数据 到 缓存中
      *
-     * @param key 保存的key
+     * @param key   保存的key
      * @param value 保存的String数据
      */
     public void put(String key, String value) {
@@ -132,8 +134,8 @@ public class ACache {
     /**
      * 保存 String数据 到 缓存中
      *
-     * @param key 保存的key
-     * @param value 保存的String数据
+     * @param key      保存的key
+     * @param value    保存的String数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, String value, int saveTime) {
@@ -148,6 +150,7 @@ public class ACache {
      * 读取 String数据
      *
      * @param key 保存的key
+     *
      * @return String 数据
      */
     public String getAsString(String key) {
@@ -190,7 +193,7 @@ public class ACache {
     /**
      * 保存 JSONObject数据 到 缓存中
      *
-     * @param key 保存的key
+     * @param key   保存的key
      * @param value 保存的JSON数据
      */
     public void put(String key, JSONObject value) {
@@ -200,8 +203,8 @@ public class ACache {
     /**
      * 保存 JSONObject数据 到 缓存中
      *
-     * @param key 保存的key
-     * @param value 保存的JSONObject数据
+     * @param key      保存的key
+     * @param value    保存的JSONObject数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, JSONObject value, int saveTime) {
@@ -216,6 +219,7 @@ public class ACache {
      * 读取JSONObject数据
      *
      * @param key 保存的key
+     *
      * @return JSONObject数据
      */
     public JSONObject getAsJSONObject(String key) {
@@ -231,7 +235,7 @@ public class ACache {
     /**
      * 保存 JSONArray数据 到 缓存中
      *
-     * @param key 保存的key
+     * @param key   保存的key
      * @param value 保存的JSONArray数据
      */
     public void put(String key, JSONArray value) {
@@ -241,8 +245,8 @@ public class ACache {
     /**
      * 保存 JSONArray数据 到 缓存中
      *
-     * @param key 保存的key
-     * @param value 保存的JSONArray数据
+     * @param key      保存的key
+     * @param value    保存的JSONArray数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, JSONArray value, int saveTime) {
@@ -257,6 +261,7 @@ public class ACache {
      * 读取JSONArray数据
      *
      * @param key 保存的key
+     *
      * @return JSONArray数据
      */
     public JSONArray getAsJSONArray(String key) {
@@ -272,7 +277,7 @@ public class ACache {
     /**
      * 保存 byte数据 到 缓存中
      *
-     * @param key 保存的key
+     * @param key   保存的key
      * @param value 保存的数据
      */
     public void put(String key, byte[] value) {
@@ -299,8 +304,8 @@ public class ACache {
     /**
      * 保存 byte数据 到 缓存中
      *
-     * @param key 保存的key
-     * @param value 保存的数据
+     * @param key      保存的key
+     * @param value    保存的数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, byte[] value, int saveTime) {
@@ -315,6 +320,7 @@ public class ACache {
      * 获取 byte 数据
      *
      * @param key 保存的key
+     *
      * @return byte 数据
      */
     public byte[] getAsBinary(String key) {
@@ -354,7 +360,7 @@ public class ACache {
     /**
      * 保存 Serializable数据 到 缓存中
      *
-     * @param key 保存的key
+     * @param key   保存的key
      * @param value 保存的value
      */
     public void put(String key, Serializable value) {
@@ -364,8 +370,8 @@ public class ACache {
     /**
      * 保存 Serializable数据到 缓存中
      *
-     * @param key 保存的key
-     * @param value 保存的value
+     * @param key      保存的key
+     * @param value    保存的value
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, Serializable value, int saveTime) {
@@ -401,6 +407,7 @@ public class ACache {
      * 读取 Serializable数据
      *
      * @param key 保存的key
+     *
      * @return Serializable 数据
      */
     public Object getAsObject(String key) {
@@ -438,7 +445,7 @@ public class ACache {
     /**
      * 保存 bitmap 到 缓存中
      *
-     * @param key 保存的key
+     * @param key   保存的key
      * @param value 保存的bitmap数据
      */
     public void put(String key, Bitmap value) {
@@ -448,8 +455,8 @@ public class ACache {
     /**
      * 保存 bitmap 到 缓存中
      *
-     * @param key 保存的key
-     * @param value 保存的 bitmap 数据
+     * @param key      保存的key
+     * @param value    保存的 bitmap 数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, Bitmap value, int saveTime) {
@@ -460,6 +467,7 @@ public class ACache {
      * 读取 bitmap 数据
      *
      * @param key 保存的key
+     *
      * @return bitmap 数据
      */
     public Bitmap getAsBitmap(String key) {
@@ -483,7 +491,7 @@ public class ACache {
     /**
      * 保存 drawable 到 缓存中
      *
-     * @param key 保存的key
+     * @param key   保存的key
      * @param value 保存的drawable数据
      */
     public void put(String key, Drawable value) {
@@ -493,8 +501,8 @@ public class ACache {
     /**
      * 保存 drawable 到 缓存中
      *
-     * @param key 保存的key
-     * @param value 保存的 drawable 数据
+     * @param key      保存的key
+     * @param value    保存的 drawable 数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, Drawable value, int saveTime) {
@@ -505,6 +513,7 @@ public class ACache {
      * 读取 Drawable 数据
      *
      * @param key 保存的key
+     *
      * @return Drawable 数据
      */
     public Drawable getAsDrawable(String key) {
@@ -518,6 +527,7 @@ public class ACache {
      * 获取缓存文件
      *
      * @param key 保存的key
+     *
      * @return value 缓存的文件
      */
     public File file(String key) {
@@ -532,6 +542,7 @@ public class ACache {
      * 移除某个key
      *
      * @param key 保存的key
+     *
      * @return 是否移除成功
      */
     public boolean remove(String key) {
@@ -548,8 +559,8 @@ public class ACache {
     /**
      * 保存 String数据 到 缓存中
      *
-     * @param key 保存的key
-     * @param value 保存的String数据
+     * @param key       保存的key
+     * @param value     保存的String数据
      * @param isEncrypt 是否加密
      */
     public void put(String key, String value, boolean isEncrypt) {
@@ -581,8 +592,8 @@ public class ACache {
     /**
      * 保存 String数据 到 缓存中
      *
-     * @param key 保存的key
-     * @param value 保存的String数据
+     * @param key      保存的key
+     * @param value    保存的String数据
      * @param saveTime 保存的时间，单位：秒
      */
     public void put(String key, String value, int saveTime, boolean isEncrypt) {
@@ -592,8 +603,9 @@ public class ACache {
     /**
      * 读取 String数据
      *
-     * @param key 保存的key
+     * @param key       保存的key
      * @param isEncrypt 是否加密
+     *
      * @return String 数据
      */
     public String getAsString(String key, boolean isEncrypt) {
@@ -643,8 +655,9 @@ public class ACache {
     /**
      * 读取 String数据 ,返回数据没有去除时间
      *
-     * @param key 保存的key
+     * @param key       保存的key
      * @param isEncrypt 是否加密
+     *
      * @return String 数据
      */
     public String getAsStringHasDate(String key, boolean isEncrypt) {
@@ -821,6 +834,7 @@ public class ACache {
          * 判断缓存的String数据是否到期
          *
          * @param str 保存的str
+         *
          * @return true：到期了 false：还没有到期
          */
         private static boolean isDue(String str) {
@@ -831,6 +845,7 @@ public class ACache {
          * 判断缓存的byte数据是否到期
          *
          * @param data 保存的data
+         *
          * @return true：到期了 false：还没有到期
          */
         private static boolean isDue(byte[] data) {
@@ -886,7 +901,7 @@ public class ACache {
             if (hasDateInfo(data)) {
                 String saveDate = new String(copyOfRange(data, 0, 13));
                 String deleteAfter = new String(copyOfRange(data, 14, indexOf(data, M_SEPARATOR)));
-                return new String[] { saveDate, deleteAfter };
+                return new String[]{saveDate, deleteAfter};
             }
             return null;
         }

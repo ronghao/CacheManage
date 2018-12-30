@@ -1,38 +1,38 @@
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion compile_sdk_version
-  buildToolsVersion build_tools_version
+    compileSdkVersion compile_sdk_version
+    buildToolsVersion build_tools_version
 
-  defaultConfig {
-    minSdkVersion min_sdk_version
-    targetSdkVersion compile_sdk_version
-    versionCode version_code
-    versionName version_name
-  }
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    defaultConfig {
+        minSdkVersion min_sdk_version
+        targetSdkVersion compile_sdk_version
+        versionCode version_code
+        versionName version_name
     }
-  }
-
-  lintOptions {
-    abortOnError false
-  }
-
-  //单元测试
-  testOptions.unitTests.all {
-    testLogging {
-      events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
-  }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    //单元测试
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
+    }
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile 'com.android.support:support-annotations:25.3.1'
-  compile 'com.google.code.gson:gson:2.8.1'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:support-annotations:25.3.1'
+    compile 'com.google.code.gson:gson:2.8.1'
 }
 
 apply from: "../bintrayUpload.gradle"

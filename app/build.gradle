@@ -1,33 +1,32 @@
 apply plugin: 'com.android.application'
 
 android {
+    compileSdkVersion compile_sdk_version
+    buildToolsVersion build_tools_version
 
-  compileSdkVersion compile_sdk_version
-  buildToolsVersion build_tools_version
-
-  defaultConfig {
-    applicationId "com.haohaohu.cachemanagesample"
-    minSdkVersion min_sdk_version
-    targetSdkVersion compile_sdk_version
-    versionCode version_code
-    versionName version_name
-  }
-
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    defaultConfig {
+        applicationId "com.haohaohu.cachemanagesample"
+        minSdkVersion min_sdk_version
+        targetSdkVersion compile_sdk_version
+        versionCode version_code
+        versionName version_name
     }
-  }
 
-  lintOptions {
-    abortOnError false
-  }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
-  compile fileTree(include: ['*.jar'], dir: 'libs')
-  compile project(':library')
-//    compile 'com.github.ronghao:CacheManage:1.1.2'
-  compile 'com.android.support:appcompat-v7:25.3.1'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+//  compile project(':library')
+    compile 'com.github.ronghao:CacheManage:1.3.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
 }
