@@ -2,9 +2,10 @@ package com.haohaohu.cachemanage;
 
 import android.content.Context;
 import android.os.Build;
+import android.text.TextUtils;
 
-import com.haohaohu.cachemanage.strategy.Des3EncryptStrategy;
 import com.haohaohu.cachemanage.strategy.IEncryptStrategy;
+import com.haohaohu.cachemanage.strategy.KeyStoreEncryptStrategy;
 
 import java.io.File;
 
@@ -17,6 +18,7 @@ import java.io.File;
 public class CacheUtilConfig {
 
     private Context context;
+    private boolean isKeyEncrypt;
     private boolean isEncrypt;
     private boolean memoryCache;
     private ACache aCache;
@@ -26,6 +28,7 @@ public class CacheUtilConfig {
     private CacheUtilConfig(Builder builder) {
         context = builder.context;
         isEncrypt = builder.isEncrypt;
+        isKeyEncrypt = builder.isKeyEncrypt;
         memoryCache = builder.memoryCache;
         aCache = builder.aCache;
         mIEncryptStrategy = builder.iEncryptStrategy;
@@ -41,6 +44,10 @@ public class CacheUtilConfig {
 
     public boolean isEncrypt() {
         return isEncrypt;
+    }
+
+    public boolean isKeyEncrypt() {
+        return isKeyEncrypt;
     }
 
     public boolean isMemoryCache() {
@@ -66,9 +73,10 @@ public class CacheUtilConfig {
     public static class Builder {
         private Context context;
         private boolean isEncrypt = true;//默认加密
+        private boolean isKeyEncrypt = true;//key默认加密
         private boolean memoryCache = true;//默认保存到内存
-        private File file;
         private boolean isPreventPowerDelete = false;//防止被删除
+        private String alias;//私钥
 
         private ACache aCache;//ACache示例
         public IEncryptStrategy iEncryptStrategy;
@@ -97,14 +105,28 @@ public class CacheUtilConfig {
             return this;
         }
 
+        public Builder allowKeyEncrypt(boolean isKeyEncrypt) {
+            this.isKeyEncrypt = isKeyEncrypt;
+            return this;
+        }
+
         public Builder preventPowerDelete(boolean isPreventPowerDelete) {
             this.isPreventPowerDelete = isPreventPowerDelete;
             return this;
         }
 
+        public Builder setAlias(String alise) {
+            this.alias = alise;
+            return this;
+        }
+
         public CacheUtilConfig build() {
             if (this.iEncryptStrategy == null) {
-                iEncryptStrategy = new Des3EncryptStrategy(context);
+                if (TextUtils.isEmpty(alias)) {
+                    iEncryptStrategy = new KeyStoreEncryptStrategy(context);
+                } else {
+                    iEncryptStrategy = new KeyStoreEncryptStrategy(context, alias);
+                }
             }
             if (this.aCache == null) {
                 if (isPreventPowerDelete) {

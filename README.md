@@ -1,5 +1,5 @@
 
-# [CacheManage](https://github.com/ronghao/CacheManage)  [![](https://jitpack.io/v/ronghao/CacheManage.svg)](https://jitpack.io/#ronghao/CacheManage) [![](https://travis-ci.org/ronghao/CacheManage.svg?branch=master)](https://travis-ci.org/ronghao/CacheManage) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/ronghao/CacheManage/master/LICENSE) [ ![Download](https://api.bintray.com/packages/haohao/maven/CacheManage/images/download.svg?version=1.0.3) ](https://bintray.com/haohao/maven/CacheManage/1.0.3/link)
+# [CacheManage](https://github.com/ronghao/CacheManage)  [![](https://jitpack.io/v/ronghao/CacheManage.svg)](https://jitpack.io/#ronghao/CacheManage) [![](https://travis-ci.org/ronghao/CacheManage.svg?branch=master)](https://travis-ci.org/ronghao/CacheManage) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/ronghao/CacheManage/master/LICENSE)
 
 > android缓存管理器，分为两级缓存：内存缓存和文件缓存；先取内存数据，没有再从文件缓存中获取
 
@@ -12,40 +12,54 @@
     + getCacheDir()获取的缓存文件较容易被删除
     + 大于1M的缓存文件，google建议使用getExternalCacheDir()缓存存储
     + 默认存储位置为app数据缓存位置
-	    + 为处理防止被删除，在项目数据库文件夹下创建cachemanage文件夹，数据存储在该文件夹下
+	    + 为处理防止被删除，在数据库文件夹下创建cachemanage文件夹，数据存储在该文件夹下
 + 支持文件加密存储
     + 默认des3加密内容
     + 默认生成des3唯一密钥（建议使用默认生成的密钥）
         + 默认生成的默认密钥，每个客户端都是唯一的，互不相同
-        + 默认密钥存储在KeyStore中，防止逆向工程获取密钥
+        + 默认密钥存储在KeyStore中，防逆向工程获取密钥
 + 支持基本数据类型、String、JSONObject、JSONArray、实体对象（Test类）
 	+ 不支持数据类型可转换成String存储
-+ 缓存数据可设置过期时间，到期自动销毁
++ **缓存数据可设置过期时间，到期自动销毁**
 + 允许内存缓存
 + key值加密
     + 对应的本地缓存文件也加密
-+ 添加数据监控机制
-+ 支持自定义加密算法
++ **添加数据监控机制**
++ **支持自定义加密算法**
 
 
 # 使用方法
 #### 初始化配置（必须调用 activity或者application）
 ```java
-    CacheUtilConfig cc = CacheUtilConfig.builder(getApplication())
-                .setIEncryptStrategy(
-                        new Des3EncryptStrategy(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==",
-                                "haohaoha"))//自定义加密算法
+CacheUtilConfig cc = CacheUtilConfig.builder(getApplication())
                 .allowMemoryCache(true)//是否允许保存到内存
                 .allowEncrypt(false)//是否允许加密
-				.preventPowerDelete(true)//强力防止删除，将缓存数据存储在app数据库目录下的cachemanage文件夹下
-				.setACache(ACache.get(file1))//自定义ACache，file1为缓存自定义存储文件夹
+                .allowKeyEncrypt(true)//是否允许Key加密
+                .preventPowerDelete(true)//强力防止删除，将缓存数据存储在app数据库目录下的cachemanage文件夹下
+                .setACache(ACache.get(file1))//自定义ACache，file1为缓存自定义存储文件夹,设置该项，preventPowerDelete失效
+                .setAlias("")//默认KeyStore加密算法私钥，可不设置.自定义加密算法，该功能失效
+                .setIEncryptStrategy(
+                        new Des3EncryptStrategy(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==",
+                                "haohaoha"))//自定义des3加密
                 .build();
         CacheUtil.init(cc);//初始化，必须调用
 ```
 
+#### 初始化配置
+|默认|状态|
+|-|-|
+|默认内存缓存|缓存|
+|默认Key是否加密|加密|
+|默认value是否加密|加密|
+|默认加密算法|keystore加密|
+|默认加密私钥|包名|
+|强力防止删除|否，需设置|
+
+
+
 #### 保存数据
 ```java
-CacheUtil.put("key1", "测试数据1");//默认不加密
+CacheUtil.put("key1", "测试数据1");//默认加密
 CacheUtil.put("key2", "测试数据2", true);//true代表加密存储
 CacheUtil.put("key3", "~!@#$%^&*()_+{}[];':,.<>`");//特殊字符串测试
 CacheUtil.put("key4", "~!@#$%^&*()_+{}[];':,.<>`", true);//加密特殊字符串测试
@@ -143,8 +157,11 @@ dependencies {
 ```
 
 # 特别注意
++ **卸载APP会清空数据**
+	+ 指定文件目录存储的，需要自行清除。卸载后重装，使用默认设置会重新生成新的密钥。旧数据无法继续使用
 + **文件缓存默认缓存到app缓存文件，在手机清理缓存空间时可被清理，请悉知：如不想被清理，请指定缓存位置存储**
-	+ 先默认存在app缓存文件的父文件夹下，防止清理缓存时清理掉
+	+ 现在默认存在app缓存文件的父文件夹下，防止清理缓存时清理掉
+	+ 1.2.3版本后，存储在数据库文件夹下，防止被清除
 + 禁止传入空key
 + 如未存储数据时，get（key）会返回的字符串为空字符串
 + 如未存储数据（实体对象）时获取数据，

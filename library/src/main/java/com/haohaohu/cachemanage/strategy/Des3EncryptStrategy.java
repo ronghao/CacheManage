@@ -4,8 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.provider.Settings;
 import android.text.TextUtils;
+
 import com.haohaohu.cachemanage.util.Des3Util;
 import com.haohaohu.cachemanage.util.KeyStoreHelper;
+import com.haohaohu.cachemanage.util.Md5Utils;
+
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -22,22 +25,10 @@ public class Des3EncryptStrategy implements IEncryptStrategy {
     private String iv = "haohaoha";//移动位置8位
     private Context mContext;
 
-    public Des3EncryptStrategy(Context context) {
-        this(context, "", "haohaoha");
-    }
-
     public Des3EncryptStrategy(Context context, String secretKey, String iv) {
         this.mContext = context;
         this.secretKey = secretKey;
         this.iv = iv;
-        if (TextUtils.isEmpty(this.secretKey)) {
-            createKeyStoreSecretKey();
-            this.secretKey = KeyStoreHelper.getSigningKey("SecretKey");
-            this.secretKey = get24Str(this.secretKey);
-            if (TextUtils.isEmpty(this.secretKey)) {
-                this.secretKey = createSecretKey();
-            }
-        }
     }
 
     @Override
@@ -95,7 +86,7 @@ public class Des3EncryptStrategy implements IEncryptStrategy {
 
     public void createKeyStoreSecretKey() {
         try {
-            KeyStoreHelper.createKeys(mContext, "SecretKey");
+            KeyStoreHelper.createKeys(mContext, mContext.getPackageName());
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {

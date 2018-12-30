@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.haohaohu.cachemanage.observer.CacheObserver;
 import com.haohaohu.cachemanage.util.Base64Util;
 import com.haohaohu.cachemanage.util.LockUtil;
+import com.haohaohu.cachemanage.util.Md5Utils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -104,8 +105,10 @@ public class CacheUtil {
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
             return;
         }
-
         LockUtil.getInstance().writeLock().lock();
+        if (getConfig().isKeyEncrypt()) {
+            key = translateSecretKey(key);
+        }
         if (getConfig().isMemoryCache()) {
             getLruCache().put(key, value);
         }
@@ -138,6 +141,9 @@ public class CacheUtil {
             return;
         }
         LockUtil.getInstance().writeLock().lock();
+        if (getConfig().isKeyEncrypt()) {
+            key = translateSecretKey(key);
+        }
         if (getConfig().isMemoryCache()) {
             getLruCache().put(key, Utils.newStringWithDateInfo(time, value));
         }
@@ -249,6 +255,9 @@ public class CacheUtil {
         }
         try {
             LockUtil.getInstance().readLock().lock();
+            if (getConfig().isKeyEncrypt()) {
+                key = translateSecretKey(key);
+            }
             String value;
             if (getConfig().isMemoryCache()) {
                 value = getLruCache().get(key);
@@ -310,6 +319,9 @@ public class CacheUtil {
         }
         try {
             LockUtil.getInstance().readLock().lock();
+            if (getConfig().isKeyEncrypt()) {
+                key = translateSecretKey(key);
+            }
             Gson gson = new Gson();
             String value;
             if (getConfig().isMemoryCache()) {
@@ -458,6 +470,13 @@ public class CacheUtil {
      */
     public static String translateKey(@NonNull String key) {
         return "." + Base64Util.encode(key.getBytes());
+    }
+
+    /**
+     * keyMd5编码
+     */
+    public static String translateSecretKey(@NonNull String key) {
+        return Md5Utils.md5(key);
     }
 
     private static class CacheUtilHolder {

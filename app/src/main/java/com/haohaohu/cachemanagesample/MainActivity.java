@@ -1,6 +1,7 @@
 package com.haohaohu.cachemanagesample;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
                 String key1Value = CacheUtil.get("key1");
                 String key2Value = CacheUtil.get("key2", true);
-                String key3Value = CacheUtil.get("key3");
+                String key3Value = CacheUtil.get("key3", false);
                 String key4Value = CacheUtil.get("key4", true);
                 Test key5Test = CacheUtil.get("key5", Test.class);//可能为null
                 String key5Value = key5Test == null ? "" : key5Test.toString();
@@ -235,7 +236,8 @@ public class MainActivity extends AppCompatActivity {
                 CacheUtil.put("key1", "测试数据1");//默认加密状态
                 CacheUtil.put("key2", "测试数据2", true);//true代表加密存储
                 CacheUtil.put("key3", "~!@#$%^&*()_+{}[];':,.<>`");//特殊字符串测试
-                CacheUtil.put("key4", "~!@#$%^&*()_+{}[];':,.<>`", true);//加密特殊字符串测试
+                CacheUtil.put("key4",
+                        "~!@#$%^&*()_+{}[];':,.<>`", true);//加密特殊字符串测试
                 CacheUtil.put("key5", new Test(1, "2"));//实体对象测试
                 CacheUtil.put("key6", new Test(1, "2"), true);//加密实体对象测试
                 CacheUtil.put("key7", jsonObject);//jsonObject对象测试
@@ -352,11 +354,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void initCacheConfig1() {
         CacheUtilConfig cc = CacheUtilConfig.builder(getApplication())
+                .allowMemoryCache(true)//是否允许保存到内存
+                .allowEncrypt(false)//是否允许加密
+                .allowKeyEncrypt(true)//是否允许Key加密
+                .preventPowerDelete(true)//强力防止删除，将缓存数据存储在app数据库目录下的cachemanage文件夹下
+//                .setACache(ACache.get(file1))//自定义ACache，file1为缓存自定义存储文件夹,设置该项，preventPowerDelete失效
+                .setAlias("")//默认KeyStore加密算法私钥，建议设置.自定义加密算法，该功能失效
                 .setIEncryptStrategy(
                         new Des3EncryptStrategy(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==",
                                 "haohaoha"))//自定义des3加密
-                .allowMemoryCache(true)//是否允许保存到内存
-                .allowEncrypt(false)//是否允许加密
                 .build();
         CacheUtil.init(cc);//初始化，必须调用
     }
@@ -405,14 +411,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initCacheConfig4() {
-//        openOrCreateDatabase("cachemanage",MODE_ENABLE_WRITE_AHEAD_LOGGING,null);
-//        File file = getDatabasePath("cachemanage");
-//        File file1 = new File(file.getParent(), "cache");
+        File file1 = new File(Environment.getExternalStorageDirectory(), "cache");
         CacheUtilConfig cc =
                 CacheUtilConfig.builder(getApplication()).allowMemoryCache(true)//是否允许保存到内存
                         .allowEncrypt(false)//是否允许加密
-                        .preventPowerDelete(true)//强力防止删除，将缓存数据存储在app数据库目录下的cachemanage文件夹下
-//                        .setACache(ACache.get(file1))//自定义ACache
+//                        .preventPowerDelete(true)//强力防止删除，将缓存数据存储在app数据库目录下的cachemanage文件夹下
+                        .setACache(ACache.get(file1))//自定义ACache
                         .build();
         CacheUtil.init(cc);//初始化，必须调用
     }
