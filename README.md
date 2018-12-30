@@ -1,5 +1,5 @@
 
-# [CacheManage](https://github.com/ronghao/CacheManage)  [![](https://jitpack.io/v/ronghao/CacheManage.svg)](https://jitpack.io/#ronghao/CacheManage) [![](https://travis-ci.org/ronghao/CacheManage.svg?branch=master)](https://travis-ci.org/ronghao/CacheManage) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/ronghao/CacheManage/master/LICENSE)
+# [CacheManage](https://github.com/ronghao/CacheManage)  [![GitHub version](https://badge.fury.io/gh/ronghao%2FCacheManage.svg)](https://badge.fury.io/gh/ronghao%2FCacheManage) [![](https://jitpack.io/v/ronghao/CacheManage.svg)](https://jitpack.io/#ronghao/CacheManage) [![](https://travis-ci.org/ronghao/CacheManage.svg?branch=master)](https://travis-ci.org/ronghao/CacheManage) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/ronghao/CacheManage/master/LICENSE)
 
 > android缓存管理器，分为两级缓存：内存缓存和文件缓存；先取内存数据，没有再从文件缓存中获取
 
@@ -155,8 +155,11 @@ dependencies {
     compile 'com.github.ronghao:CacheManage:1.3.0'
 }
 ```
+# Java doc帮助文档
+[Java doc帮助文档](https://jitpack.io/com/github/ronghao/CacheManage/1.3.0/javadoc/)
 
 # 特别注意
++ **请混淆代码，减小库大小，默认没有混淆**
 + **卸载APP会清空数据**
 	+ 指定文件目录存储的，需要自行清除。卸载后重装，使用默认设置会重新生成新的密钥。旧数据无法继续使用
 + **文件缓存默认缓存到app缓存文件，在手机清理缓存空间时可被清理，请悉知：如不想被清理，请指定缓存位置存储**
