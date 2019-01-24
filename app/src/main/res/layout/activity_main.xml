@@ -1,74 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center_horizontal"
-              android:orientation="vertical"
-              tools:context="com.haohaohu.cachemanagesample.MainActivity"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context="com.haohaohu.cachemanagesample.MainActivity"
     >
 
+  <TextView
+      android:id="@+id/main_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="5dp"
+      android:text="展示"
+      />
+
+  <TextView
+      android:id="@+id/main_text1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="5dp"
+      android:text="保存"
+      />
+
+  <TextView
+      android:id="@+id/main_text2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="5dp"
+      android:text="压力测试"
+      />
+
+  <TextView
+      android:id="@+id/main_text4"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="5dp"
+      android:text="清理内存缓存"
+      android:visibility="gone"
+      />
+
+  <TextView
+      android:id="@+id/main_text5"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="5dp"
+      android:text="清理内存缓存(clearAllMemory方法)"
+      />
+
+  <TextView
+      android:id="@+id/main_text6"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="5dp"
+      android:text="清理内存缓存和文件缓存(clearAll方法)"
+      />
+  <TextView
+      android:id="@+id/main_text7"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="5dp"
+      android:text="清理内存缓存和文件缓存(clear方法)【前5个】"
+      />
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
     <TextView
-        android:id="@+id/main_text"
+        android:id="@+id/main_text3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:text="展示"
+        android:text="展示数据"
         />
-
-    <TextView
-        android:id="@+id/main_text1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="保存"
-        />
-
-    <TextView
-        android:id="@+id/main_text2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="压力测试"
-        />
-
-    <TextView
-        android:id="@+id/main_text4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:visibility="gone"
-        android:text="清理内存缓存"
-        />
-
-    <TextView
-        android:id="@+id/main_text5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="清理内存缓存(clearAllMemory方法)"
-        />
-
-    <TextView
-        android:id="@+id/main_text6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="清理内存缓存和文件缓存(clearAll方法)"
-        />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/main_text3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="展示数据"
-            />
-    </ScrollView>
+  </ScrollView>
 
 
 </LinearLayout>

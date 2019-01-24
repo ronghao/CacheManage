@@ -10,18 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.haohaohu.cachemanage.ACache;
 import com.haohaohu.cachemanage.CacheUtil;
 import com.haohaohu.cachemanage.CacheUtilConfig;
 import com.haohaohu.cachemanage.observer.CacheObserver;
 import com.haohaohu.cachemanage.observer.IDataChangeListener;
 import com.haohaohu.cachemanage.strategy.Des3EncryptStrategy;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.IOException;
 import java.security.KeyStore;
@@ -30,8 +24,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.ReentrantLock;
-
 import javax.crypto.KeyGenerator;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 测试Activity
@@ -105,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         mTextView = (TextView) findViewById(R.id.main_text3);
-        initCacheConfig4();
+        initCacheConfig1();
         initEvent();
         initObserver();
     }
@@ -235,9 +231,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CacheUtil.put("key1", "测试数据1");//默认加密状态
                 CacheUtil.put("key2", "测试数据2", true);//true代表加密存储
+                CacheUtil.put("key18", "测试数据18", false);//false代表不加密存储
                 CacheUtil.put("key3", "~!@#$%^&*()_+{}[];':,.<>`");//特殊字符串测试
-                CacheUtil.put("key4",
-                        "~!@#$%^&*()_+{}[];':,.<>`", true);//加密特殊字符串测试
+                CacheUtil.put("key4", "~!@#$%^&*()_+{}[];':,.<>`", true);//加密特殊字符串测试
                 CacheUtil.put("key5", new Test(1, "2"));//实体对象测试
                 CacheUtil.put("key6", new Test(1, "2"), true);//加密实体对象测试
                 CacheUtil.put("key7", jsonObject);//jsonObject对象测试
@@ -251,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
                 CacheUtil.put("key15", "测试数据1", 5, true);//加密保存数据5秒
                 CacheUtil.put("key16", new Test(1, "2"), 5, true);//加密保存对象数据5秒
                 CacheUtil.put(CacheUtil.translateKey("key17"), "123456", true);//key加密
-                CacheUtil.put("key18", "测试数据18", false);//false代表不加密存储
                 Toast.makeText(MainActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
             }
         });
@@ -276,24 +271,7 @@ public class MainActivity extends AppCompatActivity {
                 setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        CacheUtil.clearMemory("key1");
-                        CacheUtil.clearMemory("key2");
-                        CacheUtil.clearMemory("key3");
-                        CacheUtil.clearMemory("key4");
-                        CacheUtil.clearMemory("key5");
-                        CacheUtil.clearMemory("key6");
-                        CacheUtil.clearMemory("key7");
-                        CacheUtil.clearMemory("key8");
-                        CacheUtil.clearMemory("key9");
-                        CacheUtil.clearMemory("key10");
-                        CacheUtil.clearMemory("key11");
-                        CacheUtil.clearMemory("key12");
-                        CacheUtil.clearMemory("key13");
-                        CacheUtil.clearMemory("key14");
-                        CacheUtil.clearMemory("key15");
-                        CacheUtil.clearMemory("key16");
-                        CacheUtil.clearMemory(CacheUtil.translateKey("key17"));
-                        CacheUtil.clearMemory("key18");
+                        clearMemory();
                         Toast.makeText(MainActivity.this, "清理内存成功", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -313,6 +291,20 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         CacheUtil.clearAll();
+                        Toast.makeText(MainActivity.this, "清理缓存成功", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        findViewById(R.id.main_text7).
+
+                setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CacheUtil.clear("key1");
+                        CacheUtil.clear("key2");
+                        CacheUtil.clear("key18");
+                        CacheUtil.clear("key3");
+                        CacheUtil.clear("key4");
                         Toast.makeText(MainActivity.this, "清理缓存成功", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -353,17 +345,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initCacheConfig1() {
-        CacheUtilConfig cc = CacheUtilConfig.builder(getApplication())
-                .allowMemoryCache(true)//是否允许保存到内存
-                .allowEncrypt(false)//是否允许加密
-                .allowKeyEncrypt(true)//是否允许Key加密
-                .preventPowerDelete(true)//强力防止删除，将缓存数据存储在app数据库目录下的cachemanage文件夹下
-//                .setACache(ACache.get(file1))//自定义ACache，file1为缓存自定义存储文件夹,设置该项，preventPowerDelete失效
-                .setAlias("")//默认KeyStore加密算法私钥，建议设置.自定义加密算法，该功能失效
-                .setIEncryptStrategy(
-                        new Des3EncryptStrategy(MainActivity.this, "WLIJkjdsfIlI789sd87dnu==",
-                                "haohaoha"))//自定义des3加密
-                .build();
+        CacheUtilConfig cc =
+                CacheUtilConfig.builder(getApplication()).allowMemoryCache(true)//是否允许保存到内存
+                        .allowEncrypt(false)//是否允许加密
+                        .allowKeyEncrypt(true)//是否允许Key加密
+                        //.preventPowerDelete(true)//强力防止删除，将缓存数据存储在app数据库目录下的cachemanage文件夹下
+                        //                .setACache(ACache.get(file1))//自定义ACache，file1为缓存自定义存储文件夹,设置该项，preventPowerDelete失效
+                        .setAlias("")//默认KeyStore加密算法私钥，建议设置.自定义加密算法，该功能失效
+                        .setIEncryptStrategy(new Des3EncryptStrategy(MainActivity.this,
+                                "WLIJkjdsfIlI789sd87dnu==", "haohaoha"))//自定义des3加密
+                        .build();
         CacheUtil.init(cc);//初始化，必须调用
     }
 
@@ -415,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
         CacheUtilConfig cc =
                 CacheUtilConfig.builder(getApplication()).allowMemoryCache(true)//是否允许保存到内存
                         .allowEncrypt(false)//是否允许加密
-//                        .preventPowerDelete(true)//强力防止删除，将缓存数据存储在app数据库目录下的cachemanage文件夹下
+                        //                        .preventPowerDelete(true)//强力防止删除，将缓存数据存储在app数据库目录下的cachemanage文件夹下
                         .setACache(ACache.get(file1))//自定义ACache
                         .build();
         CacheUtil.init(cc);//初始化，必须调用
@@ -424,6 +415,7 @@ public class MainActivity extends AppCompatActivity {
     public void clearMemory() {
         CacheUtil.clearMemory("key1");
         CacheUtil.clearMemory("key2");
+        CacheUtil.clearMemory("key18");
         CacheUtil.clearMemory("key3");
         CacheUtil.clearMemory("key4");
         CacheUtil.clearMemory("key5");
@@ -439,7 +431,6 @@ public class MainActivity extends AppCompatActivity {
         CacheUtil.clearMemory("key15");
         CacheUtil.clearMemory("key16");
         CacheUtil.clearMemory(CacheUtil.translateKey("key17"));
-        CacheUtil.clearMemory("key18");
     }
 
     public String check(String str, String str1) {
