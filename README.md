@@ -152,7 +152,7 @@ allprojects {
 在项目build.gradle中添加 ![](https://jitpack.io/v/ronghao/CacheManage.svg)
 ```
 dependencies {
-    compile 'com.github.ronghao:CacheManage:1.3.0'
+    compile 'com.github.ronghao:CacheManage:1.3.1'
 }
 ```
 # Java doc帮助文档
@@ -172,6 +172,8 @@ dependencies {
 	+ 如果未实现构造函数，会返回null
 
 # 版本更新说明
++ v1.3.1
+  	+ 解决clear方法执行错误的问题
 + v1.3.0
   	+ 提高底层加密算法、增加安全性
 + v1.2.4
