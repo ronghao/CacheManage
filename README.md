@@ -138,6 +138,14 @@ CacheObserver.getInstance().addObserver("key1", new IDataChangeListener() {
         });
 ```
 
+#### String与List互相转换
+```java
+//String 转list
+List<User> userList = gson.fromJson(string, new TypeToken<List<User>>() {}.getType()); 
+//List转String
+String string = new Gson().toJson(userList);
+```
+	
 # 项目添加方法
 在根 build.gradle中添加
 ```
