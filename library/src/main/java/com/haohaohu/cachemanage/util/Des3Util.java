@@ -1,7 +1,6 @@
 package com.haohaohu.cachemanage.util;
 
 import android.text.TextUtils;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -22,9 +21,8 @@ public class Des3Util {
      * 加密
      *
      * @param plainText 要加密文字
-     * @param iv        偏移量
+     * @param iv 偏移量
      * @param secretKey 密钥
-     *
      * @return 加密文字
      * @throws Exception
      */
@@ -32,10 +30,9 @@ public class Des3Util {
         if (TextUtils.isEmpty(secretKey) || TextUtils.isEmpty(iv)) {
             throw new NullPointerException("u should init first");
         }
-        SecretKey deskey = null;
         DESedeKeySpec spec = new DESedeKeySpec(secretKey.getBytes());
         SecretKeyFactory keyfactory = SecretKeyFactory.getInstance("desede");
-        deskey = keyfactory.generateSecret(spec);
+        SecretKey deskey = keyfactory.generateSecret(spec);
         Cipher cipher = Cipher.getInstance(DESEDE_CBC_PKCS5_PADDING);
         IvParameterSpec ips = new IvParameterSpec(iv.getBytes());
         cipher.init(1, deskey, ips);
@@ -55,10 +52,9 @@ public class Des3Util {
         if (TextUtils.isEmpty(secretKey) || TextUtils.isEmpty(iv)) {
             throw new NullPointerException("u should init first");
         }
-        SecretKey deskey = null;
         DESedeKeySpec spec = new DESedeKeySpec(secretKey.getBytes());
         SecretKeyFactory keyfactory = SecretKeyFactory.getInstance("desede");
-        deskey = keyfactory.generateSecret(spec);
+        SecretKey deskey = keyfactory.generateSecret(spec);
         Cipher cipher = Cipher.getInstance(DESEDE_CBC_PKCS5_PADDING);
         IvParameterSpec ips = new IvParameterSpec(iv.getBytes());
         cipher.init(2, deskey, ips);

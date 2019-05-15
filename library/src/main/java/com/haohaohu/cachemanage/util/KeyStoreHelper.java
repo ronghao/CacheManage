@@ -7,7 +7,6 @@ import android.security.KeyPairGeneratorSpec;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
-
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
@@ -22,7 +21,6 @@ import java.security.cert.CertificateEncodingException;
 import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.security.auth.x500.X500Principal;
@@ -129,7 +127,11 @@ public class KeyStoreHelper {
      */
     public static String getSigningKey(String alias) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            Certificate cert = getPrivateKeyEntry(alias).getCertificate();
+            KeyStore.PrivateKeyEntry keyEntry = getPrivateKeyEntry(alias);
+            if (keyEntry == null) {
+                return null;
+            }
+            Certificate cert = keyEntry.getCertificate();
             if (cert == null) {
                 return null;
             }
@@ -166,7 +168,11 @@ public class KeyStoreHelper {
 
     public static String encrypt(String alias, String plaintext) {
         try {
-            PublicKey publicKey = getPrivateKeyEntry(alias).getCertificate().getPublicKey();
+            KeyStore.PrivateKeyEntry keyEntry = getPrivateKeyEntry(alias);
+            if (keyEntry == null) {
+                return "";
+            }
+            PublicKey publicKey = keyEntry.getCertificate().getPublicKey();
             Cipher cipher = getCipher();
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             return Base64.encodeToString(cipher.doFinal(plaintext.getBytes()), Base64.NO_WRAP);
@@ -177,7 +183,11 @@ public class KeyStoreHelper {
 
     public static String decrypt(String alias, String ciphertext) {
         try {
-            PrivateKey privateKey = getPrivateKeyEntry(alias).getPrivateKey();
+            KeyStore.PrivateKeyEntry keyEntry = getPrivateKeyEntry(alias);
+            if (keyEntry == null) {
+                return "";
+            }
+            PrivateKey privateKey = keyEntry.getPrivateKey();
             Cipher cipher = getCipher();
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             return new String(cipher.doFinal(Base64.decode(ciphertext, Base64.NO_WRAP)));
