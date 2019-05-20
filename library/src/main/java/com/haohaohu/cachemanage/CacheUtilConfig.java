@@ -152,6 +152,9 @@ public class CacheUtilConfig {
                 } else {
                     File file = new File(ACache.getDiskCacheDir(context));
                     File cacheFile = new File(file.getParent(), "cachemanage/");
+                    if (!cacheFile.exists()) {
+                        cacheFile.mkdirs();
+                    }
                     this.aCache = ACache.get(cacheFile);
                 }
             }
