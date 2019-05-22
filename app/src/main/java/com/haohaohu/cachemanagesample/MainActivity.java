@@ -157,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
                 //key20未存储的数据，返回默认值
                 Test key21Value = CacheUtil.get(CacheUtil.translateKey("null1"), Test.class, true);
                 //key21未存储的数据，且无默认构造方法,返回null
+                Integer key22Value = CacheUtil.get("key22", Integer.class, 100,true);
+                //key21已存储的数据，返回默认值
 
                 String value = "测试:\n"
                         + "字符串(默认方式):"
@@ -221,6 +223,9 @@ public class MainActivity extends AppCompatActivity {
                         + "\n"
                         + "未保存实体对象[Test类](无默认返回对象):"
                         + (key21Value != null ? key21Value.toString() : "null")
+                        + "\n"
+                        + "保存实体对象[Test类](有默认返回对象):"
+                        + (key22Value != null ? key22Value.toString() : "null")
                         + "\n";
                 mTextView.setText(value);
             }
@@ -247,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
                 CacheUtil.put("key15", "测试数据1", 5, true);//加密保存数据5秒
                 CacheUtil.put("key16", new Test(1, "2"), 5, true);//加密保存对象数据5秒
                 CacheUtil.put(CacheUtil.translateKey("key17"), "123456", true);//key加密
+                CacheUtil.put("key22", 1);//测试默认值返回
                 Toast.makeText(MainActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
             }
         });

@@ -388,6 +388,9 @@ public class CacheUtil {
             LockUtil.getInstance().readLock().lock();
             Gson gson = new Gson();
             String value;
+            if (getConfig().isKeyEncrypt()) {
+                key = translateSecretKey(key);
+            }
             if (getConfig().isMemoryCache()) {
                 value = getLruCache().get(key);
                 if (!TextUtils.isEmpty(value)) {
