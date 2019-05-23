@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 //key20未存储的数据，返回默认值
                 Test key21Value = CacheUtil.get(CacheUtil.translateKey("null1"), Test.class, true);
                 //key21未存储的数据，且无默认构造方法,返回null
-                Integer key22Value = CacheUtil.get("key22", Integer.class, 100,true);
+                int key22Value = CacheUtil.get("key22", int.class, 100,true);
                 //key21已存储的数据，返回默认值
 
                 String value = "测试:\n"
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                         + (key21Value != null ? key21Value.toString() : "null")
                         + "\n"
                         + "保存实体对象[Test类](有默认返回对象):"
-                        + (key22Value != null ? key22Value.toString() : "null")
+                        + (String.valueOf(key22Value))
                         + "\n";
                 mTextView.setText(value);
             }

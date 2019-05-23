@@ -363,7 +363,6 @@ public class CacheUtil {
      * @param t 错误情况下返回数据
      * @return 实体对象
      */
-    @Nullable
     public static <T> T get(String key, Class<T> classOfT, T t) {
         return get(key, classOfT, t, getConfig().isEncrypt());
     }
@@ -379,10 +378,9 @@ public class CacheUtil {
      * @param isEncrypt 是否加密
      * @return 实体对象
      */
-    @Nullable
-    public static <T> T get(String key, Class<T> classOfT, T t, boolean isEncrypt) {
+    public static <T> T get(String key, Class<T> classOfT, @NonNull T t, boolean isEncrypt) {
         if (TextUtils.isEmpty(key) || classOfT == null) {
-            return null;
+            return t;
         }
         try {
             LockUtil.getInstance().readLock().lock();
@@ -413,7 +411,7 @@ public class CacheUtil {
             }
             return t;
         } catch (Exception e) {
-            return null;
+            return t;
         } finally {
             LockUtil.getInstance().readLock().unlock();
         }
