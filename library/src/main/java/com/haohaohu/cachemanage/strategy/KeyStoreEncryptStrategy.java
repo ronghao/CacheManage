@@ -1,6 +1,7 @@
 package com.haohaohu.cachemanage.strategy;
 
 import android.content.Context;
+import android.os.Build;
 
 import com.haohaohu.cachemanage.util.KeyStoreHelper;
 
@@ -25,14 +26,19 @@ public class KeyStoreEncryptStrategy implements IEncryptStrategy {
 
     public KeyStoreEncryptStrategy(Context context, String alias) {
         this.mContext = context;
-        this.alias = context.getPackageName() + alias;
+        this.alias = context.getPackageName() + "_" + alias;
         createKeyStoreSecretKey(this.alias);
     }
 
     @Override
     public String encrypt(String str) {
         try {
-            return KeyStoreHelper.encrypt(alias, str);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                return KeyStoreHelper.encryptM(alias, str);
+            }
+            else {
+                return KeyStoreHelper.encryptJBMR2(alias, str);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return "";
@@ -42,7 +48,12 @@ public class KeyStoreEncryptStrategy implements IEncryptStrategy {
     @Override
     public String decode(String str) {
         try {
-            return KeyStoreHelper.decrypt(alias, str);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                return KeyStoreHelper.decryptM(alias, str);
+            }
+            else{
+            return KeyStoreHelper.decryptJBMR2(alias, str);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return "";
