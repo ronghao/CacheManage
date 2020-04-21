@@ -24,6 +24,9 @@ package mohapps.modified.java.util;
  * questions.
  */
 
+//added by mohapps to use on Android API<26
+//java.util.Base64 was only available for API>=26
+
 
 import java.io.FilterOutputStream;
 import java.io.IOException;
