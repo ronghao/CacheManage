@@ -33,15 +33,16 @@ modifications by mohapps:
 + Fixed an issue that caused crash on API 23 while generating keypair when app locale is Arabic, Persian,...
 
 To use AES encryption for API>=23 and RSA encryption for API<23 using Android Keystore:
-see [CacheHelper](https://github.com/mohappsdev/CacheManage/blob/master/library/src/main/java/mohapps/helperlib/helper/CacheHelper.java)
 ```java
 
         // Initialize
-        CacheUtilConfig.builder(context)
+       CacheUtilConfig cc =  CacheUtilConfig.builder(context)
                 .setIEncryptStrategy(new KeyStoreEncryptStrategy(context, "cacheUtil"))
                 .allowMemoryCache(true)
                 .allowEncrypt(false)
                 .build();
+	CacheUtil.init(cc);
+		
        // Save value
        CacheUtil.put(key, value, isEncrypt);
    
