@@ -87,7 +87,8 @@ public class KeyStoreHelper {
         kpGenerator.initialize(spec);
         kpGenerator.generateKeyPair();
     }
-
+    
+    //this is for API 23 only
     private static void setLocale(Context context, Locale locale) {
         Resources resources = context.getResources();
         Configuration configuration = resources.getConfiguration();
@@ -165,7 +166,7 @@ public class KeyStoreHelper {
      * Returns the private key signature on JBMR2+ or else null.
      */
     public static String getSigningKey(String alias) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             KeyStore.PrivateKeyEntry keyEntry = getPrivateKeyEntry(alias);
             if (keyEntry == null) {
                 return null;
