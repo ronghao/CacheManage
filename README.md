@@ -31,7 +31,7 @@ modifications by mohapps:
 + Implemented AES encryption instead of RSA
 + Managing AES key via Keystore for API>=23
 + Generating, Encrypting (by RSA) and saving AES key into (and loading, decrypting from) SharedPreferences in API<23 since Keystore doesn't support AES
-+ RSA was unable to encrypt >128 bit text (solved by AES implemention)
++ RSA was unable to encrypt text longer than 128 bit (solved by AES implemention)
 + Using java.util.Base64 instead of android.util.Base64 (added class to library to use on all APIs including API<26)
 + Fixed an issue that caused crash on API 23 while generating keypair when app locale is Arabic, Persian,...
 
