@@ -1,13 +1,8 @@
 package com.haohaohu.cachemanage.strategy;
 
 import android.content.Context;
-import android.os.Build;
 
 import com.haohaohu.cachemanage.util.KeyStoreHelper;
-
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 
 /**
  * KeyStore加密策略
@@ -33,12 +28,7 @@ public class KeyStoreEncryptStrategy implements IEncryptStrategy {
     @Override
     public String encrypt(String str) {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                return KeyStoreHelper.encryptM(alias, str);
-            }
-            else {
-                return KeyStoreHelper.encryptJBMR2(alias, str);
-            }
+            return KeyStoreHelper.encrypt(mContext, alias, str);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
@@ -48,26 +38,17 @@ public class KeyStoreEncryptStrategy implements IEncryptStrategy {
     @Override
     public String decode(String str) {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                return KeyStoreHelper.decryptM(alias, str);
-            }
-            else{
-            return KeyStoreHelper.decryptJBMR2(alias, str);
-            }
+            return KeyStoreHelper.decrypt(mContext, alias, str);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
         }
     }
 
-    public void createKeyStoreSecretKey(String alias) {
+    private void createKeyStoreSecretKey(String alias) {
         try {
             KeyStoreHelper.createKeys(mContext, alias);
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
