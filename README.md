@@ -27,6 +27,33 @@
 + **添加数据监控机制**
 + **支持自定义加密算法**
 
+modifications by mohapps:
++ Implemented AES encryption instead of RSA
++ Managing AES key via Keystore for API>=23
++ Generating, Encrypting (by RSA) and saving AES key into (and loading, decrypting from) SharedPreferences in API<23 since Keystore doesn't support AES
++ RSA was unable to encrypt text longer than 128 bit (solved by AES implemention)
++ Using java.util.Base64 instead of android.util.Base64 (added class to library to use on all APIs including API<26)
++ Fixed an issue that caused crash on API 23 while generating keypair when app locale is Arabic, Persian,...
+
+
+To use AES encryption:
+```java
+
+        // Initialize
+       CacheUtilConfig cc =  CacheUtilConfig.builder(context)
+                .setIEncryptStrategy(new KeyStoreEncryptStrategy(context, "cacheUtil"))
+                .allowMemoryCache(true)
+                .allowEncrypt(false)
+                .build();
+	CacheUtil.init(cc);
+		
+       // Save value
+       CacheUtil.put(key, value, isEncrypt);
+   
+       // Read value 
+       CacheUtil.get(key, isEncrypt);
+  
+```
 
 # 使用方法
 #### 初始化配置（必须调用 activity或者application）
@@ -44,6 +71,7 @@ CacheUtilConfig cc = CacheUtilConfig.builder(getApplication())
                 .build();
         CacheUtil.init(cc);//初始化，必须调用
 ```
+
 
 #### 初始化配置
 |默认|状态|

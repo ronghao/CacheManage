@@ -4,10 +4,6 @@ import android.content.Context;
 
 import com.haohaohu.cachemanage.util.KeyStoreHelper;
 
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-
 /**
  * KeyStore加密策略
  *
@@ -25,14 +21,14 @@ public class KeyStoreEncryptStrategy implements IEncryptStrategy {
 
     public KeyStoreEncryptStrategy(Context context, String alias) {
         this.mContext = context;
-        this.alias = context.getPackageName() + alias;
+        this.alias = context.getPackageName() + "_" + alias;
         createKeyStoreSecretKey(this.alias);
     }
 
     @Override
     public String encrypt(String str) {
         try {
-            return KeyStoreHelper.encrypt(alias, str);
+            return KeyStoreHelper.encrypt(mContext, alias, str);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
@@ -42,21 +38,17 @@ public class KeyStoreEncryptStrategy implements IEncryptStrategy {
     @Override
     public String decode(String str) {
         try {
-            return KeyStoreHelper.decrypt(alias, str);
+            return KeyStoreHelper.decrypt(mContext, alias, str);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
         }
     }
 
-    public void createKeyStoreSecretKey(String alias) {
+    private void createKeyStoreSecretKey(String alias) {
         try {
             KeyStoreHelper.createKeys(mContext, alias);
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
