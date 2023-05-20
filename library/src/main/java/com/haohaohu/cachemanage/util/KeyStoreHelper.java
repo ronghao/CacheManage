@@ -9,6 +9,7 @@ import android.os.Build;
 import android.security.KeyPairGeneratorSpec;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
+import android.support.annotation.RequiresApi;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -31,7 +32,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.security.auth.x500.X500Principal;
 
-import kotlin.text.Charsets;
 import mohapps.modified.java.util.Base64;
 
 
@@ -43,6 +43,7 @@ import mohapps.modified.java.util.Base64;
  * @author haohao on 2017/8/24 10:37
  * @version v1.0
  */
+@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class KeyStoreHelper {
     private static final String TAG = "KeyStoreHelper";
 
@@ -207,7 +208,7 @@ public class KeyStoreHelper {
             return null;
         }
     }
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private static SecretKey getSecretKeyJBMR2(Context context, String alias) {
         SharedPreferences pref = context.getSharedPreferences(SecurityConstants.ENCRYPTION, Context.MODE_PRIVATE);
         String aesKey = pref.getString(SecurityConstants.AES_KEY, "");
@@ -217,14 +218,14 @@ public class KeyStoreHelper {
                 keygen.init(128);
                 SecretKey secretKey = keygen.generateKey();
                 SharedPreferences.Editor editor = pref.edit();
-                editor.putString(SecurityConstants.AES_KEY, encryptKey(alias, new String(secretKey.getEncoded(), Charsets.ISO_8859_1)));
+                editor.putString(SecurityConstants.AES_KEY, encryptKey(alias, new String(secretKey.getEncoded(), StandardCharsets.ISO_8859_1)));
                 editor.apply();
                 return secretKey;
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
         } else {
-            return new SecretKeySpec(decryptKey(alias, aesKey).getBytes(Charsets.ISO_8859_1), 0, 16, SecurityConstants.KEY_ALGORITHM_AES);
+            return new SecretKeySpec(decryptKey(alias, aesKey).getBytes(StandardCharsets.ISO_8859_1), 0, 16, SecurityConstants.KEY_ALGORITHM_AES);
         }
         return null;
     }

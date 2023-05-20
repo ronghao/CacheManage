@@ -2,7 +2,9 @@ package com.haohaohu.cachemanage.strategy;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
 import com.haohaohu.cachemanage.util.Des3Util;
@@ -83,15 +85,8 @@ public class Des3EncryptStrategy implements IEncryptStrategy {
         return Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void createKeyStoreSecretKey() {
-        try {
-            KeyStoreHelper.createKeys(mContext, mContext.getPackageName());
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        }
+        KeyStoreHelper.createKeys(mContext, mContext.getPackageName());
     }
 }
