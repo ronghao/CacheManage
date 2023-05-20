@@ -188,7 +188,7 @@ allprojects {
 在项目build.gradle中添加 ![](https://jitpack.io/v/ronghao/CacheManage.svg)
 ```
 dependencies {
-    compile 'com.github.ronghao:CacheManage:1.3.4'
+    compile 'com.github.ronghao:CacheManage:1.3.6'
 }
 ```
 # Java doc帮助文档
